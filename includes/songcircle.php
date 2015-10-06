@@ -79,6 +79,12 @@ class Songcircle extends MySQLDatabase{
 		// log record of past songcircles
 	}
 
+	/**
+	* Public function - queries database
+	* for songcircles and displays them
+	*
+	* @return string creates a table display on workshop.php
+	*/
 	public function display_songcircles(){
 		global $db;
 		$sql = "SELECT ";
@@ -98,7 +104,8 @@ class Songcircle extends MySQLDatabase{
 					$output.= "<input type=\"hidden\" data-conference-id=\"".$row['songcircle_id']."\">";
 					$output.= "<td class=\"date\">".$this->user_timezone($row['date_of_songcircle'])."</td>";
 					// $output.= "<td class=\"type\"><span class=\"permission\">".$row['songcircle_permission']."</span>&nbsp;";
-					$output.= "<td class=\"type\">".$row['songcircle_name']."<br><span class=\"registered\"> (".$this->num_of_parts($row['songcircle_id'])." of " .$row['participants']. " participants registered)</span></td>";
+					$output.= "<td class=\"type\">".$row['songcircle_name']."<br>";
+					$output.= "<span class=\"registered\"><a href=\"#\">(".$this->num_of_parts($row['songcircle_id'])." of " .$row['participants']. " participants registered)</a></span></td>";
 					$output.= "<td class=\"created\">Created by: <br><a href=\"profile.php?id=".$row['user_id']."\">".$row['user_name']."</a></td>";
 					// check to see if registered users equals max users
 					if($this->is_full_songcircle($row['participants'], $this->num_of_parts($row['songcircle_id'])) && $this->is_not_registered($row['songcircle_id'])){
