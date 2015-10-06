@@ -9,7 +9,6 @@ function generate_ip_data(){
 	// if the Server detects an IP address, set it to $user_ip variable
 	if(isset($_SERVER['REMOTE_ADDR']) && filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)){
 		$user_ip = $_SERVER['REMOTE_ADDR'];
-		$user_ip = "181.196.204.134";
 	} else {
 		$user_ip = "";
 	}

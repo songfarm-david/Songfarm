@@ -5,7 +5,7 @@ $user->retrieve_user_data($_GET['id']);
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title><?php echo $profile->username ?>&apos;s Profile</title>
+	<title><?php echo $user->username ?>&apos;s Profile</title>
 	<link href="css/workshop.css" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 </head>
@@ -30,7 +30,7 @@ $user->retrieve_user_data($_GET['id']);
 		<div class="user_image" style="background-image:url('../uploaded_images/<?php //echo $image_name; ?>')">
 			<!-- Is there a better way to access these pictures?? Absolute Path? -->
 		</div>
-		<h1><?php echo $profile->username; ?></h1>
+		<h1><?php echo $user->username; ?></h1>
 		<span class="attr">Singer/Songwriter, Lyricist</span>&nbsp;<span style="font-style:italic;">located in</span>&nbsp;<span style="font-weight:bold;">Canoa, Ecuador</span>
 		<!-- Input form for user_image -->
 		<!-- if session user is visiting his/her own profile, option to return to workshop -->
