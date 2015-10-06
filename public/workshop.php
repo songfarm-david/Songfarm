@@ -10,11 +10,13 @@ if(isset($_POST['submitCountryCode'])){
 if(!$user->has_timezone($session->user_id)){
 	$country_array = generate_ip_data();	// catch returned array from generate_ip_data()
 	list($country_code, $country_name) = $country_array;
-} elseif($user->has_timezone($session->user_id)) {
-	$country_array = generate_ip_data();
-	list($country_code, $country_name) = $country_array;
-	$user->country = $country_name;
+} else{
+	$user->has_timezone($session->user_id);
 }
+	// $country_array = generate_ip_data();
+	// list($country_code, $country_name) = $country_array;
+	// $user->country = $country_name;
+
 
 if(isset($_SESSION['message'])){echo $_SESSION['message'];}
 ?>
@@ -210,11 +212,14 @@ if(isset($_SESSION['message'])){echo $_SESSION['message'];}
 						// } else {
 						// 	alert('private');
 						// }
-					});
+					// });
 					</script>
 				</article>
 				<article id="songcircle" class="songcircle">
 				<?php
+				// call open_songcircle_exists to auto create open songcircle
+				$songcircle->open_songcircle_exists();
+
 				// if user register/unregister for songcircle
 				if(isset($_POST['register'])){
 					$songcircle->timezone = $user->has_timezone($session->user_id);
@@ -272,6 +277,26 @@ if(isset($_SESSION['message'])){echo $_SESSION['message'];}
 					echo "<div class=\"songcircle_msg\">".$songcircle->message."</div>";
 				} ?>
 				<script>
+				// show participants on hover
+				var participantsDiv = $('div#participants');
+				$('span.registered').on('mouseover', function(){
+					if(participantsDiv.hasClass('hide')){
+						participantsDiv.fadeIn().removeClass('hide');
+					}
+				// 	else
+				// 	{
+				// 		participantsDiv.fadeOut().addClass('hide');
+				// 	}
+				});
+				// participantsDiv.on('mouseout', function(){
+				// 	participantsDiv.fadeOut().addClass('hide');
+				// })
+
+
+
+
+
+				// code for displaying songcircle message
 				var div = $('#songcircle > div.songcircle_msg').html();
 				if(div){
 					var div = $('#songcircle > div.songcircle_msg');
@@ -383,7 +408,6 @@ if(isset($_SESSION['message'])){echo $_SESSION['message'];}
 	<script>
 	// user settings dropdown
 	$('ul#settings-trigger').on('mouseover', function(){
-		console.log('show');
 		$('#settings-drop-down').show();
 	});
 	$('ul#settings-drop-down, ul#settings-trigger').on('mouseout', function(){
