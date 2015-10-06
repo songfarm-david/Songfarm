@@ -1,0 +1,563 @@
+@font-face {
+    font-family: 'museo_sans100';
+    src: url('../fonts/museo_sans/museosans-100-webfont.eot');
+    src: url('../fonts/museo_sans/museosans-100-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/museo_sans/museosans-100-webfont.woff2') format('woff2'),
+         url('../fonts/museo_sans/museosans-100-webfont.woff') format('woff'),
+         url('../fonts/museo_sans/museosans-100-webfont.ttf') format('truetype'),
+         url('../fonts/museo_sans/museosans-100-webfont.svg#museo_sans100') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'museo_sans300';
+    src: url('../fonts/museo_sans/museosans-300-webfont.eot');
+    src: url('../fonts/museo_sans/museosans-300-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/museo_sans/museosans-300-webfont.woff2') format('woff2'),
+         url('../fonts/museo_sans/museosans-300-webfont.woff') format('woff'),
+         url('../fonts/museo_sans/museosans-300-webfont.ttf') format('truetype'),
+         url('../fonts/museo_sans/museosans-300-webfont.svg#museo_sans300') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'museo_sans700';
+    src: url('../fonts/museo_sans/museosans-700-webfont.eot');
+    src: url('../fonts/museo_sans/museosans-700-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/museo_sans/museosans-700-webfont.woff2') format('woff2'),
+         url('../fonts/museo_sans/museosans-700-webfont.woff') format('woff'),
+         url('../fonts/museo_sans/museosans-700-webfont.ttf') format('truetype'),
+         url('../fonts/museo_sans/museosans-700-webfont.svg#museo_sans700') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'museo_sans900';
+    src: url('../fonts/museo_sans/museosans-900-webfont.eot');
+    src: url('../fonts/museo_sans/museosans-900-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/museo_sans/museosans-900-webfont.woff2') format('woff2'),
+         url('../fonts/museo_sans/museosans-900-webfont.woff') format('woff'),
+         url('../fonts/museo_sans/museosans-900-webfont.ttf') format('truetype'),
+         url('../fonts/museo_sans/museosans-900-webfont.svg#museo_sans900') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@charset "UTF-8";
+
+/*	Global styles		*/
+html, body, div, p, ul, h1, h2, h3, img, em, small, li, span, time, section, article, header, nav, footer, table, th, td, tr{
+	margin:0;
+	padding:0;
+	border: 0;
+	vertical-align: baseline;
+	font: inherit;
+	background: transparent;
+  font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
+	box-sizing: border-box;
+}
+header, nav, main, section, article, footer, figure, figcaption{
+	display: block;
+}
+
+.hide{display: none;}
+a{
+	text-decoration: none;
+}
+
+button{
+	background: #99EE20;
+	color: #2A5C03;
+  width: 100%;
+}
+button a{
+  padding:12px 0;
+  display: block;
+  width: 100%; height:100%;
+  color:inherit;
+}
+button:hover{
+	background: #3FA8F4;
+	color: #fff;
+	cursor: pointer;
+}
+button.inactive{
+	background: rgba(0,0,0,.25);
+  color: rgba(42, 92, 3, .5);
+}
+button.inactive:hover{ cursor: default;}
+button.inactive a{ cursor: default;}
+button:focus {outline:0;}
+
+main{}
+
+
+/* Navigation */
+nav{
+	width:100%;
+	height:45px;
+	background: #99EE20;
+}
+nav h1{
+	display:none;
+}
+nav span.logo{
+	line-height: 45px;
+	margin-left: 18.3%;
+	text-transform: uppercase;
+}
+nav ul#settings-trigger{
+	float:right;
+	/*margin-right: 0.7%;*/
+}
+nav ul#settings-trigger li{
+	display: inline-block;
+	line-height: 45px;
+  position: relative;
+  padding-left: 64px;
+  padding-right: 13px;
+}
+nav ul#settings-trigger li a{
+	padding: 10px 6px;
+}
+nav ul#settings-trigger > li a:before{
+  content:url('../images/arrows_and_lines/workshop-arrow-down.png');
+  position: absolute;
+  line-height: 16px; /* half it's height */
+  top:50%;
+  -webkit-transform: translateY(-50%);
+   -moz-transform: translateY(-50%);
+   -ms-transform: translateY(-50%);
+   transform: translateY(-50%);
+  left:32px;
+}
+nav ul#settings-trigger > li a:before:hover{
+  background: #fff;
+}
+nav li ul#settings-drop-down{
+  position:absolute;
+  border: 1px solid black; border-top: none;
+  width:218px;
+  right: 13px;
+
+}
+nav li ul#settings-drop-down li{
+  display: block; padding: 0;
+  width: 100%; height: 100%;
+  background: #ccc;
+  text-align: left;
+}
+nav li ul#settings-drop-down li:first-child{
+  border-bottom:1px solid #ddd;
+}
+nav li ul#settings-drop-down li a{
+  display: block; padding: 0;
+  background: #ccc;
+  padding-left: 44px;
+  padding-right: 19px;
+}
+nav li ul#settings-drop-down li a:hover{
+  background: #fff;
+}
+nav li ul#settings-drop-down li a:before{
+  content: '';
+}
+
+/* Main Header */
+header{
+	width:50%;
+	margin: 10px auto; /* 45px auto */
+  padding: 16px;
+  padding-left: 154px;
+	height:135px;
+	border:1px dotted black;
+  position: relative;
+}
+.user_image{
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center center; /* Center image in the circle */
+  background-size: cover; /* Make sure it covers the circle, as there is no bg repeat*/
+  border:1px solid black;
+  position:absolute;
+  left:25px;
+  transition-duration: .250s;
+}
+.user_image:hover{
+  cursor: pointer;
+  opacity: 0.75;
+}
+
+header h1{
+	font-size: 1.8em;
+}
+header h1 + span{ margin-left: 1px;}
+header span{ font-size: 0.9em;}
+
+
+/* upload image form */
+#upload_user_image{
+  position: absolute;
+  right:0; bottom:0; left:132px;
+  height: 30px;
+  background-color: #eee;
+  /*margin: auto;*/
+  padding:1em;
+  text-align: left;
+}
+
+
+/* Main Tabs */
+div#tab-container{
+  width:100%;
+  height:55px;
+  padding-top: 10px;
+  border-bottom: 2px solid #ccc;
+  background: #ddd;
+}
+div#tab-container ul{
+  width:1088px;
+  height:100%;
+  margin:0 auto;
+  padding:0;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+div#tab-container ul li{
+  display: inline-block;
+  background: #eee;
+  border: 2px solid #ccc;
+  border-bottom: none;
+  width:50%;
+  margin:0; padding: 0;
+  box-sizing: border-box;
+  height: 100%;
+  text-align: center;
+  line-height: 45px;
+  font-size: 1.25em;
+}
+div#tab-container ul li:last-child{border-left: none;}
+div#tab-container ul li a{
+  display: block;
+  height:inherit;
+}
+div#tab-container ul li a:hover{background: #ddd;}
+div#tab-container ul li.active{height:104%;}
+div#tab-container ul li.active a:hover{
+  height:105%;
+  background: none;
+  cursor: default;
+}
+section#tab-content{
+  background:#fff;
+  height:100%;
+}
+section#tab-content article{
+  margin:0 auto;
+}
+
+/* Songbook panel */
+article#songbook{
+  width: 900px;
+}
+article#songbook > h2{
+  display: none;
+}
+article#songbook div#songbook-container > div#upload-song{
+  border: 1px solid black;
+  width:230px;
+  position:absolute;
+  top: -90px;
+  text-align: center;
+  z-index: 11;
+}
+article#songbook div#songbook-container > div#upload-song a{
+  display: block;
+  background: orange;
+  padding:10px 20px;
+  font-size: 1.15em;
+}
+article#songbook div#songbook-container > div#upload-song a:hover{
+  background:blue; color:white;
+}
+
+/* the Songbook */
+div#songbook-container{
+  border:1px solid black;
+  margin-top:130px;
+  /*overflow: hidden;*/
+  height:500px;
+  position: relative;
+}
+
+
+/* Left Pane */
+
+div#songbook-container #pane-left{
+  float:left;
+  width:55%;
+  height: 100%;
+  position: relative;
+  padding:10px 10px 120px;
+}
+#songbook-container #pane-left #video-container{
+  border:1px solid black;
+  height:inherit; width:100%;
+  background: black;
+}
+#songbook-container #pane-left #video-container video{
+  width: inherit; height: inherit;
+  margin-bottom: 4px;
+}
+#songbook-container #pane-left h2{
+  font-size: 1.25em;
+  max-width: 85%;
+  display: block;
+}
+#songbook-container #pane-left h2 > span.sub_name{margin-left:.25em; font-size: initial;}
+
+#songbook-container #pane-left span.display_perm{
+  border:1px solid red; float:right;
+  padding:3px 5px;
+}
+
+
+/* Right Pane */
+
+div#songbook-container #pane-right{
+  float:right;
+  width:45%;
+  height:100%;
+  border-left: 1px solid black;
+  padding:10px;
+}
+#songbook-container #pane-right #song-list{
+  height:inherit; width: 100%;
+  background: #ddd;
+  border: 1px solid black;
+}
+#songbook-container #pane-right #song-list ul{
+  height:inherit; width: inherit;
+  position: relative;
+}
+#songbook-container #pane-right #song-list ul ul{
+  /*border:1px solid green;*/
+  display: inline;
+  position: absolute;
+  width:20%;
+  right:0;
+}
+#songbook-container #pane-right #song-list ul ul li{
+  display: inline-block;
+  /*background:#ddd;*/
+  width:50%;
+  /*border: 1px solid white;*/
+  text-align: center;
+}
+#songbook-container #pane-right #song-list p{
+  font-size: 1.25em; padding:10px 15px;
+}
+#songbook-container #pane-right #song-list ul li{
+  display: inline-block;
+  width: 90%;
+  height:45px;
+  border-bottom: 1px solid #fff;
+  line-height: 45px;
+  padding:0;
+  background: #eee;
+}
+#songbook-container #pane-right #song-list ul li:hover{
+  cursor: pointer;
+  background: #fff;
+}
+#songbook-container #pane-right #song-list ul li span.permission{
+  display: inline-block;
+  text-align: center;
+  font-size: 0.75em;
+  width:60px;
+}
+#songbook-container #pane-right #song-list ul li span.permission.public{ color:green;}
+#songbook-container #pane-right #song-list ul li span.permission.private{ color:blue;}
+#songbook-container #pane-right #song-list ul li span.cover{
+  color:red;
+  font-size: 0.9em;
+  padding-left: 5px;
+}
+
+/* SongTag form */
+form#songtag{
+  position: absolute;
+  top:0; right:0; bottom:0; left:0;
+  z-index: 200;
+  background:#fff;
+  text-align: center;
+  padding-top: 145px;
+}
+form#songtag p{ padding:20px;}
+
+#songtag div.next{
+  background: #99EE20;
+  width:100px;
+  margin:10px auto;
+  padding:10px 20px;
+  font-size: 1.1em;
+  cursor: pointer;
+}
+#songtag div.next.disabled{
+  background: rgba(153,238,23,0.5);
+  cursor: default;
+}
+#songtag div.next.disabled:hover{
+  background: rgba(153,238,23,0.5);
+  cursor: default;
+}
+#songtag div.next:hover{background:blue;}
+#songtag span.go-back{
+  font-size: 0.85em;
+  text-decoration: underline;
+  cursor: pointer;
+}
+#songtag span.go-back:hover{color: blue;}
+#songtag span.go-back:active{color: purple;}
+
+
+/* Songcircle Panel */
+article#songcircle{
+  padding-top: 115px;
+  width:65%;
+  position: relative;
+}
+article#songcircle h2{
+  font-size: 1.25em;
+  margin-bottom: 32px;
+}
+article#songcircle > h2 > span{
+  text-decoration: underline;
+  color:blue;
+  font-size: .75em
+}
+div#timezone-container{
+  border: 1px solid black;
+  padding:15px;
+  width:70%;
+  margin:50px auto 0;
+}
+div#timezone-container h1{
+  font-size: 1.2em;
+  margin-bottom: 16px;
+}
+div#timezone-container h1 > span.country{
+  color: green;
+  font-weight: bold;
+}
+div#timezone-container p{ font-size: .9em; margin-bottom: 16px;}
+
+article#songcircle div.songcircle_msg{
+  display: block; width:70%;
+  margin:0 auto;
+  padding:15px 60px;
+  background: #B3FF90;
+  text-align: center;
+  line-height: 1.2;
+  /*position: absolute;
+  top:25px;
+  left:50%;
+  margin-left: -35%;*/
+}
+
+
+.aside-left{
+  position: absolute;
+  width: 19%;
+  border-right: 2px dotted #ccc;
+  padding:1em 1em 0;
+  box-sizing: border-box;
+}
+.aside-left button{
+  border-radius: 12px;
+  margin-bottom: 0.75em;
+  font-size: inherit;
+  border:1px solid #86D21B;
+}
+
+table{
+	width: 100%;
+	border:1px solid green;
+	border-spacing: 0;
+	text-align: center;
+	margin-bottom: 2em;
+}
+td{
+	border: 1px solid black;
+	vertical-align: middle;
+	padding:16px 9px;
+	line-height: 1.3;
+}
+td.date{
+	width:26%;
+	font-size: 0.9em;
+}
+td.type{
+	font-size: 1.2em;
+}
+td.register{
+	width: 19%;
+}
+.cannot_register input{
+  opacity: 0.5;
+}
+.registered{
+	font-size: 0.65em;
+}
+span.permission{
+  font-size: 0.85em;
+  color: #DA7C7C;
+}
+
+/* Suggest bar */
+
+section#suggest-bar{
+  position: fixed;
+  bottom: 0;
+  width:100%;
+  height:30px;
+  background: rgba(10, 32, 8, 0.85)
+}
+section#suggest-bar > img{
+  position: absolute;
+  top:-65px;
+}
+section#suggest-bar > img:hover{
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+/* Host Songcircle form */
+#overlay{
+		position:fixed;
+		z-index: 1000;
+		top:0;
+		right:0;
+		bottom:0;
+		left:0;
+		background-color: rgba(0,0,0,0.5);
+}
+form#host_a_songcircle{
+  width:40%;
+  margin:5em auto;
+  padding:0 2em 1em;
+  border: 2px dotted #99EE20;
+  position:fixed;
+  top:0; right:0; bottom:0; left:0;
+  z-index:2000;
+  background: white;
+}
+form#host_a_songcircle h1{
+  font-size: 1.8em;
+  margin:1em 0;
+}
+form#host_a_songcircle p{margin-bottom:0.5em;}
+form#host_a_songcircle input, select{margin-bottom: 1.5em;}
