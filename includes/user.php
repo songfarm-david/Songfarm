@@ -8,28 +8,23 @@ class User extends MySQLDatabase{
 	public $country;
 
 
-	public function has_timezone($user_id){
+	public function has_location($user_id){
 		global $db;
 
-		$sql = "SELECT timezone FROM user_timezone WHERE user_id = {$user_id}";
+		$sql = "SELECT timezone, country FROM user_timezone WHERE user_id = {$user_id}";
 		$result = $db->query($sql);
 		if($db->has_rows($result) > 0){
 			$row = $db->fetch_array($result);
-			$this->user_city($row['timezone']);
+			$this->user_location($row['timezone'], $row['country']);
 			return $this->timezone = $row['timezone'];
 		} else {
 			return false;
 		}
 	}
 
-	public function user_city($timezone){
-		if( ($pos = strpos($timezone, '/') ) !== false ) { // remove 'America/'
-			$clean_timezone = substr($timezone, $pos+1);
-			if( ($pos = strpos($clean_timezone, '/')) !== false ) { // remove second level '.../'
-				$clean_timezone = substr($clean_timezone, $pos+1);
-			}
-		}
-		$this->city = $clean_timezone;
+	public function user_location($timezone, $country){
+		$this->city = $this->clean_city($timezone);
+		$this->country = $country;
 	}
 
 	/* takes submitted country code from workshop.php
@@ -38,11 +33,11 @@ class User extends MySQLDatabase{
 	* @param int - the user's session id (from login)
 	* @param string - the value of $_POST['timezone']
 	*/
-	public function insert_timezone($user_id, $timezone){
+	public function insert_timezone($user_id, $timezone, $country){
 		global $db;
 
-		$sql = "INSERT INTO user_timezone (user_id, timezone) ";
-		$sql.= "VALUES ($user_id, '$timezone')";
+		$sql = "INSERT INTO user_timezone (user_id, timezone, country) ";
+		$sql.= "VALUES ($user_id, '$timezone', '$country')";
 		if(!$result = $db->query($sql)){
 			echo "There was an error updating your timezone";
 		}
@@ -61,6 +56,24 @@ class User extends MySQLDatabase{
 		$result = $db->query($sql);
 		$user_array = $db->fetch_array($result);
 		$this->username = $user_array['user_name'];
+	}
+
+	/**
+	* public function - takes a timezone
+	* from PHP and cleans it by removing
+	* '/'s and '_'.
+	*
+	* @param string PHP timezone
+	* @return string
+	*/
+	public static function clean_city($city){
+		if( ($pos = strpos($city, '/') ) !== false ) { // remove 'America/'
+			$clean_timezone = substr($city, $pos+1);
+			if( ($pos = strpos($clean_timezone, '/')) !== false ) { // remove second level '.../'
+				$clean_timezone = substr($clean_timezone, $pos+1);
+			}
+		}
+		return $clean_timezone = str_replace('_',' ',$clean_timezone); // remove the '_' in city names
 	}
 
 }

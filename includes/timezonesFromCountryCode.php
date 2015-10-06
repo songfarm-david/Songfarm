@@ -1,11 +1,12 @@
-<?php
+<?php require('initialize.php');
 
 if(isset($_POST['country_code'])){
 	$country_code = $_POST['country_code'];
-	echo timezones_from_countryCode($_POST['country_code']);
+	$country_name = $_POST['country_name'];
+	echo timezones_from_countryCode($country_code, $country_name);
 }
 
-function timezones_from_countryCode($country_code){
+function timezones_from_countryCode($country_code, $country_name){
 	$dt = new DateTime();
 
 	// create a list of timezones based on that country code..
@@ -30,16 +31,17 @@ function timezones_from_countryCode($country_code){
 		$offset_formatted = gmdate( 'H:i', abs($offset) );
 		$pretty_offset = "UTC${offset_prefix}${offset_formatted}";
 
-		if( ($pos = strpos($raw_timezone, '/') ) !== false ) { // remove 'America/'
-			$clean_timezone = substr($raw_timezone, $pos+1);
-			if( ($pos = strpos($clean_timezone, '/')) !== false ) { // remove second level '.../'
-				$clean_timezone = substr($clean_timezone, $pos+1);
-			}
-		}
-		$clean_timezone = str_replace('_',' ',$clean_timezone); // remove the '_' in city names
+		// if( ($pos = strpos($raw_timezone, '/') ) !== false ) { // remove 'America/'
+		// 	$clean_timezone = substr($raw_timezone, $pos+1);
+		// 	if( ($pos = strpos($clean_timezone, '/')) !== false ) { // remove second level '.../'
+		// 		$clean_timezone = substr($clean_timezone, $pos+1);
+		// 	}
+		// }
+		// $clean_timezone = str_replace('_',' ',$clean_timezone); // remove the '_' in city names
+		$clean_timezone = User::clean_city($raw_timezone);
 		echo "<option value=\"$raw_timezone\">(".$pretty_offset.") " . $clean_timezone . ' ('.$timezone_abbr.')</option>';
-	}
 
+	}
 }
 
 ?>

@@ -3,15 +3,15 @@
 if(!$session->is_logged_in()) { redirect_to('index.php'); }
 $image->user_id = $session->user_id;
 if(isset($_POST['submitCountryCode'])){
-	$user->user_city($_POST['timezone']);
-	$user->insert_timezone($session->user_id, $_POST['timezone']);
+	$user->user_location($_POST['timezone'],$_POST['country_name']);
+	$user->insert_timezone($session->user_id, $_POST['timezone'], $_POST['country_name']);
 }
 // if user timezone is NOT set, request geoplugin
-if(!$user->has_timezone($session->user_id)){
+if(!$user->has_location($session->user_id)){
 	$country_array = generate_ip_data();	// catch returned array from generate_ip_data()
 	list($country_code, $country_name) = $country_array;
 } else{
-	$user->has_timezone($session->user_id);
+	$user->has_location($session->user_id);
 }
 	// $country_array = generate_ip_data();
 	// list($country_code, $country_name) = $country_array;
@@ -222,10 +222,10 @@ if(isset($_SESSION['message'])){echo $_SESSION['message'];}
 
 				// if user register/unregister for songcircle
 				if(isset($_POST['register'])){
-					$songcircle->timezone = $user->has_timezone($session->user_id);
+					$songcircle->timezone = $user->has_location($session->user_id);
 					$songcircle->register($_POST['songcircle_id'], $session->user_id, $session->username, $_POST['songcircle_name'], $_POST['date_of_songcircle']);
 				} elseif(isset($_POST['unregister'])){
-					$songcircle->timezone = $user->has_timezone($session->user_id);
+					$songcircle->timezone = $user->has_location($session->user_id);
 					$songcircle->unregister($_POST['songcircle_id'], $session->user_id, $_POST['songcircle_name'], $_POST['date_of_songcircle']);
 				}
 				// if user creates a songcircle
@@ -236,12 +236,12 @@ if(isset($_SESSION['message'])){echo $_SESSION['message'];}
 					<h2>Upcoming Songcircles:&nbsp;&nbsp;<span><a href="#">(What's a Songcircle?)</a></span></h2>
 
 					<?php // if user timezone is not currently set, prompt them to set it.
-					if($user->has_timezone($session->user_id)) {
+					if($user->has_location($session->user_id)) {
 						$songcircle->timezone = $user->timezone;
 						$songcircle->display_songcircles();
-					} else {
-						if(!empty($country_name)){ ?>
+					} else { ?>
 						<div id="timezone-container">
+					<?php	if(!empty($country_name)){ ?>
 							<h1>Timezone based on <span class="country"><?php echo $country_name ?></span></h1>
 							<?php } ?>
 
@@ -267,7 +267,7 @@ if(isset($_SESSION['message'])){echo $_SESSION['message'];}
 								}
 								?>
 							</select>
-							<input type="hidden" id="country-code" value="<?php if(isset($country_code)){echo $country_code;} ?>">
+							<!-- <input type="hidden" id="country-codezzz" value="<?php if(isset($country_code)){echo $country_code;} ?>"> -->
 							<select id="timezones" name="timezone"></select>
 							<input type="submit" name="submitCountryCode" value="Submit">
 							</form>
@@ -472,11 +472,19 @@ if(isset($_SESSION['message'])){echo $_SESSION['message'];}
 		});
 		$('#countries').on('change',function(){
 			var countryCode = $(this).val(); // this gets the country code
+			// get the text of the selected option field -- this comes in the form of a Country Name
+			var countryName = $('#countries option:selected').text();
+			console.log(countryName);
+			// target form and insert a hidden input with this value
+			var countryForm = $('form#countryCode select:nth-child(2)').after('<input type="hidden" name="country_name" value="'+countryName+'">');
+			console.log(countryForm);
 			$.ajax({
 				method : "POST",
 				url	: "../includes/timezonesFromCountryCode.php",
-				data : {'country_code':countryCode},
+				data : {'country_code':countryCode,
+								'country_name':countryName},
 				success: function(data){
+					// console.log(data);
 					$('#timezones').html(data);
 				}
 			});
