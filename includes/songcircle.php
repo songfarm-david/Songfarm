@@ -61,8 +61,6 @@ class Songcircle extends MySQLDatabase{
 		if(!$db->query($sql)) {
 			$this->message = "There was an error creating the {$this->songcircle_name}.";
 		}
-		// $tz = $dt->getTimezone();
-		// echo $tz->getName(); // returns 'UTC'
 	}
 
 	function open_songcircle_is_max_parts($songcircle_id, $max_participants, $date_of_songcircle){
@@ -105,7 +103,14 @@ class Songcircle extends MySQLDatabase{
 					$output.= "<td class=\"date\">".$this->user_timezone($row['date_of_songcircle'])."</td>";
 					// $output.= "<td class=\"type\"><span class=\"permission\">".$row['songcircle_permission']."</span>&nbsp;";
 					$output.= "<td class=\"type\">".$row['songcircle_name']."<br>";
-					$output.= "<span class=\"registered\"><a href=\"#\">(".$this->num_of_parts($row['songcircle_id'])." of " .$row['participants']. " participants registered)</a></span></td>";
+					$output.= "<span class=\"registered\">(".$this->num_of_parts($row['songcircle_id'])." of " .$row['participants']. " participants registered)</span>";
+					$output.= "<div id=\"participants\" class=\"hide\"><ul>";
+						$result = $this->list_participants($row['songcircle_id']);
+						// print_r($participants);
+						while ($participants = $db->fetch_array($result)){
+							$output.= "<li><a href=\"profile.php?id={$participants['user_id']}\">{$participants['username']}</a></li>";
+						}
+					$output.= "</ul></div></td>";
 					$output.= "<td class=\"created\">Created by: <br><a href=\"profile.php?id=".$row['user_id']."\">".$row['user_name']."</a></td>";
 					// check to see if registered users equals max users
 					if($this->is_full_songcircle($row['participants'], $this->num_of_parts($row['songcircle_id'])) && $this->is_not_registered($row['songcircle_id'])){
@@ -130,10 +135,40 @@ class Songcircle extends MySQLDatabase{
 		}
 	}
 
+
+	/**
+	* Private function - Gets list of
+	* currently registered participants per
+	* Songcircle
+	*
+	*	@param string id of songcircle
+	* @return string displays html elements
+	*/
+	private function list_participants($songcircle_id){
+		global $db;
+		$sql = $this->get_by_songcircle_id($songcircle_id);
+		if($result = $db->query($sql)){
+			return $result;
+		}
+	}
+
 	private function num_of_parts($songcircle_id){
 		global $db;
-		$sql = "SELECT user_id FROM songcircle_register WHERE songcircle_id = '$songcircle_id'";
+		$sql = $this->get_by_songcircle_id($songcircle_id);
 		return $rows = $db->has_rows($db->query($sql));
+	}
+
+	/**
+	* Private function - this function takes a
+	* Songcircle Id and does a query on it returning
+	* certain values to be used with other functions
+	*
+	*	@param string the songcircle id
+	* @return string an sql statement
+	*/
+	private function get_by_songcircle_id($songcircle_id){
+		global $db;
+		return $sql = "SELECT user_id, username FROM songcircle_register WHERE songcircle_id = '$songcircle_id'";
 	}
 
 	private function is_full_songcircle($participants, $num_reg_participants){
@@ -152,7 +187,7 @@ class Songcircle extends MySQLDatabase{
 		if(!$result = $db->query($sql)){
 			return $this->$message = "Failed to register you for this songcircle.";
 		} else {
-			$this->message = "You successfully registered for \"{$songcircle_name}\" on ".$this->user_timezone($date_of_songcircle).". Check your inbox for more information.";
+			Message::$message = "You successfully registered for \"{$songcircle_name}\" on ".$this->user_timezone($date_of_songcircle).". Check your inbox for more information.";
 		}
 	}
 
@@ -162,9 +197,9 @@ class Songcircle extends MySQLDatabase{
 		$sql = "DELETE FROM songcircle_register WHERE songcircle_id = '$songcircle_id' AND user_id = $user_id";
 		// echo $sql;
 		if(!$result = $db->query($sql)){
-			return $this->message = "Could not unregister you from this songcircle";
+			$this->message = "Could not unregister you from this songcircle";
 		} else {
-			$this->message = "You have unregistered from \"{$songcircle_name}\" on ".$this->user_timezone($date_of_songcircle).".";
+			Message::$message = "You have unregistered from \"{$songcircle_name}\" on ".$this->user_timezone($date_of_songcircle).".";
 		}
 	}
 

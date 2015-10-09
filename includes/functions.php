@@ -1,10 +1,26 @@
 <?php
 
+/**
+* Function - redirect to
+* a new location
+*
+* @param string location
+*/
 function redirect_to($location) {
 	header("Location: " . $location);
 	exit;
 }
 
+/**
+*	Function - Attempt to validate
+* user IP address.
+*
+* Use IP address to collect user's
+* Country Code and Country Name
+*
+* @return array user's country code, country name
+*
+*/
 function generate_ip_data(){
 	// if the Server detects an IP address, set it to $user_ip variable
 	if(isset($_SERVER['REMOTE_ADDR']) && filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)){
@@ -16,8 +32,8 @@ function generate_ip_data(){
 	// get contents of the IP address
 	$ip_contents = unserialize(file_get_contents('http://www.geoplugin.net/php.gp?ip='.$user_ip));
 
-	// create an array to hold IP data
 	$ip_data = [];
+	// loop through contents and extract certain values
 	foreach ($ip_contents as $key => $value) {
 		$key = substr($key, 10); // remove 'geoplugin' part of key..
 		if( // if there are matches for any of these conditions, place into $ip_data[]
@@ -26,7 +42,6 @@ function generate_ip_data(){
 		}
 	} // end of foreach loop
 
-	// create country array
 	$country_array = [];
 	// create variables to contain ip keys
 	$country_array[] = strtoupper($ip_data['countryCode']); // make sure country code is always uppercase

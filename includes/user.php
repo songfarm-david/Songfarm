@@ -2,12 +2,45 @@
 
 class User extends MySQLDatabase{
 
+	/**
+	* Public variables
+	*
+	* @var $username string name of user
+	* @var $city string user's city
+	* @var $country string user's country
+	* @var $timezone string user's timezone
+	*/
 	public $username;
-	public $timezone;
 	public $city;
 	public $country;
+	public $timezone;
 
 
+	/**
+	* Public Static function - Remove's
+	* unwanted characters from a
+	* timezone
+	*
+	* @param string PHP timezone
+	* @return string cleaned timezone
+	*/
+	public static function clean_city($city){
+		if( ($pos = strpos($city, '/') ) !== false ) { // remove 'America/'
+			$clean_timezone = substr($city, $pos+1);
+			if( ($pos = strpos($clean_timezone, '/')) !== false ) { // remove second level '.../'
+				$clean_timezone = substr($clean_timezone, $pos+1);
+			}
+		}
+		return $clean_timezone = str_replace('_',' ',$clean_timezone); // remove the '_' in city names
+	}
+
+	/**
+	* Public function - Checks if user
+	* has timezone, country in the database
+	*
+	* @param int user id
+	*	@return FALSE if no record
+	*/
 	public function has_location($user_id){
 		global $db;
 
@@ -22,59 +55,50 @@ class User extends MySQLDatabase{
 		}
 	}
 
-	public function user_location($timezone, $country){
-		$this->city = $this->clean_city($timezone);
-		$this->country = $country;
-	}
-
-	/* takes submitted country code from workshop.php
-	* Enters it into the database
+	/**
+	* Public function - inserts user timezone and
+	* country into database
 	*
-	* @param int - the user's session id (from login)
-	* @param string - the value of $_POST['timezone']
+	* @param int user id
+	* @param string timezone
+	* @param string country
 	*/
 	public function insert_timezone($user_id, $timezone, $country){
 		global $db;
 
 		$sql = "INSERT INTO user_timezone (user_id, timezone, country) ";
 		$sql.= "VALUES ($user_id, '$timezone', '$country')";
-		if(!$result = $db->query($sql)){
-			echo "There was an error updating your timezone";
-		}
-	}
-
-	/*
-	*	Used on profile.php
-	* Retrieve user info based on their user_id
-	*
-	*/
-	public function retrieve_user_data($profile_id){
-		global $db;
-		$sql = "SELECT user_id, user_type, user_name, user_email, reg_date ";
-		$sql.= "FROM user_register ";
-		$sql.= "WHERE user_id = $profile_id";
 		$result = $db->query($sql);
-		$user_array = $db->fetch_array($result);
-		$this->username = $user_array['user_name'];
 	}
 
 	/**
-	* public function - takes a timezone
-	* from PHP and cleans it by removing
-	* '/'s and '_'.
+	* Public function - Takes a user id and queries
+	* database for user info (username, reg_date, etc)
 	*
-	* @param string PHP timezone
-	* @return string
+	* @param int id of user
+	* @return array user data
 	*/
-	public static function clean_city($city){
-		if( ($pos = strpos($city, '/') ) !== false ) { // remove 'America/'
-			$clean_timezone = substr($city, $pos+1);
-			if( ($pos = strpos($clean_timezone, '/')) !== false ) { // remove second level '.../'
-				$clean_timezone = substr($clean_timezone, $pos+1);
-			}
+	public function retrieve_user_data($profile_id){
+		global $db;
+		$sql = "SELECT * FROM user_register WHERE user_id = $profile_id";
+		if($result = $db->query($sql)){
+			$user_data = $db->fetch_array($result);
+			$this->username = $user_data['user_name'];
 		}
-		return $clean_timezone = str_replace('_',' ',$clean_timezone); // remove the '_' in city names
 	}
+
+	/**
+	* Protected function - Sets timezone
+	* and country to class variables
+	*
+	* @param string timezone
+	* @param string country
+	*/
+	protected function user_location($timezone, $country){
+		$this->city = $this->clean_city($timezone);
+		$this->country = $country;
+	}
+
 
 }
 
