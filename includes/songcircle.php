@@ -177,7 +177,7 @@ class Songcircle extends MySQLDatabase{
 		if($result = $db->query($sql)){
 			$rows = $db->has_rows($result);
 			if($rows > 0){
-				return "value=\"Unregister\" name=\"unregister\">";
+				return "value=\"Unregister\" name=\"unregister\"> &nbsp; &nbsp; <a href=startCall.php?songcircleid=". $songcircle_id. " target=new>join</a>";
 			} else {
 				return "value=\"Register\" name=\"register\">";
 			}
