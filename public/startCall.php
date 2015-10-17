@@ -19,7 +19,7 @@
         <meta property="og:image:width" content="1772">
         <meta property="og:image:height" content="1170">
         <link href="css/index.css" rel="stylesheet" type="text/css">
-        <link href="css/sampleApp.css" rel="stylesheet" type="text/css">
+        <link href="css/songfarmvideo.css" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
         <script src="https://code.oovoo.com/webrtc/oovoosdk-2.0.0.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui.js"></script>
