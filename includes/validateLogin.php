@@ -12,7 +12,8 @@ class validateLogin extends MySQLDatabase{
 			// success
 			if($db->has_rows($result = $db->user_name_exists($this->username))){
 				$result = $db->fetch_array($result);
-				if(password_verify($this->password, $result['user_password'])){
+				//print_r($result);
+				if(password_verify($this->password, $result['user_password']) ){
 					$_SESSION['user_id'] = $result['user_id'];
 					$_SESSION['username'] = $result['user_name'];
 					$_SESSION['permission'] = $result['permission'];

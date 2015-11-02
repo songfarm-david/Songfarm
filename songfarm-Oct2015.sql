@@ -123,13 +123,24 @@ CREATE TABLE IF NOT EXISTS `user_songs` (
 -- Table structure for table `user_timezone`
 --
 
+
 CREATE TABLE IF NOT EXISTS `user_timezone` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `user_id` int(11) NOT NULL,
   `timezone` varchar(30) NOT NULL,
+  `country` varchar(100) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='Stores user''s selected timezone' AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COMMENT='Stores user''s selected timezone' AUTO_INCREMENT=5 ;
+
+--
+-- Dumping data for table `user_timezone`
+--
+
+INSERT INTO `user_timezone` (`id`, `user_id`, `timezone`, `country`) VALUES
+(2, 0, 'Asia/Hong_Kong', 'Hong Kong'),
+(3, 2, 'Asia/Nicosia', 'Cyprus'),
+(4, 1, 'America/Los_Angeles', 'United States');
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
