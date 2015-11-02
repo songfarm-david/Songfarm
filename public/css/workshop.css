@@ -1,4 +1,4 @@
-@font-face {
+/*@font-face {
     font-family: 'museo_sans100';
     src: url('../fonts/museo_sans/museosans-100-webfont.eot');
     src: url('../fonts/museo_sans/museosans-100-webfont.eot?#iefix') format('embedded-opentype'),
@@ -43,10 +43,12 @@
     font-style: normal;
 }
 
-@charset "UTF-8";
+@charset "UTF-8";*/
 
 /*	Global styles		*/
-html, body, div, p, ul, h1, h2, h3, img, em, small, li, span, time, section, article, header, nav, footer, table, th, td, tr{
+
+/*** moved to global.css ***/
+/*html, body, div, p, ul, h1, h2, h3, img, em, small, li, span, time, section, article, header, nav, footer, table, th, td, tr{
 	margin:0;
 	padding:0;
 	border: 0;
@@ -101,12 +103,13 @@ div.global_msg{
   text-align: center;
   line-height: 1.2;
   border-radius: 6px;
-}
+}*/
 
 
 /* Navigation */
+/*** Moved to nav.css ***/
 
-nav{
+/*nav{
 	width:100%;
 	height:45px;
 	background: #99EE20;
@@ -162,7 +165,7 @@ nav li ul#settings-drop-down li{
   display: block;
   text-align: left;
 }
-nav li ul#settings-drop-down li:nth-child(-n+2){ /* selects only the first two li's and not the 3rd */
+nav li ul#settings-drop-down li:nth-child(-n+2){
   border-bottom:1px dotted #AEE2B3;
 }
 nav li ul#settings-drop-down li a{
@@ -176,7 +179,7 @@ nav li ul#settings-drop-down li a:hover{
 }
 nav li ul#settings-drop-down li a:active{
   color:#45D845;
-}
+}*/
 
 
 /* Main Header */
@@ -635,7 +638,8 @@ section#suggest-bar > img:hover{
 		right:0;
 		bottom:0;
 		left:0;
-		background-color: rgba(0,0,0,0.5);
+		background: #000;
+		background-color: rgba(0,0,0,0.65);
 }
 form#host_a_songcircle{
   width:40%;
@@ -653,3 +657,27 @@ form#host_a_songcircle h1{
 }
 form#host_a_songcircle p{margin-bottom:0.5em;}
 form#host_a_songcircle input, select{margin-bottom: 1.5em;}
+
+
+section#user_settings{
+  background: #eee;
+  border-left: 1px solid black;
+  border-right: 1px solid black;
+  width:70%;
+  margin:0 auto;
+  position: absolute;
+  left:50%;
+  margin-left: -35%;
+  top:0; bottom:0;
+  z-index: 1001;
+  padding:3em 6em;
+}
+section#user_settings hr{ margin-bottom: 32px;}
+
+section#user_settings h1{
+  font-size: 1.8em;
+}
+section#user_settings h2{
+  margin:16px 0;
+  font-size: 1.2em;
+}

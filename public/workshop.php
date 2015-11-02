@@ -1,5 +1,6 @@
 <?php require_once('../includes/initialize.php'); include_once('../includes/countries_array.php');
 
+
 // check if user is logged in, if no, redirect to index.php
 if(!$session->is_logged_in()) { redirect_to('index.php'); }
 
@@ -10,16 +11,22 @@ if(isset($_SESSION['message'])){echo $_SESSION['message'];}
 upon initial entry into workshop.php */
 
 // if user submit's the country code form, insert data into database
-if(isset($_POST['submit_country_code'])){
-	$user->insert_timezone($session->user_id, $_POST['timezone'], $_POST['country_name']); }
-
+if(isset($_POST['submit_location'])){
+	// check if user has a timezone, if so update
+	if($user->has_location($session->user_id)){
+		$user->update_timezone($session->user_id);
+	} else {
+		$user->insert_timezone($session->user_id, $_POST['timezone'], $_POST['country'], $_POST['full_timezone']); }
+	}
 // if user timezone is NOT set, request geoplugin
 if(!$user->has_location($session->user_id)){
 	// catch returned array in $country_array from generate_ip_data()
 	$country_array = generate_ip_data();
 	// create new variables from the array
 	list($country_code, $country_name) = $country_array;
-} else{
+}
+else
+{
 	$user->has_location($session->user_id);
 }
 ?>
@@ -28,6 +35,8 @@ if(!$user->has_location($session->user_id)){
 <head>
 	<meta charset="utf-8">
 	<title><?php echo $session->username ?>&apos;s Workshop</title>
+	<link href="css/global.css" rel="stylesheet" type="text/css">
+	<link href="css/nav.css" rel="stylesheet" type="text/css">
 	<link href="css/workshop.css" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 </head>
@@ -47,9 +56,9 @@ if(!$user->has_location($session->user_id)){
 		<div id="overlay" class="hide"></div>
 			<div id="tab-container">
 				<ul>
-					<li>
+					<li class="active">
 						<a href="#" data-name="Songbook">Songbook</a>
-					</li><li class="active">
+					</li><li>
 						<a href="#" data-name="Songcircle">Songcircle</a>
 					</li>
 				</ul>
@@ -58,7 +67,7 @@ if(!$user->has_location($session->user_id)){
 			<?php if(isset($_POST['submit_songTag'])){$songbook->insert_song($session->user_id);} ?>
 			<section id="tab-content">
 
-				<article id="songbook" class="songbook hide">
+				<article id="songbook" class="songbook">
 					<h2>Songbook</h2>
 					<div id="songbook-container">
 						<div id="upload-song">
@@ -164,7 +173,8 @@ if(!$user->has_location($session->user_id)){
 					// });
 					</script>
 				</article>
-				<article id="songcircle" class="songcircle">
+
+				<article id="songcircle" class="songcircle hide">
 				<?php
 				// call open_songcircle_exists to auto create open songcircle
 				$songcircle->open_songcircle_exists();
@@ -186,29 +196,14 @@ if(!$user->has_location($session->user_id)){
 					<h2>Upcoming Songcircles:&nbsp;&nbsp;<span><a href="#">(What's a Songcircle?)</a></span></h2>
 
 					<!-- Logic, Form and JS for user timezone upon first entry workshop.php -->
-					<?php include(LIB_PATH.DS.'layout'.DS.'user_timezone.php'); ?>
+					<?php include_once(LIB_PATH.DS.'user_timezone.php'); ?>
 
-
-				<?php //if(isset($songcircle->message)){
-					//echo "<div class=\"songcircle_msg\">".$songcircle->message."</div>";
-				//} ?>
 				<script>
 				// show div#participants on hover
 				var participantsDiv = $('div#participants');
 				$('span.registered').on('mouseover', function(){
 					participantsDiv.toggle();
 				});
-
-
-
-
-
-				// code for displaying songcircle message
-				var div = $('#songcircle > div.songcircle_msg').html();
-				if(div){
-					var div = $('#songcircle > div.songcircle_msg');
-					div.delay('4000').fadeOut('500');
-				}
 				</script>
 				</article>
 			</section>

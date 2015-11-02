@@ -5,7 +5,9 @@ $user_array = $user->retrieve_user_data($_GET['id']);
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title><?php echo $user->username ?>&apos;s Profile</title>
+	<title>Songfarm - <?php echo $user->username ?>&apos;s Profile</title>
+	<link href="css/global.css" rel="stylesheet" type="text/css">
+	<link href="css/nav.css" rel="stylesheet" type="text/css">
 	<link href="css/workshop.css" rel="stylesheet" type="text/css">
 	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 	<style>
