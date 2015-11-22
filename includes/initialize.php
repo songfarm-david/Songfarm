@@ -21,6 +21,7 @@ require_once(LIB_PATH.DS."user.php");
 require_once(LIB_PATH.DS."image.php");
 require_once(LIB_PATH.DS."songbook.php");
 require_once(LIB_PATH.DS."songcircle.php");
+require_once(LIB_PATH.DS."message.php");
 // Load basic functions
 require_once(LIB_PATH.DS."functions.php");
 

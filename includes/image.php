@@ -10,29 +10,33 @@ class Image extends MySQLDatabase{
 	*/
 	protected static $table_name = 'user_photo';
 	protected static $photo_dir = 'uploaded_images';
+
 	/**
 	* Public variables
 	*
-	* @var $user_id int contains unique user id
-	*	@var $song_name string name of song
-	* @var $original_artist string name of original artist if song is cover
-	* @var $lyric text lyrics for the song
+	* @var $image_name string user image filename/type
+	* @var $photo_errors array photo errors
+	* @var $message string success message
 	*/
 	public $image_name = "";
-	public $filename;
-	public $type;
-	protected $size;
-	private $tmp_name;
-	// private $dir = "uploaded_images";
-	private $existing_filename;
-	private $existing_filetype;
-
-	public $message;
 	public $photo_errors = [];
-	public $php_upload_errors = array(
+	public $message;
+
+	/**
+	* Protected variables
+	*
+	* @var $filename string name of user image
+	* @var $type string extension of image
+	* @var $size int size of image file
+	* @var $php_upload_errors array array of possible photo errors
+	*/
+	protected $filename;
+	protected $type;
+	protected $size;
+	protected $php_upload_errors = array(
 			0 => 'There is no error, the file uploaded with success',
 			1 => 'The uploaded file exceeds the upload_max_filesize directive in php.ini',
-			2 => 'The uploaded file exceeds the MAX_FILE_SIZE directive that was specified in the HTML form',
+			2 => 'The uploaded file exceeds the MAX_FILE_SIZE of 2MB',
 			3 => 'The uploaded file was only partially uploaded',
 			4 => 'No file was uploaded',
 			6 => 'Missing a temporary folder',
@@ -40,9 +44,35 @@ class Image extends MySQLDatabase{
 			8 => 'A PHP extension stopped the file upload.',
 	);
 
-	public function upload_image($image){
+	/**
+	* Private variables
+	*
+	* @var $tmp_name string temporary image path
+	* @var $existing_filename string existing path to user image
+	* @var $existing_filetype string file extension of existing user image
+	*/
+	private $tmp_name;
+	private $existing_filename;
+	private $existing_filetype;
+
+
+	/**
+	* Public function - Performs
+	* various checks on a file upload
+	* before either updating or inserting
+	* image into database
+	*
+	* @param array upload image array
+	* @param int user id
+	*
+	* @return function update_image()
+	* or
+	* @return function insert_image()
+	*/
+	public function upload_image($image, $id){
+		$this->user_id = $id;
 		if($this->image_has_presence($image)){
-			if($this->is_valid_filename($this->filename)){
+			if($this->has_not_photo_errors($image)){
 				if($this->is_valid_extension($this->type)){
 					if($this->user_has_existing_photo($this->user_id)){
 						if($this->delete_existing_image($this->existing_filename, $this->existing_filetype)){
@@ -58,32 +88,69 @@ class Image extends MySQLDatabase{
 	}
 
 	/**
-	*	Private function - Takes uploaded image array
-	* from user andchecks for presence.
+	*	Public function - retrieves user image
+	* from database based on user id.
 	*
-	* If present, then checks array for errors
+	*	@return string path to file image if exists
+	*	else
+	* @return string path to default image 'Upload Photo'
+	*/
+	public function retrieve_user_photo($id){
+
+		global $db;
+
+		$sql = "SELECT filename, type FROM ".self::$table_name." WHERE ";
+		$sql.= "user_id = $id";
+		if($result = $db->query($sql)){
+			if($db->has_rows($result) > 0){
+				$image_array = $db->fetch_array($result);
+				$image_name = $image_array['filename'].$image_array['type'];
+				$image_path = SITE_ROOT.DS.self::$photo_dir.DS.$image_name;
+				if(file_exists($image_path)){
+					$this->image_name = $image_name;
+				} else {
+					$this->photo_errors[] = "Sorry, we couldn't find your photo in the filesystem. Please, try uploading it again";
+				}
+			} else {
+				// if there is no existing user photo, use default
+				$this->image_name = 'avatar_default.png';
+			}
+		}
+	}
+
+
+	/**
+	*	Protected function - Checks for presence
+	* of an image array
 	*
 	* @param array $_FILES['image']
 	* @return mixed variables containing uploaded image data
 	* else
 	* @return string $photo_error returns an error
 	*/
-	private function image_has_presence($uploaded_image){
+	protected function image_has_presence($uploaded_image){
 		if($uploaded_image && !empty($uploaded_image) && is_array($uploaded_image)) {
-			if($this->has_not_photo_errors($uploaded_image)){
-				$this->filename = uniqid('', true);
-				$this->type = str_replace('image/','.',$uploaded_image['type']);
-				$this->size = $uploaded_image['size'];
-				$this->tmp_name = $uploaded_image['tmp_name'];
-				return true;
-			}
+			// if($this->has_not_photo_errors($uploaded_image)){
+			// 	$this->filename = uniqid('', true);
+			// 	$this->type = str_replace('image/','.',$uploaded_image['type']);
+			// 	$this->size = $uploaded_image['size'];
+			// 	$this->tmp_name = $uploaded_image['tmp_name'];
+			// }
+			return true;
 		} else {
 			$this->photo_errors[] = "No File Uploaded";
 			return false;
 		}
 	}
 
-	private function has_not_photo_errors($image){
+	/**
+	* Protected function - Takes $_FILES superglobal
+	* array and checks for photo errors
+	*
+	* @param array $_FILES superglobal array
+	* @return true if no errors, false if errors
+	*/
+	protected function has_not_photo_errors($image){
 		if($image['error'] != 0){
 			foreach($this->php_upload_errors as $key => $value) {
 				if($image['error'] == $key) {
@@ -92,43 +159,78 @@ class Image extends MySQLDatabase{
 			}
 			return false;
 		} else {
+			$this->filename = uniqid('', true);
+			$this->type = str_replace('image/','.',$image['type']);
+			$this->size = $image['size'];
+			$this->tmp_name = $image['tmp_name'];
 			return true;
 		}
 	}
 
-	protected function is_valid_filename($filename) {
-		if(preg_match('/^[a-zA-Z0-9_.-]+$/',$filename)){
-			return true;
-		} else {
-			$this->photo_errors[] = "Invalid characters in file name. Only characters, numbers and (_-.) allowed.";
-			return false;
-		}
-	}
-
+	/**
+	* Protected function - checks file type
+	* is a valid extension
+	*
+	* @param string a file extension
+	*/
 	protected function is_valid_extension($type) {
 		$ext_type = array('gif','jpg','jpe','jpeg','png');
 		$file_ext = substr(strrchr($type,'.'),1);
 		if(in_array($file_ext, $ext_type)){
 			return true;
 		} else {
-			return $this->photo_errors[] = "Files must be of either type jpeg, jpg, jpe, gif or png.";
+			$this->photo_errors[] = "Files must be of either type jpeg, jpg, jpe, gif or png.";
 		}
 	}
 
-	protected function user_has_existing_photo($user_id){
+	/**
+	* Protected function - Checks database
+	* for existing user image
+	*
+	* @param int user id
+	* @return bool true if user has existing photo
+	* @var string $image_name default image if no existing photo
+	*/
+	protected function user_has_existing_photo($id){
 		global $db;
-		$sql = "SELECT * FROM user_photo WHERE user_id = $user_id";
+		$sql = "SELECT * FROM user_photo WHERE user_id = $id";
 		if($result = $db->query($sql)){
 			if($db->has_rows($result)){
 				$res_array = $db->fetch_array($result);
 				$this->existing_filename = $res_array['filename'];
 				$this->existing_filetype = $res_array['type'];
 				return true;
+			} else {
+				$this->image_name = 'avatar_default.png';
 			}
 		}
 	}
 
-	protected function delete_existing_image($filename, $type){
+	/**
+	* Protected function - Moves uploaded
+	* file to the filesystem
+	*
+	* @return bool true on success, false on failure
+	*/
+	protected function moved_uploaded_file(){
+		if(move_uploaded_file($this->tmp_name, SITE_ROOT.DS.self::$photo_dir.'/'.$this->filename.$this->type)){
+			return true;
+		} else {
+			$this->photo_errors[] = "Error moving file to file system. Please try again later.";
+			return false;
+		}
+	}
+
+
+	/**
+	*	Private function - Deletes a image file
+	* from the server filesystem
+	*
+	* @param string filename name of the image file
+	* @param string type extension of file
+	* @return bool true if delete successful
+	*/
+	private function delete_existing_image($filename, $type){
 		if(file_exists(SITE_ROOT.DS.self::$photo_dir.DS.$filename.$type)){ // if file exists, delete it
 			if(unlink(SITE_ROOT.DS.self::$photo_dir.DS.$filename.$type)){
 				return true;
@@ -138,26 +240,34 @@ class Image extends MySQLDatabase{
 		}
 	}
 
-	protected function update_image(){
+	/**
+	* Private function - Updates user photo
+	*/
+	private function update_image(){
 		global $db;
 
-		$sql = "UPDATE user_photo ";
+		$sql = "UPDATE ".self::$table_name." ";
 		$sql.= "SET filename = '$this->filename', type = '$this->type', size = $this->size ";
 		$sql.= "WHERE user_id = $this->user_id";
 		if($result = $db->query($sql)) {
 			if($this->moved_uploaded_file()){
-				$this->message = "Update Successful";
+				Message::$message = "Image update successful!";
 				$this->image_name = $this->filename.$this->type;
+				return false;
 			}
 		} else {
 			$this->photo_errors[] = "There was an error updating your profile picture. Please try again at a later time.";
 		}
 	}
 
-	protected function insert_image(){
+	/**
+	* Private function - Insert new image
+	* into database
+	*/
+	private function insert_image(){
 		global $db;
 
-		$sql = "INSERT INTO user_photo (";
+		$sql = "INSERT INTO ".self::$table_name." (";
 		$sql.= "user_id, filename, type, size ";
 		$sql.= ") VALUES (";
 		$sql.= "$this->user_id, '$this->filename', '$this->type', $this->size)";
@@ -167,50 +277,31 @@ class Image extends MySQLDatabase{
 				return false;
 			} elseif($this->moved_uploaded_file()) {
 				// success
-				$this->message = "Insert Successful";
+				Message::$message = "Image upload successful!";
 				$this->image_name = $this->filename.$this->type;
+				return false;
 			}
 		}
 	}
 
-	protected function moved_uploaded_file(){
-		if(move_uploaded_file($this->tmp_name, SITE_ROOT.DS.self::$photo_dir.'/'.$this->filename.$this->type)){
-			return true;
-		} else {
-			$this->photo_errors[] = "Error moving file to file system";
-			return false;
-		}
-	}
 
-	/*
-	*	Public function - retrieves user image
-	* information from database based on the users's
-	* user id.
-	* Creates image path and checks server file system
-	* for matching image
+
+	/**
+	* Protected function - Validates a
+	* string for acceptable (safe) characters
 	*
-	*	@return string path to file image if exists
-	*	else
-	* @return string path to default image 'Upload Photo'
+	* @param string image file
 	*/
-	public function retrieve_user_photo(){
-		global $db;
-		$sql = "SELECT filename, type FROM ".self::$table_name." WHERE ";
-		$sql.= "user_id = $this->user_id";
-		if($result = $db->query($sql)){
-			if($db->has_rows($result)){
-				$result_array = $db->fetch_array($result);
-				$image_name = $result_array['filename'].$result_array['type'];
-				$image_path = SITE_ROOT.DS.self::$photo_dir.DS.$image_name;
-				if(file_exists($image_path)){
-					$this->image_name = $image_name;
-				} else {
-					/* display image of 'Please Upload a Photo' */
-					$this->photo_errors[] = "Please upload a photo";
-				}
-			}
-		}
-	}
+	// protected function is_valid_filename($filename) {
+	// 	if(preg_match('/^[a-zA-Z0-9_.-]+$/',$filename)){
+	// 		return true;
+	// 	} else {
+	// 		$this->photo_errors[] = "Invalid characters in file name. Only characters, numbers and (_-.) allowed.";
+	// 		return false;
+	// 	}
+	// }
+
+
 }
 
 $image = new Image();

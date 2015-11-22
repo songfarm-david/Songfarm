@@ -1,4 +1,4 @@
-sandbox/
-uploaded_images/
+#sandbox/
+#uploaded_images/
 phpinfo.php
-template.htm
+#template.htm
