@@ -17,12 +17,15 @@
    .callContainer {
        margin-left: auto;
        margin-right: auto;
+       margin-top: auto;
+       
        overflow: hidden;
        height: 540px;
        position:fixed;
        background-color:#333333;
        float: right;
        width: 960px;
+       
        -webkit-touch-callout: none;
        -webkit-user-select: none;
        -khtml-user-select: none;
@@ -293,6 +296,12 @@ cursor: pointer;
     background-position:-74px -70px;
 }
 
+.fullscreen {
+    width: 49px;
+    height: 49px;
+    background: url("../images/fullscreen.png");
+    background-position:0px 0px;
+}
 .disconnect {
     width:56px;
     height:49px;
@@ -328,6 +337,11 @@ cursor: pointer;
     margin-left: 325px;
 }
 
+.right10 {
+    float: right;
+    margin-right: 0px;
+}
+
 .displayname {
   position: absolute;
   top: 5px; 
@@ -338,7 +352,7 @@ cursor: pointer;
   overflow:hidden;
   font-weight: 500; 
   font-style: normal; 
-  font-family: 'Gotham Rounded A', 'Gotham Rounded B', sans-serif;  
+  font-family: 'sans-serif', 'Gotham Rounded A', 'Gotham Rounded B', sans-serif;  
   color: white; 
   text-shadow: 1px 1px 1px #000;
   white-space: nowrap;
@@ -367,7 +381,7 @@ cursor: pointer;
   overflow: hidden;
   text-overflow: ellipsis;
   -o-text-overflow: ellipsis;
-  -moz-binding: url('assets/xml/ellipsis.xml#ellipsis');
+  -moz-binding: url('assets/xml/ellipsis.xml#ellipsis'); 
   cursor:default;
 }
 

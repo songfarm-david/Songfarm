@@ -6,6 +6,7 @@
 <html lang="en">
     <head>
         <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width">
         <meta name="description" content="Songfarm nurtures music talent and cultivates songwriters' careers from the ground up!">
         <title>Songfarm - Growing Music Talent From The Ground Up</title>
         <!-- <link rel="shortcut icon" type="image/x-icon" href="images/songfarm_favicon.png" /> -->
@@ -20,19 +21,17 @@
         <link href="css/songfarmvideo.css" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
         <script src="https://code.oovoo.com/webrtc/oovoosdk-2.0.0.min.js"></script>
-        <script type="text/javascript" src="js/songfarm.VideoHelper-0.0.5.js"></script>	
-    	<script type="text/javascript" src="js/jquery-ui.js"></script>
+        <script type="text/javascript" src="js/jquery-ui.js"></script>
 	</head>        
 <?php
 	
 	$songcircle_id = $_GET['songcircleid'];
-	if($songcircle_id != '')
-	{
-
-	}
+	
 ?>
 
+    <script type="text/javascript" src="js/songfarm.VideoHelper-0.0.5.js"></script>	
     <script>
+    
     var isFireFox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
 	var conference = null;
@@ -45,9 +44,10 @@
 	var participantId = getQSParam("pid");
 	log("calling: ooVoo.API.init");
 	
-	var resolution = "HIGH";		//"NORMAL";
+	var resolution = "NORMAL";		//"HIGH";
 	var isResolutionSupported = true;
 	var enableLogs = true;
+	var username = "<?php  echo $session->username ?>";
 
 	try {
 	    document.addEventListener("fullscreenchange", onFullScreenStateChanged, false);
@@ -85,7 +85,7 @@
 	    } else {
 	        log("callback: getUserMedia");
 	        log("calling: ooVoo.API.Conference.init");
-	        conf = ooVoo.API.Conference.init({ video: true, audio: true }, onConference_init);
+	        conf = ooVoo.API.Conference.init({ video: true, audio: true}, onConference_init);
 	    }
 	}
 
@@ -100,7 +100,7 @@
 	        conf.onConferenceStateChanged = onConferenceStateChanged
 	        conf.onRemoteVideoStateChanged = onRemoteVideoStateChanged;
 	        conf.onLocalStreamPublished = onStreamPublished;
-
+	        
 	        join();
 	    }
 	    else {
@@ -112,6 +112,9 @@
 	    showPopup("dvAccess");
 	    log("callback: ooVoo.API.Conference.setConfig:" + JSON.stringify(res));
 	    if (!res.error) {
+	    	
+	    	//alert(username);
+	    	$("#dname").val(username);
 	        log("calling: conf.join");
 	        //user login
 	        conf.join(document.getElementById("confid").value, $("#user_id").val(), user_token, document.getElementById("dname").value, function (res) {
@@ -122,6 +125,8 @@
 	            else
 	                error(JSON.stringify(res));
 	        });
+			
+	        
 	    }
 	    else {
 	        error(JSON.stringify(res));
@@ -202,16 +207,25 @@
 	            mainVideo.id = "vid_" + myId;
 	            callParticipants.push(myId);
 
+		        if(callParticipants.length <2)
+		        {
+		        	showPopup("dvWelcomeMessage");
+		        }
+		        else
+		        {
+		        	hidePopup("dvWelcomeMessage");
+			    }
+
 	            var mainDName = document.getElementById("mainDisplayName");
 	            mainDName.textContent = document.getElementById("dname").value;
 	            mainDName.id = "name_" + myId;
-	            //document.querySelector("#mainVideoContainer div").style.display = "block";
+	            document.querySelector("#mainVideoContainer div").style.display = "block";
 	            document.querySelector(".main_control_bar").id = "control_" + myId;
 	            break;
 	        case ooVoo.API.ConferenceStateEventType.ACCESS_DENIED:
 	            log("ooVoo.API.ConferenceStateEventType.ACCESS_DENIED");
 	            showPopup("dvDenied");
-	            //conf.disconnect();
+	            conf.disconnect();
 	            break;
 	        case ooVoo.API.ConferenceStateEventType.DEVICE_NOT_FOUND:
 	            log("ooVoo.API.ConferenceStateEventType.DEVICE_NOT_FOUND");
@@ -225,6 +239,7 @@
 	        case ooVoo.API.ConferenceStateEventType.CONNECTED:
 	            log("ooVoo.API.ConferenceStateEventType.CONNECTED");
 	            //showPopup("dvName");
+
 	            break;
 	        case ooVoo.API.ConferenceStateEventType.DISCONNECTED:
 	            log("ooVoo.API.ConferenceStateEventType.DISCONNECTED");
@@ -259,6 +274,8 @@
 	function onStreamPublished(stream)
 	{
 	    addLocalVideo(stream);
+	    
+	    
 	}
 	function addLocalVideo(stream) {
 	    var $mainVideo = $($(".localVideo")[0]);
@@ -298,6 +315,7 @@
 	    document.getElementById("mainVideoContainer").classList.add("in_call");
 	    log("calling: ooVoo.API.Conference.setConfig: " + resolution);
 	    conf.setConfig({ videoResolution: ooVoo.API.VideoResolution[resolution], videoFrameRate: new Array(5, 15) }, onConference_setConfig);
+		//enterFullScreen();
 	}
 	function log(msg) {
 	    if (enableLogs) {
@@ -392,6 +410,14 @@
 	}
 	function drawCallWindows()
 	{
+		 if(callParticipants.length <2)
+	        {
+	        	showPopup("dvWelcomeMessage");
+	        }
+	        else
+	        {
+	        	hidePopup("dvWelcomeMessage");
+		    }
 	    var mainVideoContainer = document.getElementById("mainVideoContainer");
 	    var remoteVideosContainer = document.getElementById("remoteVideosContainer");
 
@@ -423,6 +449,8 @@
 	    $videoElement.show(function () {
 	        VideoHelper.optimizeVideo($videoElement.parent().attr("id"));
 	    });
+
+	    //enterFullScreen();
 	}
 	function hideVideo($videoElement, enableClick) {
 	    if (!$videoElement.attr("id")) {
@@ -480,7 +508,7 @@
 	    }
 	    var message = "{ \"action\": \"change_name\" ,\"value\": \"" + dname + "\" }";
 	    ooVoo.API.Conference.sendData(myId, "", message, function (msg) {
-	        //hidePopup('dvName');
+	        hidePopup('dvName');
 	        $("#name_" + myId).text(dname);
 	        if (msg && msg.error) {
 	            log(JSON.stringify(msg.error));
@@ -544,7 +572,7 @@
 	    });
 	}
 	function onFilterChanged(uid, filter) {
-	    VideoHelper.setFilter(uid, filter);
+	    //VideoHelper.setFilter(uid, filter);
 	}
 	function toggleFullScreen() {
 	    if (isFullScreen()) {
@@ -556,6 +584,7 @@
 	}
 	function enterFullScreen()
 	{
+		//alert('fullscreen');
 		var el = document.documentElement, rfs = el.requestFullScreen || el.webkitRequestFullScreen || el.mozRequestFullScreen;
 	    rfs.call(el);
 	}
@@ -616,14 +645,15 @@
     }
 
 </script>
-<body>
+<body >
+
 	<div>
         <input type="hidden" id="confid" value="<?php echo $songcircle_id; ?>" />
         <input type="hidden" id="user_token" value=""  />
         <input type="hidden" id="user_id" value="<?php echo $_SESSION['user_id']; ?>" />
     </div>
-    <div class="callContainer" ondblclick="toggleFullScreen();">
-        <div id="popupsContainer">
+    <div class="callContainer" ondblclick="toggleFullScreen();" >
+        <div id="popupsContainer" align=center>
             <div id="dvBackground" class="popup_background"></div>
             <div id="dvAccess" class="popup_form" style="display: none; height: 250px;top:125px;">
                 <h2>Allow camera and mic access </h2>
@@ -636,12 +666,19 @@
                 <div class="popup_access_denied">
                 </div>
                 <div style="text-align:center;font-size:12px;margin-left:20px;margin-right:20px;">
-                Find this icon in the URL bar and allow ooVoo access your media devices.</div>
+                Find this icon in the URL bar and allow songfarm access your media devices.</div>
             </div>
             <div id="dvNotFound" class="popup_form" style="display: none; height: 165px; top: 163px;">
                 <h2>Media device not found </h2>
                 <div style="text-align:center;font-size:16px;margin-left:20px;margin-right:20px;">
                   Please make sure you have camera and microphone connected.
+                </div>
+            </div>
+            
+            <div id="dvWelcomeMessage" class="popup_form" style="display: none; height: 165px; top: 163px;">
+                <h2>Welcome to Song circle </h2>
+                <div style="text-align:center;font-size:16px;margin-left:20px;margin-right:20px;">
+                  We will start once at least 2 participant join the Songcirlce. Please wait.
                 </div>
             </div>
             <div id="dvName" class="popup_form" style="height: 135px; top: 178px;">
@@ -653,18 +690,18 @@
                 <input type="button" value="CONTINUE" onclick="changeDisplayName();" style=" width: 110px !important; height: 40px !important; line-height: 40px; margin: 0px 0 35px 50px !important;" />
                 <br />
              </div> 
-<!--            <div id="dvNotSupported" class="popup_form" style="height: 178px; top: 156px;"> -->
-<!--                 <h2>Sorry for the inconvenience</h2> -->
-<!--                 <div class="popup_browser_not_supported"></div> -->
-<!--                  	<div style="float: left; margin-left: 4px;"> -->
-<!--                     Your browser is incompatible ! -->
-<!--                     <br />Please use latest Chrome/Firefox/Opera<br /> browsers. -->
-<!--                 </div> -->
-<!--             </div> -->
+<!--            <div id="dvNotSupported" class="popup_form" style="height: 178px; top: 156px;"> --> 
+<!-- 				<h2>Sorry for the inconvenience</h2>  -->
+<!-- 				<div class="popup_browser_not_supported"></div>  -->
+<!-- 				<div style="float: left; margin-left: 4px;">  -->
+<!-- 					Your browser is incompatible !  -->
+<!-- 					<br />Please use latest Chrome/Firefox/Opera<br /> browsers.  -->
+<!-- 				</div>  -->
+<!-- 			</div>  -->
         </div>
-<!--         <iframe id="iframeWebRTC" height="540" width="960" allowtransparency="true" frameborder="0" scrolling="no"></iframe> -->
+		<!-- <iframe id="iframeWebRTC" height="540" width="960" allowtransparency="true" frameborder="0" scrolling="no"></iframe> --> 
         
-        <div class="videoWinContainer" oncontextmenu="return false;">
+        <div class="videoWinContainer" oncontextmenu="return false;" >
             <div id="mainVideoContainer" class="two_wayMainVideoContainer">
                 <video autoplay id="mainVideo" muted class="localVideo" style="display:none;"></video>
                 <div id="mainDisplayName" class="displayname"></div>
@@ -679,9 +716,11 @@
                 <div id="localMic" title="mute mic" class="icon mic left10 disabled" onclick="muteLocal(event)"></div>
                 <div id="localSpk" title="mute speakers" class="icon spk left10 disabled" onclick="muteRemote(event)"></div>
                 <div id="localCam" title="stop video" class="icon cam left10 disabled" onclick="stopLocal(event)"></div>
-                <div id="localFilter" title="select filter" class="icon filter left10 disabled" onclick="$('#ddlFilters').show();"></div>
+                <!--  <div id="localFilter" title="select filter" class="icon filter left10 disabled" onclick="$('#ddlFilters').show();"></div>  -->
+                
             </div>
             <div class="left100"><div id="disconnect" class="icon disconnect_disabled" onclick="conf.disconnect()"></div></div>
+            <div id="fullscreen" title="change fullscreen " class="icon fullscreen right10" onclick="toggleFullScreen();"></div>
         </div>
         <div id="ddlFilters" class="filters_container" onmouseleave="$('#ddlFilters').hide();">
             <div onclick="changeFilter('filter-grayscale');">Grayscale</div>

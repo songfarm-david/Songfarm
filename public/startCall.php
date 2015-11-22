@@ -27,9 +27,10 @@
 <?php
 	
 	$songcircle_id = $_GET['songcircleid'];
-	if($songcircle_id != '')
+	if($songcircle_id == '')
 	{
-		
+		echo  "No Songcircle is provided, please try to jon after login to songfarm.ca";
+		return;
 	}
 ?>
 

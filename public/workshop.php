@@ -406,6 +406,52 @@ if(isset($_SESSION['message'])){echo $_SESSION['message'];}
     <?php //echo $message; ?>
   </form>
 	<script>
+	function ifsongcirclestarted() {
+
+		var methodtype = "start";
+		//alert('pradip1');
+		$.ajax({
+			method : "POST",
+			url	: "../includes/songcircleapi.php",
+			data : {'type':methodtype},
+			success: function(data){
+				if(data != "")
+		  		{
+					var arr = data.split(",");
+					
+					for (var i = 0; i < (arr.length-1); i++) 
+					{ 
+						$('#divJoin' + arr[i]).show();
+					}
+		      	}
+			}
+		});
+	}
+	var interval = setInterval(ifsongcirclestarted, 110000);
+		
+	function ifsongcirclecomlpeted() {
+
+		var methodtype = "complete";
+		//alert('pradip1');
+		$.ajax({
+			method : "POST",
+			url	: "../includes/songcircleapi.php",
+			data : {'type':methodtype},
+			success: function(data){
+				if(data != "")
+		  		{
+					var arr = data.split(",");
+					
+					for (var i = 0; i < (arr.length-1); i++) 
+					{ 
+						$('#divJoin' + arr[i]).hide();
+					}
+		      	}
+			}
+		});
+	}
+	var interval = setInterval(ifsongcirclecomlpeted, 120000);
+	
 	// user settings dropdown
 	$('ul#settings-trigger').on('mouseover', function(){
 		$('#settings-drop-down').show();
@@ -490,6 +536,8 @@ if(isset($_SESSION['message'])){echo $_SESSION['message'];}
 			});
 		});
 	});
+
+	
 	</script>
 </body>
 </html>
