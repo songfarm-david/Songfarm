@@ -1,24 +1,27 @@
 <?php require_once('../includes/initialize.php'); include_once('../includes/countries_array.php');
-/* verify that user is logged in, if not, re-direct */
+
+// check if user is logged in, if no, redirect to index.php
 if(!$session->is_logged_in()) { redirect_to('index.php'); }
-$image->user_id = $session->user_id;
-if(isset($_POST['submitCountryCode'])){
-	$user->user_location($_POST['timezone'],$_POST['country_name']);
-	$user->insert_timezone($session->user_id, $_POST['timezone'], $_POST['country_name']);
-}
+
+if(isset($_SESSION['message'])){echo $_SESSION['message'];}
+
+
+/* regarding getting and setting country code
+upon initial entry into workshop.php */
+
+// if user submit's the country code form, insert data into database
+if(isset($_POST['submit_country_code'])){
+	$user->insert_timezone($session->user_id, $_POST['timezone'], $_POST['country_name']); }
+
 // if user timezone is NOT set, request geoplugin
 if(!$user->has_location($session->user_id)){
-	$country_array = generate_ip_data();	// catch returned array from generate_ip_data()
+	// catch returned array in $country_array from generate_ip_data()
+	$country_array = generate_ip_data();
+	// create new variables from the array
 	list($country_code, $country_name) = $country_array;
 } else{
 	$user->has_location($session->user_id);
 }
-	// $country_array = generate_ip_data();
-	// list($country_code, $country_name) = $country_array;
-	// $user->country = $country_name;
-
-
-if(isset($_SESSION['message'])){echo $_SESSION['message'];}
 ?>
 <!doctype html>
 <html lang="en">
@@ -29,73 +32,18 @@ if(isset($_SESSION['message'])){echo $_SESSION['message'];}
 	<script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 </head>
 <body>
+
+
 	<!-- Top navigation bar -->
-	<nav>
-		<h1>Navigation</h1>
-		<span class="logo">Songfarm</span>
-		<ul id="settings-trigger">
-			<li>
-				<a href="#"><?php echo $session->username; ?></a>
-				<ul id="settings-drop-down" class="hide">
-					<li>
-						<a href="profile.php?id=<?php echo $session->user_id; ?>">View Profile</a>
-					</li>
-					<li>
-						<a href="artist_settings.php">Settings</a>
-					</li>
-					<li>
-						<a href="../includes/sign_out.php">Log Out</a>
-					</li>
-				</ul>
-			</li>
-		</ul>
-	</nav>
+	<?php include(LIB_PATH.DS.'layout'.DS.'user_navigation.php'); ?>
 	<!-- End of navigation bar -->
 
-	<!-- Main user header -->
-	<header>
-		<!-- Hold user image -->
-		<?php echo isset($_POST['submit_image']) ? $image->upload_image($_FILES['file_upload']) : $image->retrieve_user_photo(); ?>
-		<div class="user_image" style="background-image:url('../uploaded_images/<?php echo $image->image_name; ?>')"></div>
-		<form id="upload_user_image" action="<?php echo $_SERVER['PHP_SELF'].'?id='.$session->user_id ?>" method="post" enctype="multipart/form-data" class="hide">
-			<input type="hidden" name="MAX_FILE_SIZE" value="2000000">
-			<input type="file" name="file_upload">
-			<input type="submit" name="submit_image" value="Upload">
-			<?php if($image->photo_errors) { ?>
-				<span>Photo error:</span>
-				<ul>
-					<?php foreach ($photo_errors as $error) {
-						echo "<li>{$error}</li>";
-					} ?>
-				</ul>
-			<?php } ?>
-		</form>
-		<!-- end of form -->
-		<!-- H1 holds user name -->
-		<h1><?php echo $session->username; ?></h1>
-			<!-- hold user information
-			- Roles
-			- Location
-			- Style(s)
-			-->
-			<!-- <span class="attr">Singer/Songwriter, Lyricist</span> -->
-				<?php
-				if(isset($user->city)){
-					echo "Located in <span style=\"font-weight:bold;\">".$user->city;
-				}
-				if(isset($user->country)){
-					echo ", ".$user->country;
-				}
-				echo "</span>";
+	<!-- Main User header -->
+	<?php include(LIB_PATH.DS.'layout'.DS.'user_header.php'); ?>
+	<!-- end of Main User header -->
 
-				?>
-			<!-- hidden form for image -->
-	</header>
-	<!-- end of Main user header -->
-	<!-- Message display
-	- a place for user messages to appear
-	-->
 	<main>
+
 		<div id="overlay" class="hide"></div>
 			<div id="tab-container">
 				<ul>
@@ -109,6 +57,7 @@ if(isset($_SESSION['message'])){echo $_SESSION['message'];}
 			<!-- if a SongTag is submitted, run the insert_song() method -->
 			<?php if(isset($_POST['submit_songTag'])){$songbook->insert_song($session->user_id);} ?>
 			<section id="tab-content">
+
 				<article id="songbook" class="songbook hide">
 					<h2>Songbook</h2>
 					<div id="songbook-container">
@@ -233,64 +182,22 @@ if(isset($_SESSION['message'])){echo $_SESSION['message'];}
 					$songcircle->create_songcircle($session->user_id);
 				}
 				?>
+
 					<h2>Upcoming Songcircles:&nbsp;&nbsp;<span><a href="#">(What's a Songcircle?)</a></span></h2>
 
-					<?php // if user timezone is not currently set, prompt them to set it.
-					if($user->has_location($session->user_id)) {
-						$songcircle->timezone = $user->timezone;
-						$songcircle->display_songcircles();
-					} else { ?>
-						<div id="timezone-container">
-					<?php	if(!empty($country_name)){ ?>
-							<h1>Timezone based on <span class="country"><?php echo $country_name ?></span></h1>
-							<?php } ?>
+					<!-- Logic, Form and JS for user timezone upon first entry workshop.php -->
+					<?php include(LIB_PATH.DS.'layout'.DS.'user_timezone.php'); ?>
 
-							<p>Please select your country and most accurate timezone from the list to begin</p>
-							<form id="countryCode" method="post" action="<?php echo $_SERVER['PHP_SELF']; ?>">
-								<select id="countries" name="countries">
-								<?php if(isset($country_code) && !empty($country_name)){ ?>
-									<option value="<?php echo $country_code ?>"><?php echo $country_name; ?></option>
-								<?php }
 
-								$continents = [];
-								foreach ($countries as $country) {
-									$continents[] = $country['continent'];
-									$continents = array_unique($continents);
-								}
-								foreach($continents as $key => $continent){
-									echo "<optgroup label=\"{$continent}\"></optgroup>";
-									foreach ($countries as $key => $value) {
-										if($value['continent'] == $continent){
-											echo "<option value=\"$key\">". $value['country'] ."</option>";
-										}
-									}
-								}
-								?>
-							</select>
-							<!-- <input type="hidden" id="country-codezzz" value="<?php if(isset($country_code)){echo $country_code;} ?>"> -->
-							<select id="timezones" name="timezone"></select>
-							<input type="submit" name="submitCountryCode" value="Submit">
-							</form>
-						</div>
-				<?php	} ?>
-				<?php if(isset($songcircle->message)){
-					echo "<div class=\"songcircle_msg\">".$songcircle->message."</div>";
-				} ?>
+				<?php //if(isset($songcircle->message)){
+					//echo "<div class=\"songcircle_msg\">".$songcircle->message."</div>";
+				//} ?>
 				<script>
-				// show participants on hover
+				// show div#participants on hover
 				var participantsDiv = $('div#participants');
 				$('span.registered').on('mouseover', function(){
-					if(participantsDiv.hasClass('hide')){
-						participantsDiv.fadeIn().removeClass('hide');
-					}
-				// 	else
-				// 	{
-				// 		participantsDiv.fadeOut().addClass('hide');
-				// 	}
+					participantsDiv.toggle();
 				});
-				// participantsDiv.on('mouseout', function(){
-				// 	participantsDiv.fadeOut().addClass('hide');
-				// })
 
 
 
@@ -452,15 +359,7 @@ if(isset($_SESSION['message'])){echo $_SESSION['message'];}
 	}
 	var interval = setInterval(ifsongcirclecomlpeted, 120000);
 	
-	// user settings dropdown
-	$('ul#settings-trigger').on('mouseover', function(){
-		$('#settings-drop-down').show();
-	});
-	$('ul#settings-drop-down, ul#settings-trigger').on('mouseout', function(){
-		$('#settings-drop-down').hide();
-	});
-
-  // host songcircle overlay
+	// host songcircle overlay
   $('#host_songcircle').on('click', function(){
     $('form#host_a_songcircle, div#overlay').fadeIn().removeClass('hide');
   });
@@ -498,46 +397,11 @@ if(isset($_SESSION['message'])){echo $_SESSION['message'];}
       e.preventDefault();
     });
 	})
-
-	// user image
-	$('.user_image').on('click', function(){
-		$('#upload_user_image').fadeIn('fast').removeClass('hide');
-	})
 	</script>
-	<script>
-	// country code
-	$(document).ready(function(){
-		var initialCountryCode = $('#country-code').val();
-		$.ajax({
-			method : "POST",
-			url	: "../includes/timezonesFromCountryCode.php",
-			data : {'country_code':initialCountryCode},
-			success: function(data){
-				$('#timezones').html(data);
-			}
-		});
-		$('#countries').on('change',function(){
-			var countryCode = $(this).val(); // this gets the country code
-			// get the text of the selected option field -- this comes in the form of a Country Name
-			var countryName = $('#countries option:selected').text();
-			console.log(countryName);
-			// target form and insert a hidden input with this value
-			var countryForm = $('form#countryCode select:nth-child(2)').after('<input type="hidden" name="country_name" value="'+countryName+'">');
-			console.log(countryForm);
-			$.ajax({
-				method : "POST",
-				url	: "../includes/timezonesFromCountryCode.php",
-				data : {'country_code':countryCode,
-								'country_name':countryName},
-				success: function(data){
-					// console.log(data);
-					$('#timezones').html(data);
-				}
-			});
-		});
-	});
+	<!-- Global message -->
+	<?php include(LIB_PATH.DS.'global_message.php'); ?>
+	<!-- end of Global messages -->
 
 	
-	</script>
 </body>
 </html>
