@@ -1,11 +1,12 @@
+<?php require_once(LIB_PATH.DS."login.php"); ?>
 <header id="header" >
-	<img src="images/top-bar.png">
+	<!-- <img src="images/top-bar.png">
 	<ul id="social_head">
 		<li class="facebook"></li>
 		<li class="twitter"></li>
 		<li class="linkedIn"></li>
 		<li><a href="index.php#contactUs" title="Contact Us" rel="bookmark"></a></li>
-	</ul>
+	</ul> -->
 	<h1 class="hide">Songfarm</h1><!-- h1 hidden // anchored link to top -->
 	<nav>
 		<h2 class="hide">Navigation</h2><!-- nav h2 is hidden -->

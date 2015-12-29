@@ -1,0 +1,404 @@
+@font-face {
+    font-family: 'museo_sans100';
+    src: url('../fonts/museo_sans/museosans-100-webfont.eot');
+    src: url('../fonts/museo_sans/museosans-100-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/museo_sans/museosans-100-webfont.woff2') format('woff2'),
+         url('../fonts/museo_sans/museosans-100-webfont.woff') format('woff'),
+         url('../fonts/museo_sans/museosans-100-webfont.ttf') format('truetype'),
+         url('../fonts/museo_sans/museosans-100-webfont.svg#museo_sans100') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'museo_sans300';
+    src: url('../fonts/museo_sans/museosans-300-webfont.eot');
+    src: url('../fonts/museo_sans/museosans-300-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/museo_sans/museosans-300-webfont.woff2') format('woff2'),
+         url('../fonts/museo_sans/museosans-300-webfont.woff') format('woff'),
+         url('../fonts/museo_sans/museosans-300-webfont.ttf') format('truetype'),
+         url('../fonts/museo_sans/museosans-300-webfont.svg#museo_sans300') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'museo_sans700';
+    src: url('../fonts/museo_sans/museosans-700-webfont.eot');
+    src: url('../fonts/museo_sans/museosans-700-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/museo_sans/museosans-700-webfont.woff2') format('woff2'),
+         url('../fonts/museo_sans/museosans-700-webfont.woff') format('woff'),
+         url('../fonts/museo_sans/museosans-700-webfont.ttf') format('truetype'),
+         url('../fonts/museo_sans/museosans-700-webfont.svg#museo_sans700') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'museo_sans900';
+    src: url('../fonts/museo_sans/museosans-900-webfont.eot');
+    src: url('../fonts/museo_sans/museosans-900-webfont.eot?#iefix') format('embedded-opentype'),
+         url('../fonts/museo_sans/museosans-900-webfont.woff2') format('woff2'),
+         url('../fonts/museo_sans/museosans-900-webfont.woff') format('woff'),
+         url('../fonts/museo_sans/museosans-900-webfont.ttf') format('truetype'),
+         url('../fonts/museo_sans/museosans-900-webfont.svg#museo_sans900') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@charset "UTF-8";
+
+/*	Global styles		*/
+html, body, div, p, ul, h1, h2, h3, img, em, small, li, span, time, section, article, header, nav, footer, table, th, td, tr{
+	margin:0;
+	padding:0;
+	border: 0;
+	vertical-align: baseline;
+	font: inherit;
+	background: transparent;
+  font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
+	box-sizing: border-box;
+}
+header, nav, main, section, article, footer, figure, figcaption{
+	display: block;
+}
+
+.hide{display: none;}
+a{
+	text-decoration: none;
+}
+
+button{
+	background: #99EE20;
+	color: #2A5C03;
+  width: 100%;
+}
+button a{
+  padding:12px 0;
+  display: block;
+  width: 100%; height:100%;
+  color:inherit;
+}
+button:hover{
+	background: #3FA8F4;
+	color: #fff;
+	cursor: pointer;
+}
+button.inactive{
+	background: rgba(0,0,0,.25);
+  color: rgba(42, 92, 3, .5);
+}
+button.inactive:hover{ cursor: default;}
+button.inactive a{ cursor: default;}
+button:focus {outline:0;}
+
+main{
+  width:100%; height: 100%;
+	border-bottom: 1px dotted #ccc;
+  background: #eee;
+	/*padding: 45px 0 5px;*/
+	box-sizing: border-box;
+}
+
+
+/* Navigation */
+nav{
+	width:100%;
+	height:45px;
+	background: #99EE20;
+}
+nav h1{
+	display:none;
+}
+nav span.logo{
+	line-height: 45px;
+	margin-left: 18.3%;
+	text-transform: uppercase;
+}
+nav ul#settings-trigger{
+	float:right;
+	/*margin-right: 0.7%;*/
+}
+nav ul#settings-trigger li{
+	display: inline-block;
+	line-height: 45px;
+  position: relative;
+  padding-left: 64px;
+  padding-right: 13px;
+}
+nav ul#settings-trigger li a{
+	padding: 10px 6px;
+}
+nav ul#settings-trigger > li a:before{
+  content:url('../images/arrows_and_lines/workshop-arrow-down.png');
+  position: absolute;
+  line-height: 16px; /* half it's height */
+  top:50%;
+  -webkit-transform: translateY(-50%);
+   -moz-transform: translateY(-50%);
+   -ms-transform: translateY(-50%);
+   transform: translateY(-50%);
+  left:32px;
+}
+nav ul#settings-trigger > li a:before:hover{
+  background: #fff;
+}
+nav li ul#settings-drop-down{
+  position:absolute;
+  border: 1px solid black; border-top: none;
+  width:218px;
+  right: 13px;
+
+}
+nav li ul#settings-drop-down li{
+  display: block; padding: 0;
+  width: 100%; height: 100%;
+  background: #ccc;
+  text-align: left;
+}
+nav li ul#settings-drop-down li:first-child{
+  border-bottom:1px solid #ddd;
+}
+nav li ul#settings-drop-down li a{
+  display: block; padding: 0;
+  background: #ccc;
+  padding-left: 44px;
+  padding-right: 19px;
+}
+nav li ul#settings-drop-down li a:hover{
+  background: #fff;
+}
+nav li ul#settings-drop-down li a:before{
+  content: '';
+}
+
+/* Main Header */
+header{
+	width:50%;
+	margin: 45px auto;
+  padding: 16px;
+  padding-left: 154px;
+	height:135px;
+	border:1px dotted black;
+  position: relative;
+}
+.user_image{
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-repeat: no-repeat;
+  background-position: center center; /* Center image in the circle */
+  background-size: cover; /* Make sure it covers the circle, as there is no bg repeat*/
+  border:1px solid black;
+  position:absolute;
+  left:25px;
+  transition-duration: .250s;
+}
+.user_image:hover{
+  cursor: pointer;
+  opacity: 0.75;
+}
+
+header h1{
+	font-size: 1.8em;
+}
+header h1 + span{ margin-left: 1px;}
+header span{ font-size: 0.9em;}
+
+
+/* upload image form */
+#upload_user_image{
+  position: absolute;
+  right:0; bottom:0; left:132px;
+  height: 30px;
+  background-color: #eee;
+  /*margin: auto;*/
+  padding:1em;
+  text-align: left;
+}
+
+
+/* Main Panels */
+div#tab-container{
+  width:100%;
+  height:68px;
+  border-bottom: 2px solid #ccc;
+  background: #ddd;
+}
+div#tab-container ul{
+  width:1096px;
+  height:100%;
+  margin:0 auto;
+  padding:0;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
+}
+div#tab-container ul li{
+  display: inline-block;
+  background: #eee;
+  border: 2px solid #ccc;
+  border-bottom: none;
+  width:50%;
+  margin:0; padding: 0;
+  box-sizing: border-box;
+  height: 100%;
+  text-align: center;
+  line-height: 60px;
+  font-size: 1.85em;
+}
+div#tab-container ul li:last-child{border-left: none;}
+div#tab-container ul li a{
+  display: block;
+  height:inherit;
+}
+div#tab-container ul li a:hover{background: #ddd;}
+div#tab-container ul li.active{height:103%;}
+div#tab-container ul li.active a:hover{
+  height:105%;
+  background: none;
+  cursor: default;
+}
+section#tab-content{
+  background:#fff;
+  height:100%;
+}
+section#tab-content article{
+  width:1096px;
+  margin:0 auto;
+}
+
+/*#tab-container{
+  width:1280px;
+  margin:0 auto;
+	position: relative;
+}
+li.tab{
+	width:426px;
+	display: inline-block;
+	text-align: center;
+	position:relative;
+	z-index:3;
+}
+li.tab a{
+	display: block;
+	background: #eee;
+	border: 1px solid #aaa;
+	width: 100%;
+	line-height: 56px;
+	font-size:1.2em;
+}
+li.tab a:hover{	background: #fff; }
+li.tab a.active{ border-bottom: none; background: #fff; }
+
+article.tab-content{
+	height: 360px;
+	width: 1280px;
+	padding: 38px 0;
+	border-top: none;
+	position: absolute;
+	top:53px; left:0;
+	background: #fff;
+
+}
+.tab-content h3{
+  margin:-8px 0 28px;
+	font-size: 1.8em;
+  box-sizing: border-box;
+}
+
+#tab-songcircle > div{
+  height: 100%;
+  padding: 1em 58px 0;
+  overflow-y: scroll;
+}*/
+
+.aside-left{
+  position: absolute;
+  width: 19%;
+  border-right: 2px dotted #ccc;
+  padding:1em 1em 0;
+  box-sizing: border-box;
+}
+.aside-left button{
+  border-radius: 12px;
+  margin-bottom: 0.75em;
+  font-size: inherit;
+  border:1px solid #86D21B;
+}
+
+table{
+	width: 100%;
+	border:1px solid green;
+	border-spacing: 0;
+	text-align: center;
+	margin-bottom: 2em;
+}
+td{
+	border: 1px solid black;
+	vertical-align: middle;
+	padding:16px 9px;
+	line-height: 1.3;
+}
+td.date{
+	width:26%;
+	font-size: 0.9em;
+}
+td.type{
+	font-size: 1.2em;
+}
+td.register{
+	width: 19%;
+}
+.cannot_register input{
+  opacity: 0.5;
+}
+.registered{
+	font-size: 0.65em;
+}
+span.permission{
+  font-size: 0.85em;
+  color: #DA7C7C;
+}
+
+/* Suggest bar */
+
+section#suggest-bar{
+  position: fixed;
+  bottom: 0;
+  width:100%;
+  height:250px;
+  background: rgba(10, 32, 8, 0.85)
+}
+section#suggest-bar > img{
+  position: absolute;
+  top:-65px;
+}
+section#suggest-bar > img:hover{
+  cursor: pointer;
+  opacity: 0.9;
+}
+
+/* Host Songcircle form */
+#overlay{
+		position:fixed;
+		z-index: 1000;
+		top:0;
+		right:0;
+		bottom:0;
+		left:0;
+		background-color: rgba(0,0,0,0.5);
+}
+form#host_a_songcircle{
+  width:40%;
+  margin:5em auto;
+  padding:0 2em 1em;
+  border: 2px dotted #99EE20;
+  position:fixed;
+  top:0; right:0; bottom:0; left:0;
+  z-index:2000;
+  background: white;
+}
+form#host_a_songcircle h1{
+  font-size: 1.8em;
+  margin:1em 0;
+}
+form#host_a_songcircle p{margin-bottom:0.5em;}
+form#host_a_songcircle input, select{margin-bottom: 1.5em;}

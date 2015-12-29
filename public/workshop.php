@@ -182,7 +182,7 @@ else
 				// if user register/unregister for songcircle
 				if(isset($_POST['register'])){
 					$songcircle->timezone = $user->has_location($session->user_id);
-					$songcircle->register($_POST['songcircle_id'], $session->user_id, $session->username, $_POST['songcircle_name'], $_POST['date_of_songcircle']);
+					$songcircle->register($_POST['songcircle_id'], $session->user_id, $session->username, $_POST['songcircle_name'], $_POST['date_of_songcircle'], $songcircle->timezone, $user->country);
 				} elseif(isset($_POST['unregister'])){
 					$songcircle->timezone = $user->has_location($session->user_id);
 					$songcircle->unregister($_POST['songcircle_id'], $session->user_id, $_POST['songcircle_name'], $_POST['date_of_songcircle']);

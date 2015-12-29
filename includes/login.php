@@ -8,4 +8,5 @@ if(isset($_POST['submit'])) {
 } else {
 	$username = "";
 }
+
 ?>

@@ -1,5 +1,4 @@
-<?php require_once("../includes/initialize.php");
-require_once(LIB_PATH.DS."login.php"); ?>
+<?php require_once("../includes/initialize.php"); ?>
 <!doctype html>
 <html lang="en">
     <head>
@@ -209,6 +208,10 @@ require_once(LIB_PATH.DS."login.php"); ?>
       <!-- registration form -->
       <?php require_once(LIB_PATH.DS."forms/register.php"); ?>
       <!-- end of: registration form -->
+      <!-- Login form -->
+
+      <!-- end of form -->
+
 
 
 

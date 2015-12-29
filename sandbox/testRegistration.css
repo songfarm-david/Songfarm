@@ -1,0 +1,98 @@
+.hide{ display:none; }
+span.error{
+	position:absolute;
+	left:65px;
+	width:65%;
+	font-size: 0.8em;
+	color:red;
+}
+#overlay{
+		position:fixed;
+		z-index: 1000;
+		top:0;
+		right:0;
+		bottom:0;
+		left:0;
+		background-color: rgba(0,0,0,0.5);
+}
+#register-form{
+	position: fixed;
+	z-index: 1001;
+	top:18px;
+	right:0;
+	bottom:0;
+	left:0;
+	color: #2A5C03;
+	width:30%; height:390px;
+	margin:auto;
+	padding:2em auto;
+	text-align: center;
+	font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
+	background:#fff;
+}
+#register-form img{
+	position: relative;
+	z-index: 1002;
+	top:15px; right:15px;
+}
+#register-form div{
+	margin:24px 16px;
+}
+#register-form div > p{
+	margin:60px auto 50px;
+}
+#register-form div + div > p{
+	margin-bottom: 16px;
+}
+#register-form div.user{
+	height:126px; width:126px;
+	border-radius: 63px;
+	display: inline-block;
+	line-height: 120px;
+	margin:0 0.4em 36px;
+	background-color: #99EE20;
+	font-size:1.1em;
+}
+#register-form div.user:hover{
+	cursor: pointer;
+	background-color: #3FA8F4;
+	color:#fff;
+	transition-duration: .250s;
+}
+#register-form div + div input:not([type=submit]){
+	border: 1px solid #99EE20;
+	display: block;
+	margin: 1.5em auto 0.25em;
+	padding:0.65em; padding-left: 1em;
+	width:70%;
+	border-radius: 24px;
+	font-size: inherit;
+}
+#register-form div + div input:focus{
+	box-shadow: 0 0 0 2pt #99EE20;
+	outline: none;
+}
+#register-form div + div input[type=submit]{
+	cursor: pointer;
+	border-radius: 24px;
+	margin:1.75em auto 16px;
+	padding:0.5em 1em;
+	display: block;
+	background-color: #99EE20;
+	color:#fff;
+	border:none; outline:none;
+	width:65%;
+	font-size: 1.2em;
+}
+#register-form div + div input[type=submit]:hover{
+	background-color: #3FA8F4;
+	color:#fff;
+	transition-duration: .250s;
+}
+#register-form div#message p{
+	margin-top:6em;
+}
+
+.inactive{
+	background: rgba(0,0,0,.5);
+}

@@ -83,13 +83,26 @@ class MySQLDatabase{
 		return filter_var($email, FILTER_VALIDATE_EMAIL);
 	}
 
+	/**
+	*	Checks an email against the database
+	* for duplicate
+	*
+	* @param string a valid email
+	* @return result if result
+	*/
 	function unique_email($email) {
-		$sql = "SELECT * FROM user_register ";
+		$sql = "SELECT user_email FROM user_register ";
 		$sql.= "WHERE user_email='{$email}' ";
 		$sql.= "LIMIT 1";
 		return $this->query($sql);
 	}
 
+	/**
+	*	Checks for presence of value
+	*
+	* @param mixed a value
+	* @return $value
+	*/
 	public function has_presence($value) {
 		$value = trim($value);
 		if(isset($value) && !empty($value)){

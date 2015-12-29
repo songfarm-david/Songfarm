@@ -14,12 +14,12 @@ class User extends MySQLDatabase{
 	*
 	* @var $username string name of user
 	* @var $city string user's city
-	* @var $country string user's country
+	* @var $country_name string user's country
 	* @var $timezone string user's timezone
 	*/
 	public $username;
 	public $city;
-	public $country;
+	public $country_name;
 	public $full_timezone;
 	public $timezone;
 
@@ -52,12 +52,12 @@ class User extends MySQLDatabase{
 	public function has_location($user_id){
 		global $db;
 
-		$sql = "SELECT timezone, country, full_timezone FROM ".self::$table_name." WHERE user_id = {$user_id}";
+		$sql = "SELECT timezone, full_timezone, country_name FROM ".self::$table_name." WHERE user_id = {$user_id}";
 		$result = $db->query($sql);
 		if($db->has_rows($result) > 0){
 			$row = $db->fetch_array($result);
 			$this->full_timezone = $row['full_timezone'];
-			$this->user_location($row['timezone'], $row['country']);
+			$this->user_location($row['timezone'], $row['country_name']);
 			return $this->timezone = $row['timezone'];
 		} else {
 			return false;
@@ -72,11 +72,11 @@ class User extends MySQLDatabase{
 	* @param string timezone
 	* @param string country
 	*/
-	public function insert_timezone($user_id, $timezone, $country, $full_timezone){
+	public function insert_timezone($user_id, $timezone, $country_name, $full_timezone){
 		global $db;
 
-		$sql = "INSERT INTO ".self::$table_name." (user_id, timezone, country, full_timezone) ";
-		$sql.= "VALUES ($user_id, '$timezone', '$country', '$full_timezone')";
+		$sql = "INSERT INTO ".self::$table_name." (user_id, timezone, country_name, full_timezone) ";
+		$sql.= "VALUES ($user_id, '$timezone', '$country_name', '$full_timezone')";
 		$result = $db->query($sql);
 	}
 
@@ -85,11 +85,11 @@ class User extends MySQLDatabase{
 	*
 	* @var int user id
 	*/
-	public function update_timezone($id, $timezone, $country, $full_timezone){
+	public function update_timezone($id, $timezone, $country_name, $full_timezone){
 		global $db;
 
 		$sql = "UPDATE ".self::$table_name." ";
-		$sql.= "SET timezone = '$timezone', country = '$country', full_timezone = '$full_timezone' ";
+		$sql.= "SET timezone = '$timezone', country = '$country_name', full_timezone = '$full_timezone' ";
 		$sql.= "WHERE user_id = $id";
 		$result = $db->query($sql);
 	}
@@ -117,14 +117,14 @@ class User extends MySQLDatabase{
 	* @param string timezone
 	* @param string country
 	*/
-	protected function user_location($timezone, $country){
+	protected function user_location($timezone, $country_name){
 		$this->city = $this->clean_city($timezone);
-		$this->country = $country;
+		$this->country = $country_name;
 	}
 
 
 }
 
-$user = new User;
+$user = new User();
 
 ?>

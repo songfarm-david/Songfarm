@@ -87,6 +87,7 @@ header{
   font-family: 'museo_sans300', Arial, Helvetica, sans-serif;
   border: 1px solid #fff;
   height: 168px;
+  margin-top:-12px; /* edit */
 }
 header > img{
   position: absolute;
@@ -155,6 +156,7 @@ header ul li{
   position: relative;
 }
 header ul li a{ padding: .3em .1em; }
+/*header ul li a[title="songcircle"]{ font-size: 1.5em; }*/
 header ul#links li a:hover::before{
   content:url('../images/arrows_and_lines/navActive_arrow.png');
   position:absolute; left:-15px; top:3px;
@@ -171,6 +173,7 @@ header ul#links li a[title="Log In"]:hover:before{
   content:'';
   position: relative;
 }
+header nav ul#links li a[href^="songcircle"]{ font-size:1.1em;}
 
 header .logo{
   height: 84px; width: 370px;
