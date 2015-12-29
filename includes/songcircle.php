@@ -63,7 +63,7 @@ class Songcircle extends MySQLDatabase{
 
 		$sql = "SELECT ";
 		$sql.= "songcircle_id, date_of_songcircle, songcircle_name, ";
-		$sql.= "songcircle_permission, participants, user_register.user_id, user_name ";
+		$sql.= "songcircle_permission, participants, user_register.user_id, user_name, songcircle_status ";
 		$sql.= "FROM songcircle_create, user_register ";
 		$sql.= "WHERE songcircle_create.user_id = user_register.user_id";
 		if(!$result = $db->query($sql)){
@@ -107,7 +107,7 @@ class Songcircle extends MySQLDatabase{
 						if(empty($_SESSION)){
 							$output.= "<input type=\"submit\" value=\"Register\" data-id=\"triggerRegForm\">";
 						} else {
-							$output.= "<input type=\"submit\"".$this->is_registered($row['songcircle_id']);
+							$output.= "<input type=\"submit\"".$this->is_registered($row['songcircle_id'], $row['songcircle_status']);
 						}
 						$output.= "</form>";
 					}
@@ -159,7 +159,7 @@ class Songcircle extends MySQLDatabase{
 		}
 	}
 
-	protected function is_registered($songcircle_id){
+	protected function is_registered($songcircle_id, $status){
 		global $db;
 		// if something is true, button says register
 		$user_id = $_SESSION['user_id'];
@@ -167,13 +167,27 @@ class Songcircle extends MySQLDatabase{
 		// echo $sql . '<br>';
 		if($result = $db->query($sql)){
 			$rows = $db->has_rows($result);
-			if($rows > 0){
-				return "value=\"Unregister\" name=\"unregister\"> &nbsp; &nbsp; <a href=startCall.php?songcircleid=". $songcircle_id. " target=new>join</a>";
+			if($rows > 0)
+			{
+				$returnValue = "value=\"Unregister\" name=\"unregister\"> &nbsp; &nbsp; <div id=\"divJoin$songcircle_id\" ";
+				//echo "status = ". $status;
+				//pbb temp
+				//$status = 1;
+				if($status == 1)
+				{
+					$returnValue .= "  style=\"display: block\">  ";
+				}
+				else
+				{
+					$returnValue .= "  style=\"display: none\">  ";
+				}
+				return $returnValue . "<a href=startCall.php?songcircleid=". $songcircle_id. " target=new>Join</a> </div>";
 			} else {
 				return "value=\"Register\" name=\"register\">";
 			}
 		}
 	}
+
 
 	protected function is_not_registered($songcircle_id){
 		global $db;
@@ -222,6 +236,8 @@ class Songcircle extends MySQLDatabase{
 	// 		Message::$message = "We were unable to delete this songcircle"; // should be more specific
 	// 	}
 	// }
+
+
 
 	/**
 	* Private function - takes a datetime string (in UTC)
