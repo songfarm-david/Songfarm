@@ -53,9 +53,9 @@
                         callback();
                     });
                 });
-
+                	
                 _createDisplayNameContainer(mainVideoId, mainDName, function ($dNameContainer) {
-                    //$dNameContainer.appendTo($container);
+                    $dNameContainer.appendTo($container);
                 });
             });
         });
@@ -72,7 +72,7 @@
                 $controll.appendTo("#mainVideoContainer");
             });
             _createDisplayNameContainer(uId, dName, function ($dNameContainer) {
-                // $dNameContainer.appendTo("#mainVideoContainer");
+                 $dNameContainer.appendTo("#mainVideoContainer");
             });
         });
 
@@ -80,6 +80,7 @@
     }
 
     VideoHelper.removeParticipantThatlLeft = function (uId) {
+    	//alert('pradipremove');
         var $leftVid = $("#vid_" + uId);
         if ($leftVid.parent().attr("id") == "mainVideoContainer") {
             var $remoteVideos = $(".videoContainer");
@@ -163,6 +164,7 @@
     }
 
     VideoHelper.setCallType = function (numOfParticipants) {
+    	//alert('pradip');
         if (numOfParticipants > 5) {
             callType = VideoHelper.CallType.MORE_THAN_FIVE_WAY;
         }
@@ -254,8 +256,8 @@
     }
 
     function _createDisplayNameContainer(vidId, dName, callback) {
-        //var $nameContainer = $("<div id=\"name_" + vidId + "\" class=\"displayname\" title=\"" + dName + "\">" + dName + "</div>");
-        //callback($nameContainer);
+        var $nameContainer = $("<div id=\"name_" + vidId + "\" class=\"displayname\" title=\"" + dName + "\">" + dName + "</div>");
+        callback($nameContainer);
         callback();
     }
 
@@ -417,7 +419,7 @@
                     });
                 }
                 _createDisplayNameContainer(uId, dName, function ($dNameContainer) {
-                    //$dNameContainer.appendTo("#mainVideoContainer");
+                    $dNameContainer.appendTo("#mainVideoContainer");
                 });
             });
         });
@@ -440,7 +442,7 @@
             });
 
             _createDisplayNameContainer(uId, dName, function ($dNameContainer) {
-                //$dNameContainer.appendTo($destinationContainer);
+                $dNameContainer.appendTo($destinationContainer);
             });
         });
 

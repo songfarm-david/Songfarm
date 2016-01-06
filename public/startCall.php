@@ -1,10 +1,7 @@
-<?php 
-	require_once("../includes/initialize.php"); 
+<?php
+	require_once("../includes/initialize.php");
 	if(!$session->is_logged_in()) { redirect_to('index.php'); }
 ?>
-
-
-
 <html lang="en">
     <head>
         <meta charset="utf-8">
@@ -23,19 +20,18 @@
         <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
         <script src="https://code.oovoo.com/webrtc/oovoosdk-2.0.0.min.js"></script>
         <script type="text/javascript" src="js/jquery-ui.js"></script>
-	</head>        
+	</head>
 <?php
-	
 	$songcircle_id = $_GET['songcircleid'];
-	if($songcircle_id != '')
+	if($songcircle_id == '')
 	{
-		
+		// note for david: message format
+		echo  "No Songcircle is provided, please try to jon after login to songfarm.ca";
+		return;
 	}
 ?>
-
-    
 <body>
-	
+
   <script>
 	var conference = null;
 	var conferenceId = "<?php echo $songcircle_id ?>";
@@ -45,12 +41,12 @@
 	if (!sessionToken) {
 	    //login to get session token
 	    participantId = "123" + <?php  echo $session->user_id ?>;
-	    
+
 		//	"url to send response with the session token";
 	    var redirectUrl = location.href;
 	    var newredirectUrl = redirectUrl.replace("startCall.php","videocall.php");
 	    redirectUrl = newredirectUrl + "&pid=" + participantId;
-	    
+
 	    ooVoo.API.connect({
 	        token: appToken,
 	        isSandbox: true,
@@ -70,9 +66,8 @@
             results = regex.exec(location.search);
         return results === null ? "" : results[1].replace(/\+/g, " ");
     }
-</script>  
-
+</script>
 
 </body>
-   
+
 </html>

@@ -308,6 +308,52 @@ else
     <?php //echo $message; ?>
   </form>
 	<script>
+	function ifsongcirclestarted() {
+
+		var methodtype = "start";
+		//alert('pradip1');
+		$.ajax({
+			method : "POST",
+			url	: "../includes/songcircleapi.php",
+			data : {'type':methodtype},
+			success: function(data){
+				if(data != "")
+		  		{
+					var arr = data.split(",");
+					
+					for (var i = 0; i < (arr.length-1); i++) 
+					{ 
+						$('#divJoin' + arr[i]).show();
+					}
+		      	}
+			}
+		});
+	}
+	var interval = setInterval(ifsongcirclestarted, 110000);
+		
+	function ifsongcirclecomlpeted() {
+
+		var methodtype = "complete";
+		//alert('pradip1');
+		$.ajax({
+			method : "POST",
+			url	: "../includes/songcircleapi.php",
+			data : {'type':methodtype},
+			success: function(data){
+				if(data != "")
+		  		{
+					var arr = data.split(",");
+					
+					for (var i = 0; i < (arr.length-1); i++) 
+					{ 
+						$('#divJoin' + arr[i]).hide();
+					}
+		      	}
+			}
+		});
+	}
+	var interval = setInterval(ifsongcirclecomlpeted, 120000);
+	
 	// host songcircle overlay
   $('#host_songcircle').on('click', function(){
     $('form#host_a_songcircle, div#overlay').fadeIn().removeClass('hide');
@@ -350,5 +396,7 @@ else
 	<!-- Global message -->
 	<?php include(LIB_PATH.DS.'global_message.php'); ?>
 	<!-- end of Global messages -->
+
+	
 </body>
 </html>

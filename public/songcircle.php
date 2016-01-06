@@ -1,8 +1,18 @@
 <?php require_once("../includes/initialize.php");
 
-if($country_array = generate_ip_data()){
-	// ip address generates a country code and country name
-	list($country_code, $country_name) = $country_array;
+/**
+* References 'functions.php' generate_ip_data() function
+*/
+if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
+
+	$expected = array('country_code','country_name','city_name','continent_code');
+
+	while (list($key, $value) = each($location_by_ip)) {
+		if( in_array($key, $expected) ){
+			// assign variable variables
+			${$key} = $value;
+		}
+	}
 }
 
 ?>
@@ -39,72 +49,52 @@ if($country_array = generate_ip_data()){
 		<body>
       <?php include("../includes/layout/header.php") ?>
       <section>
-        <article><!-- holds background image -->
+
+        <article id="main"><!-- holds background image -->
           <!-- Introduction to Songcircle -->
-          <p>
-            Workshop your latest song in a <span class="bold">professional environment</span> with other songwriters just like you!
-          </p>
-          <p>
-            Register for a Songcircle today!
-          </p>
-          <!-- <h1>Songcircle</h1>
-          <h2>What is a Songcircle?</h2>
-          <p>
-            A Songcircle is a virtual songwriter's circle - a group of songwriters coming together, sharing their songs and ideas, inspiring and helping one another, and having a good time doing it - all done over the web.
-          </p>
-          <p>
-            The <strong>Songcircle</strong> is one of Songfarm's trademark features. To participate in one, all you need is an internet connection, a webcam and a song.
-          </p> -->
+          <h1 id="headline">
+            <span class="bold">Real songs. Real songwriters. Real-time.</span>
+          </h1>
+          <h2 id="byline">
+            Get inspired. Join songwriters just like you in a live, virtual songwriter's circle. Register for a Songcircle today!
+          </h2>
         </article>
-        <article>
-          <!-- Schedule of Songcircles -->
-          <h2>Upcoming Songcircles:</h2>
+
+        <article id="schedule">
+
+          <h3>Upcoming Songcircles:</h3>
+
+					<!-- Schedule of Songcircles -->
           <?php
           $songcircle->open_songcircle_exists();
           $songcircle->display_songcircles();
           ?>
 
         </article>
-        <article>
+
+        <article id="aboutSongcircle">
           <h3>What is a Songcircle?</h3>
           <p>
-            A Songcircle is a professional songwriter's circle done over the web.
+            A Songcircle is a virtual songwriter's circle done live over the web in real time.
           </p>
+					<p>
+						It's a unique opportunity to share the songs you're working on with other passionate songwriters from around the world.
+					</p>
+					<p>
+						Songcircle's are free to participate in. There is absolutely no cost involved. All you need is a song, a webcam and an internet connection.
+					</p>
         </article>
+
       </section>
-      <!-- <article id="songcircle"> -->
-        <!-- <h1>Songcircle</h1> -->
-        <!-- <section style="border:1px solid black;">
-          <h2>What is a Songcircle?</h2>
-          <p>
-            A Songcircle is a virtual songwriter's circle - a group of songwriters coming together, sharing their songs and ideas, inspiring and helping one another, and having a good time doing it - all done over the web.
-          </p>
-          <p>
-            The <strong>Songcircle</strong> is one of Songfarm's trademark features. To participate in one, all you need is an internet connection, a webcam and a song.
-          </p>
-          <img src="images/buttons/register_m.png" class="register">
-          <p>
-            <span class="register">Register Today</span> and take part in the next Songcircle!
-          </p>
-        </section> -->
-        <!-- <aside id="schedule">
-          <h3>Scheduled Songcircles:</h3>
-          <p>
-            None scheduled currently.
-          </p>
-        </aside> -->
-      <!-- </article> -->
+
 			<!-- Use RDFa to define songcircle events // schema.org -->
+			<!-- remember to use the '<time></time>' attribute when scheduling songcircles-->
 
       <?php include("../includes/layout/footer.php") ?>
-      <?php //require_once(LIB_PATH.DS."forms/register.php"); ?>
-      <!-- <script type="text/javascript" src="js/jquery.validate.min.js"></script>
-      <script type="text/javascript" src="js/forms.js"></script> -->
-
-      <!-- remember to use the '<time></time>' attribute when scheduling songcircles-->
 
 
-      <!-- registration form -->
+			<!-- Registration Form -->
+
       <div id="overlay"></div>
       <form id="registration_form" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
 
@@ -117,19 +107,20 @@ if($country_array = generate_ip_data()){
     			<!-- <p>
     				Artist Name/Name
     			</p> -->
-    			<input type="text" name="username" maxlength="60" placeholder="Please enter your Name">
+    			<input type="text" name="username" maxlength="60" placeholder="Please enter your Name" tabindex="1">
 					<div class="form_error" name="username"></div>
     			<!-- <p>
     				Email
     			</p> -->
-    			<input type="email" name="user_email" maxlength="60" placeholder="Please enter your Email">
+    			<input type="email" name="user_email" maxlength="80" placeholder="Please enter your Email" tabindex="2">
     			<!-- NOTE: have fallbacks in place for browsers that don't support the email input (ie 8 & 9)-->
 					<div class="form_error" name="user_email"></div>
     		</div>
+
     		<!-- Location -->
     		<div id="loc">
 				<?php if( (isset($country_code) && !empty($country_code)) && (isset($country_name) && !empty($country_name)) ){ ?>
-					<p id="timezone" data-has-ip='hasIP'>
+					<p id="timezone">
 						Please select the most appropriate timezone for your location
 					</p>
 
@@ -138,7 +129,7 @@ if($country_array = generate_ip_data()){
 					<p id="locationMsg">
 						Timezone based on <b><?php echo $country_name; ?></b>
 						<br>
-						<span id="trigger-location">&lpar;Not right?&rpar;</span>
+						<span id="trigger-location" tabindex="4">&lpar;Not right?&rpar;</span>
 					</p>
 
 				<?php } else { ?>
@@ -149,50 +140,54 @@ if($country_array = generate_ip_data()){
 
 				<?php }	?>
 					<div id="user_location" class="hide">
-
   					<?php include('../includes/countries_array.php'); ?>
-  					<select id="country_select">
-  						<!-- options are generated by ip search and country array -->
-  						<?php
-  						// if system can deduce from IP country name and code, then display it
-  						if(isset($country_name) && !empty($country_name)){ ?>
+
+  					<select id="country_select" tabindex="5">
+						<?php	if( (isset($country_name) && !empty($country_name)) && (isset($country_code) && !empty($country_code)) ){ ?>
   							<option value="<?php echo $country_code ?>"><?php echo $country_name; ?></option>
-  						<?php }
+						<?php }
 
-  						// generate countries select menu
-  						$continents = [];
-  						// $countries comes from countries_array.php
-  						foreach ($countries as $country) {
-  							$continents[] = $country['continent'];
-  							$continents = array_unique($continents);
-  						}
+						/* Generate countries array using 'includes/countries_array.php' */
 
-  						foreach($continents as $key => $continent){
-  							// excluding Asia, Africa, Antarctica
-  							if( $continent != 'Asia' && $continent != 'Africa' && $continent != 'Antarctica'){
-  								echo "<optgroup label=\"{$continent}\"></optgroup>";
-  								foreach ($countries as $key => $value) {
-  									if($value['continent'] == $continent){
-  										echo "<option value=\"$key\">". $value['country'] ."</option>";
-  									}
-  								}
-  							}
-  						}
-  						?>
+						$continents = [];
+
+						foreach ($countries as $country) {
+							$continents[] = $country['continent'];
+							$continents = array_unique($continents);
+						}
+
+						foreach($continents as $key => $continent){
+							// excluding Asia, Africa, Antarctica
+							if( $continent != 'Asia' && $continent != 'Africa' && $continent != 'Antarctica'){
+								echo "<optgroup label=\"{$continent}\"></optgroup>";
+								foreach ($countries as $key => $value) {
+									if($value['continent'] == $continent){
+										echo "<option value=\"$key\">". $value['country'] ."</option>";
+									}
+								}
+							}
+						}
+						?>
   					</select>
-  				</div>
 
-    			<!-- hidden inputs -->
-					<input type="hidden" name="fullTimezone" value="">
-    			<input type="hidden" name="city_name" value="<?php if(isset($city_name)){echo $city_name;}?>">
-    			<input type="hidden" name="country_name" value="<?php if(isset($country_name)){echo $country_name;}?>">
-    			<input type="hidden" name="country_code" value="<?php if(isset($country_code)){echo $country_code;}?>">
+  				</div>
 
     		</div>
 
+				<!-- hidden inputs -->
+				<input type="hidden" name="fullTimezone" value="">
+				<input type="hidden" name="city_name" value="<?php if(isset($city_name)){echo $city_name;}?>">
+				<input type="hidden" name="country_name" value="<?php if(isset($country_name)){echo $country_name;}?>">
+				<input type="hidden" name="country_code" value="<?php if(isset($country_code)){echo $country_code;}?>">
+
 				<div>
-					<input type="submit" name="register" value="Register">
+					<div id="codeOfConduct">
+						<input class="double" type="checkbox" name="codeOfConduct" tabindex="6">&nbsp;I have read and agree to adhere to the <a href="#" style="text-decoration:underline" tabindex="7">Code&nbsp;of&nbsp;Conduct</a>
+					</div>
+					<input type="submit" name="register" value="Register" tabindex="8">
 				</div>
+
+				<!-- error output -->
 				<div id="output"></div>
     	</form>
 
@@ -202,41 +197,85 @@ if($country_array = generate_ip_data()){
     <script>
 		$(document).ready(function(){
 
-			var btnRegister = $('input[data-id="triggerRegForm"]');
-			var registrationForm = $('#registration_form');
-			var overlay = $('#overlay');
+			// Where re-direction will go after successful registration:
 
-			// value of country code, generated by IP detection
-			var cityName = $('form#registration_form input[name="city_name"]');
-			var cityNameVal = cityName.val();
+			/* local site */
+			// var redirectURL = 'http://localhost/songfarm-oct2015/public/index.php';
+
+			/* live test site */
+			var redirectURL = 'http://test.songfarm.ca/public/'
+
+			//
+
+			// Register button
+			var btnRegister = $('input[data-id="triggerRegForm"]');
+			// Registration Form
+			var registrationForm = $('#registration_form');
+			// Registration Form Submit
+			var formSubmit = $('#registration_form input[type="submit"]');
+
+			// Overlay for Registration Form
+			var overlay = $('#overlay');
+			// Hide overlay on page load
+			overlay.hide();
+
+			/* IP Generated Data (functions.php) */
+			// city name hidden input value on load
+			var cityName = $('form#registration_form input[name="city_name"]').val();
+			// country code hidden input value on load
 			var countryCode = $('form#registration_form input[name="country_code"]').val();
-			var userCity = $('form#registration_form input[id="user_city"]');
-			// full timezone select dropdown
-			var selectFullTimezone = $('form#registration_form select[name="timezone"]');
-			// full timezone hidden input
+			// country name hidden input value on load
+			var countryName = $('form#registration_form input[name="country_name"]').val();
+			// dyamically inputted:
+			// full timezone hidden input value once selected
 			var fullTimezoneVal = $(registrationForm).find('input[name="fullTimezone"]');
 
+			/* Element variables */
+			// timezone select field dropdown
+			var selectFullTimezone = $('form#registration_form select[name="timezone"]');
+			// container for country select field
 			var countrySelectBoxContainer = $('div#user_location');
-			var textCountry = $('form#registration_form div#loc p#locAssist');
-
-			var countryName = $('form#registration_form input[name="country_name"]').val();
-
+			// country select field dropdown
+			var countrySelectDropdown = $('form#registration_form select#country_select');
 			// username input field
-			var usernameInput 	= $('#registration_form input[name="username"]');
+			var usernameInput = $('#registration_form input[name="username"]');
+			// email input
+			var emailInput			= $('#registration_form input[name="user_email"]');
+			// error output div
+			var outputDiv = $('#registration_form div#output');
 
-			// hide registration form and overlay on page load
-			// registrationForm.hide();
-			overlay.hide();
-			/*
-				position Form off screen
-			*/
+			/* Confirmation notification container (after submission of registration form)*/
+			var confirmContainer = $(document.createElement('div')).attr('id','modal').addClass('modalClass');
+			$('body').prepend(confirmContainer);
 
-			// create notification container with class
-			var container = $(document.createElement('div')).attr('id','modal').addClass('modalClass');
-			$('body').prepend(container);
-
-			// get the songcircle id
+			/* retrieve songcircle id from display_songcircles() ('includes/songcircle.php'); */
 			var songcircleId = $('[data-conference-id]').data('conference-id');
+
+			/* IP sensitive variables */
+			var timezoneText = '<p>Please select your timezone</p>';
+			var timezoneSlctField = '<select name="timezone" tabindex="3"></select>';
+			var formHasIP = $('p#timezone');
+
+			/* Validation measures */
+			var nameIsValid = false;
+			var emailIsValid = false;
+			var codeOfConductRead = false;
+
+			/* Code of Conduct */
+			var codeOfConductDiv = $('#registration_form div#codeOfConduct');
+			var codeOfConductCheckbox = $('#registration_form div#codeOfConduct input[name="codeOfConduct"]');
+
+			// error spans
+			var usernameError		= $('div.form_error[name="username"]');
+			var emailError			= $('div.form_error[name="user_email"]');
+
+			// Code of Conduct error counter to alert user
+			var cOcErrorCounter = 0;
+
+			// email regex
+			var myRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+			var emailRegEx = new RegExp(myRegex);
+
 
 			/**
 			* When user clicks on the 'Register' button on songcircle.php
@@ -246,79 +285,89 @@ if($country_array = generate_ip_data()){
 				e.preventDefault();
 				overlay.show();
 				registrationForm.show();
+
+				/* call remove errors function here */
+
 				usernameInput.focus();
 			});
 
+			/**
+			*	Find the selected option of timezone select field
+			* assign it to fullTimezone hidden field
+			*/
 			function getSetFullTimezone(){
-				fullTimezone = registrationForm.find('select[name="timezone"] option:selected').html();
+				fullTimezone = $(registrationForm).find('select[name="timezone"] option:selected').html();
 				fullTimezoneVal.val(fullTimezone);
 			}
 
 			callAjax(countryCode);
 
+			/**
+			*	Takes IP generated (or user selected) country code,
+			* checks that it is valid
+			*	Sends country code and city name (if available) to country code function
+			*
+			* @params string countryCode - a two letter country code
+			* @return string formatted timezones (1 or more)
+			*/
 			function callAjax(countryCode){
 				if(countryCode.length >= 2){
 					$.ajax({
 						url : '../includes/timezonesFromCountryCode.php',
 						data : {
 							'country_code' : countryCode,
-							'city_name' : cityNameVal
+							'city_name' : cityName
 						},
 						method : 'POST',
 						success: function(data){
 							$('form#registration_form select[name="timezone"]').html(data);
 						}
-					})
+					});
 				}
 			}
 
-			// click event - displays manual location select field
+			/**
+			* Click event for manual country select by user
+			*/
 			$('form#registration_form span#trigger-location').on('click', function(){
 				$(this).hide();
 				$('p#locationMsg').text('Please select your country');
 				countrySelectBoxContainer.css('display','block');
-
-				// $(this).hide();
-				// textCountry.hide();
-				// clear all hidden inputs
-				// $('form#registration_form input[type="hidden"]:not([name="fullTimezone"])').val('');
-
+				countrySelectDropdown.focus();
 			});
 
 			/**
 			*	When user changes the country select box
 			*/
-			$('form#registration_form select#country_select').on('change', function(){
+			$(countrySelectDropdown).on('change', function(){
 
+				// get value of selected option
 				var countryName = $(this).find('option:selected').text();
+				// insert value into country name hidden input field
 				$('form#registration_form input[name="country_name"]').val(countryName);
-
+				// get value of selected option
 				var countryCode = $(this).val();
+				// insert value into country CODE hidden input field
 				$('form#registration_form input[name="country_code"]').val(countryCode);
 
-				// set hidden field of city name to NULL
-				// cityName.val('');
+				// clear value of hidden field
+				$('form#registration_form input[name="city_name"]').val('');
 
 				callAjax(countryCode);
 
-				// clear out input field
-				// userCity.val('');
-				// userCity.focus();
 			});
 
-			// look up data attribute data-has-ip
-			var hasIP = $('p#timezone').data('has-ip');
-
-			// variable containing html to be inserted
-			var timezoneSlctField = '<select name="timezone"></select>';
-			var timezoneText = '<p>Please select your timezone</p>';
-
-			// if we have IP data from user
-			if( hasIP ){
+			/**
+			* Variable Location Form Fields
+			*/
+			// if presence of IP address elements
+			if( formHasIP.length ){
 				$('p#timezone').after(timezoneSlctField);
 			} else {
-				// if not data IP
+				// if no presence of IP address elements
+				// show country selection container
 				countrySelectBoxContainer.show();
+				// insert elements after selection container
 				countrySelectBoxContainer.after(timezoneText+timezoneSlctField);
 			}
 
@@ -329,207 +378,292 @@ if($country_array = generate_ip_data()){
 			$(overlay).on('click', function(){
 				$(this).hide();
 				registrationForm.hide();
-				container.hide();
-			})
+				// hide confirmation notice, if present
+				confirmContainer.hide();
+				// hide Code of Conduct, if present
+				codeOfConContainer.hide();
+			});
 
 			/**
-			*	If the 'Select timezone' select dropdown changes
+			* On Songcircle Registration form submission
 			*/
-			// $(selectFullTimezone).on('change',function(){
-			// 	var fullTimezone = $(this).find(':selected').html();
-			// 	fullTimezoneVal.val(fullTimezone);
-			// 	alert('select value has changed');
-			// });
-
-			// Next: test insert all timezone information into Database
-			// Next: figure out how to do a multi insert into both tables on once, maybe with 'Transactions'
-
-			// on userCity input value, enter value field
-
-			// on form submit
-				var formSubmit = $('#registration_form input[type="submit"]');
 
 			formSubmit.on('click', function(evt){
-				// prevent default
-				// evt.preventDefault();
-				getSetFullTimezone();
 
-				var acptSubmission_name = false;
-				var acptSubmission_email = false;
-				// var acptSubmission_city	= false;
+				/**
+				* Write function for correct outlining of true or false validations
+				*/
 
-				// input fields
-				// var usernameInput 	= $('#registration_form input[name="username"]');
-				var emailInput			= $('#registration_form input[name="user_email"]');
-				var userCityInput		= $('#registration_form input#user_city');
+				// remove the hidden input containing city name so that it doesn't submit with the form
+					$('input[name="city_name"]').remove();
 
-				// input values
-				var usernameVal 		= usernameInput.val();
-				var emailVal 				= emailInput.val();
+				// call function to retrieve full timezone
+					getSetFullTimezone();
 
-				// error spans
-				var usernameError		= $('div.form_error[name="username"]');
-				var emailError			= $('div.form_error[name="user_email"]');
-				var userCityError		= $('div.form_error[name="user_city"]');
-
-				// hide error spans
-				usernameError.hide();
-				emailError.hide();
-
-				// email regex
-				var myRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-				var emailRegEx = new RegExp(myRegex);
-
-				usernameInput.focus();
+				// hide any possible error spans from previous submissions
+					usernameError.hide();
+					emailError.hide();
 
 				// input validations..
-
-					// if username input field empty
-					if(!usernameInput.val()){
+					if( !usernameInput.val() ){	// if username input field empty
 						usernameInput.css('outline','3px solid red').focus();
+						// flag to signal there was an error with the username
+						var username_flag = true;
 					}
 					// if username is too short
-					else if (usernameVal.length <= 1){
+					else if ( usernameInput.val().length <= 1 ){
+						// focus on username input
+						$(usernameInput).focus();
+						// show error message
 						usernameError.html('Username too short!').show();
-						// usernameInput.after('<span class="form_error" name="username">Username too short!</span>');
-					}	else {
-						// clear error outline
+						// flag to signal there was an error with the username length
+						var username_length_flag = true;
+					}	else { // no errors with username
+						// hide any error spans
+						$(usernameError).hide();
+						// Outline goes green -- function used here
 						usernameInput.css('outline','3px solid green');
-						// remove any error spans
-						$('span.form_error[name="username"]').remove();
-
-						acptSubmission_name = true;
+						// validate measure
+						nameIsValid = true;
 					}
-					// if data is good, outline green...
 
-					// if email input field empty
-					if(!emailInput.val()){
-						emailInput.css('outline','3px solid red').focus();
+					if( !emailInput.val() ){ // if email input field empty
+						emailInput.css('outline','3px solid red');
+						// if NOT username error, focus on email field
+						if(!username_flag && !username_length_flag){
+							emailInput.focus();
+						}
 					}
 					// if not not valid email
-					else if(!emailRegEx.test(emailVal)){
+					else if( !emailRegEx.test( emailInput.val() ) ){
+						emailInput.css('outline','3px solid red').focus().select();
 						emailError.html('Please enter a valid email address.').show();
-						// emailInput.after('<span class="form_error" name="user_email">Please enter a valid email address.</span>');
 					}	else {
-						// clear error outline
+						// hide any error spans
+						$(emailError).hide();
+						// change outline to green
 						emailInput.css('outline','3px solid green');
-						// remove any error spans
-						$('span.form_error[name="username"]').remove();
-
-						acptSubmission_email = true;
+						// validate measure
+						emailIsValid = true;
 					}
 
-					// if(!userCity.val()){
-					// 	userCityError.html('Please enter your city').show();
-					// 	userCityInput.css('outline','3px solid red').focus();
-					//
-					// 	// instead of adding .css to different inputs, use a class... addClass().focus();
-					// } else {
-					// 	var userCityVal = userCity.val();
-					// 	$('form#registration_form input[name="city_name"]').val(userCityVal);
-					//
-					// 	userCityInput.css('outline','none');
-					// 	userCityError.remove();
-					//
-					// 	acptSubmission_city = true;
-					// }
+					// if code of conduct button is not checked
 
-				// for testing
-				var outputDiv = $('div#output');
+					if( !codeOfConductCheckbox.prop('checked') ){
+						cOcErrorCounter++;
+						console.log('error counter: '+cOcErrorCounter);
 
-				if(acptSubmission_name && acptSubmission_email){ //  && acptSubmission_city
-					// no errors, submission a go..
-					console.log('no errors, sending data to validator');
+						// construct error message
+						var alertMsg = '<div id="cOcAlertBox">';
+								alertMsg += '<p>Please acknowledge that you have read and understand the <a href="#">Songfarm Code of Conduct</a></p>'
+								alertMsg += '</div>';
+						// append message to div
+						codeOfConductDiv.append(alertMsg);
+						if(cOcErrorCounter >= 3){
+							alert('shake the box');
+							/*
+								program a shaking effect to occur on the error alert box
+							*/
+						}
+					} else {
+						// validate measure
+						codeOfConductRead = true;
+					}
+
+				// test that all validation conditions are met
+				if( nameIsValid && emailIsValid && codeOfConductRead ){
+					// no errors
+					// serialize form data
 					var formData = registrationForm.serialize();
 
+					// send data to validation (includes/registerSongcircle.php)
 					$.ajax({
 						url : '../includes/registerSongcircle.php',
-						data : {
-							formData,
-							songcircleId // contains unique songcircle id
-						},
+						data : { formData, songcircleId	},
 						method : 'POST',
 						success: function(data){
 
-							if($.inArray(true,data) != -1){
-								// if there are errors
-								outputDiv.show().html(data);
-							} else {
+							// hide form and overlay
+							registrationForm.hide();
+							overlay.hide();
 
-								// if no errors
-								console.log('validator returned. No Errors...');
-								// hide any existing errors
-								outputDiv.hide();
-								// hide the form
-								overlay.hide();
-								registrationForm.hide();
+							try {
+							// try to parse return data in JSON format
 
+								// if songcircleObj is JSON
+								var songcircleObj = $.parseJSON(data);// parse return messages
 
+								// construct return message
+								var notificationMsg = "<span>Thank You!</span><br /><br />";
+										notificationMsg += "You have successfully registered for <span>"+songcircleObj.name+'</span> on <span>'+songcircleObj.date_time+'</span><br /><br />';
+										notificationMsg += 'Please check your email for more details, plus tips on how to get the most out of this Songcircle.';
+										notificationMsg += '<br /><br />';
 
+								// timer for page redirect
+								setTimeout(function(){
+									window.location.replace(redirectURL);
+								}, 7000);
 
-								// parse return messages
-								try {
+							} catch(e) {
+								// catch returned error message as 'data'
+								var notificationMsg = data;
 
-									// disable submit button
-									btnRegister.off();
+								// collect error "id" from returned data
+								var newStr = notificationMsg.substring( notificationMsg.indexOf('=')+2, notificationMsg.indexOf("_") );
+								// console.log(newStr);
 
-									// if songcircleObj is JSON
-									var songcircleObj = $.parseJSON(data);
-
-									// construct message
-									var notificationMsg = "<span>Thank You!</span><br /><br />";
-									notificationMsg += "You have successfully registered for <span>"+songcircleObj.name+'</span> on <span>'+songcircleObj.date_time+'</span>';
-									// notificationMsg += ' ('+songcircleObj.user_timezone+' time)';
-									notificationMsg += '<br /><br />';
-									notificationMsg += 'Please check your email for all the details plus tips	on how to make the most out of this upcoming Songcircle!';
-									notificationMsg += '<br /><br />';
-									// notificationMsg += '<input type="button" value="Go">';
-
-									// count down then re-direct
-
-								} catch(e) {
-
-									// catch returned error message
-									var notificationMsg = data;
+								switch (newStr) {
+									case 'name':
+										// usernameInput.css('outline','3px solid red');
+										var nameFocus = true;
+										break;
+									case 'email':
+										var emailFocus = true;
+										// usernameInput.css('outline','3px solid green');
+										// emailInput.css('outline','3px solid red').focus();
+										break;
+									// case 'timezone':
+									// 	console.log('timezone was found');
+									// 	break;
+									// case 'country':
+									// 	console.log('country was found');
+									// 	break;
+									// case 'code':
+									// 	console.log('code was found');
+									// 	break;
+									// default:
+									// 	console.log('End of Switch Statement');
 
 								}
 
-								// append constructed message to notification container
-								$(container).append("<p>"+notificationMsg+"</p>");
+								if(nameFocus || emailFocus){
+									// set timeout to return to form
+									setTimeout(function(){
+										overlay.show();
+										registrationForm.show();
+										if(nameFocus){
+											usernameInput.focus();
+										} else if (emailFocus) {
+											emailInput.focus().select();
+										}
+									}, 2500);
+								} // end of: if(nameFocus || emailFocus)
+								else {
+									setTimeout(function(){
+										console.log('location error occurred');
+										overlay.show();
+										registrationForm.show();
+									}, 7500);
+								}
+
+							} finally {
+								// remove any child elements, if existing
+								$(confirmContainer).empty();
+								// append notification message to container
+								$(confirmContainer).append(notificationMsg);
+								// show overlay & confirmation container
 								overlay.show();
-								container.show();
-
+								confirmContainer.show();
 							}
-						}
-					}); // end of Ajax
 
-				}
-				else
+						} // end of: success: function(data)
+					}) // end of: $.ajax
+				} // end of: if( nameIsValid && emailIsValid && codeOfConductRead )
+			 	else
 				{
-					console.log('there was an error somewhere in the form');
+					console.log('registration failed due to validation error..');
+					// exit script
 					return false;
 				}
-
 				return false;
-
 			}); // end of on formSubmit
 
+			/**
+			*	Hide Code of Conduct error alert box if checked
+			*/
+			codeOfConductCheckbox.change(function(){
+				if( $(this).is(':checked') ){
+					if( $('div#cOcAlertBox').length ){
+						$('div#cOcAlertBox').hide();
+					}
+				}
+			});
 
 			// Trigger for showing songcircle participants
 			var triggerDiv = $('span.registered');
 			var participantsTable = $('#participants');
 
+			/* Events for show/hide songcircle participants */
 			triggerDiv.on('mouseover', function(){
 				participantsTable.show();
-			})
+			});
 
 			triggerDiv.on('mouseout', function(){
 				participantsTable.hide();
-			})
+			});
 
-			// when the notification closes, re-direct to the blog
-			// or have a link to blog
 
+			/* Code of Conduct Modal*/
+
+			/* CSS for Code Of Conduct Modal */
+			var modalTarget = $('#codeOfConduct a');
+			var codeOfConContainer = $('<div id="cOcModal"></div>');
+			var modalClose = $('<button type="button" class="closeCoC">Ok, got it!</button>');
+
+			/**
+			* Function for retrieving 'Songfarm Code of Conduct' from filesystem
+			*/
+			$.fn.getCodeOfConduct = function(){
+				$.get('../codeOfConduct.html', function(data){
+
+					// construct modal
+					codeOfConContainer.html(data);
+					codeOfConContainer.append(modalClose);
+
+					// append modal container at end of body
+					$('body').append(codeOfConContainer);
+
+					// get width of modal container
+					var modalWidth = codeOfConContainer.width();
+
+					// adjust left margin to center modal
+					codeOfConContainer.css('margin-left','-'+modalWidth/2+'px');
+
+					codeOfConContainer.show();
+
+				});
+			}
+
+			// on trigger click
+			modalTarget.on('click', function(){
+				// get page
+				$(this).getCodeOfConduct();
+
+			});
+
+			/**
+			* Open Modal event for Code of Conduct error alert
+			*/
+			$('body').on('click', '#cOcAlertBox', function(){
+				$.fn.getCodeOfConduct();
+			});
+
+			/**
+			* Click event to close Code of Conduct Modal
+			*/
+			$('body').on('click', '.closeCoC', function(){
+				// alert('click');
+				codeOfConContainer.fadeOut().hide();
+			});
+
+			/*
+			*	Code for browser window resize event listener
+			*/
+			// $(window).resize(function(){
+			// 	// alert('resize');
+			// 	/* this function would be used in continuously resizing a margin when
+			// 	someone resizes the browser window */
+			// })
 
 		}); // end document.ready
 

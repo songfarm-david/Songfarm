@@ -6,7 +6,7 @@ if(isset($_POST['country_code'])){
 	$country_code = $_POST['country_code'];
 	$city_name = $_POST['city_name'];
 	// echo back response to Ajax
-	echo timezones_from_countryCode($country_code, $city_name);
+	return timezones_from_countryCode($country_code, $city_name);
 }
 
 /*
@@ -50,13 +50,14 @@ function timezones_from_countryCode($country_code, $city_name){
 		$clean_timezone = User::clean_city($raw_timezone);
 		// echo back options to a select dropdown on workshop.php
 
-
 		if($city_name == $clean_timezone){
 			echo "<option value=\"$raw_timezone\" selected>(".$pretty_offset.") " . $clean_timezone . ' ('.$timezone_abbr.')</option>';
 		} else {
 			echo "<option value=\"$raw_timezone\">(".$pretty_offset.") " . $clean_timezone . ' ('.$timezone_abbr.')</option>';
 		}
-	}
+		
+	} // end of: foreach
+
 }
 
 ?>

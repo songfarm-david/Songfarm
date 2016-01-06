@@ -352,7 +352,7 @@ article#contactUs{
 }
 article#contactUs > h2 { margin: 0 0 24px; padding-top: 24px; }
 div.rounded-contact{
-	height:101px;
+	height:100px;
 	background: url("../images/contact_top_rounded.png") no-repeat;
   margin-top: 115px;
   position:relative;
@@ -826,3 +826,18 @@ form#login-form span#password-error{
   article#about div div.register{ margin-top:39px; }
 
 }*/
+
+/* Styles for Code of Conduct Modal */
+
+#cOcModal{
+  position:fixed; z-index:3001;
+  top:0.75em; left:50%; bottom:0.75em;
+  background: #fff;
+  font-size: 2.7em;
+  width: 60%;
+  padding:1.2em 1.6em;
+  display: none;
+}
+#cOcModal h1{text-align: center; margin:}
+#cOcModal ol{margin:1em 2em; font-size: 0.7em;}
+#cOcModal ol li{padding:0.15em 0;}
