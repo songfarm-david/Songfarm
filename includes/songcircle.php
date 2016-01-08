@@ -199,6 +199,29 @@ class Songcircle extends MySQLDatabase{
 		}
 	}
 
+	/**
+	* Checks a user id against a songcircle id to see
+	* if already registered -- 01/05/2016
+	*
+	* NOTE: used on public/songcircle.php in the songcircle schedule table
+	*
+	* @param (string) songcircle_id
+	* @param (int) user_id
+	* @return (bool) returns true if user IS already registered
+	*/
+	public function alreadyRegistered($songcircle_id, $user_id){
+		global $db;
+		$sql = "SELECT user_id FROM songcircle_register WHERE songcircle_id = '$songcircle_id' AND user_id = $user_id";
+		if($result = $db->query($sql)){
+			$rows = $db->has_rows($result);
+			if($rows > 0){
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+
 
 	public function create_songcircle($user_id){
 		global $db;
@@ -264,8 +287,8 @@ class Songcircle extends MySQLDatabase{
 	/**
 	* An assistive function that laterally calls private user_timezone function
 	*
-	* @param datetime a songcircle datetime
-	* @param PHP timezone the user timezone
+	* @param (datetime) a songcircle datetime
+	* @param (name constant) php timezone name
 	* @return a formatted datetime according to the user's timezone
 	*/
 	public function call_user_timezone($date_of_songcircle, $timezone) {

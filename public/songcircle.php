@@ -231,16 +231,23 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 			var fullTimezoneVal = $(registrationForm).find('input[name="fullTimezone"]');
 
 			/* Element variables */
+
+			// username input field
+			var usernameInput = $('#registration_form input[name="username"]');
+			// email input
+			var emailInput			= $('#registration_form input[name="user_email"]');
 			// timezone select field dropdown
 			var selectFullTimezone = $('form#registration_form select[name="timezone"]');
 			// container for country select field
 			var countrySelectBoxContainer = $('div#user_location');
 			// country select field dropdown
 			var countrySelectDropdown = $('form#registration_form select#country_select');
-			// username input field
-			var usernameInput = $('#registration_form input[name="username"]');
-			// email input
-			var emailInput			= $('#registration_form input[name="user_email"]');
+
+			/* IP sensitive variables */
+			var timezoneText = '<p>Please select your timezone</p>';
+			var timezoneSlctField = '<select name="timezone" tabindex="3"></select>';
+			var formHasIP = $('p#timezone');
+
 			// error output div
 			var outputDiv = $('#registration_form div#output');
 
@@ -251,15 +258,13 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 			/* retrieve songcircle id from display_songcircles() ('includes/songcircle.php'); */
 			var songcircleId = $('[data-conference-id]').data('conference-id');
 
-			/* IP sensitive variables */
-			var timezoneText = '<p>Please select your timezone</p>';
-			var timezoneSlctField = '<select name="timezone" tabindex="3"></select>';
-			var formHasIP = $('p#timezone');
+
 
 			/* Validation measures */
-			var nameIsValid = false;
-			var emailIsValid = false;
+			var nameIsValid 			= false;
+			var emailIsValid 			= false;
 			var codeOfConductRead = false;
+			var timezoneValid 		= false;
 
 			/* Code of Conduct */
 			var codeOfConductDiv = $('#registration_form div#codeOfConduct');
@@ -268,6 +273,10 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 			// error spans
 			var usernameError		= $('div.form_error[name="username"]');
 			var emailError			= $('div.form_error[name="user_email"]');
+
+			$('#registration_form div#loc').append('<div class="form_error" name="timezone"></div>');
+			var timezoneError = $('div.form_error[name="timezone"]');
+
 
 			// Code of Conduct error counter to alert user
 			var cOcErrorCounter = 0;
@@ -389,7 +398,6 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 			*/
 
 			formSubmit.on('click', function(evt){
-
 				/**
 				* Write function for correct outlining of true or false validations
 				*/
@@ -403,8 +411,10 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 				// hide any possible error spans from previous submissions
 					usernameError.hide();
 					emailError.hide();
+					timezoneError.hide();
 
-				// input validations..
+				// // input validations..
+					/* Username */
 					if( !usernameInput.val() ){	// if username input field empty
 						usernameInput.css('outline','3px solid red').focus();
 						// flag to signal there was an error with the username
@@ -427,6 +437,7 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 						nameIsValid = true;
 					}
 
+					/* Email */
 					if( !emailInput.val() ){ // if email input field empty
 						emailInput.css('outline','3px solid red');
 						// if NOT username error, focus on email field
@@ -445,6 +456,14 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 						emailInput.css('outline','3px solid green');
 						// validate measure
 						emailIsValid = true;
+					}
+
+					/* Timezone validation */
+					if( !fullTimezoneVal.val() ){
+						timezoneError.html('Please select your timezone').show();
+					} else {
+						console.log('no timezone error.. Validating true');
+						timezoneValid = true;
 					}
 
 					// if code of conduct button is not checked
@@ -471,15 +490,19 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 					}
 
 				// test that all validation conditions are met
-				if( nameIsValid && emailIsValid && codeOfConductRead ){
+				if( nameIsValid && emailIsValid && timezoneValid && codeOfConductRead ){
 					// no errors
+
 					// serialize form data
 					var formData = registrationForm.serialize();
 
 					// send data to validation (includes/registerSongcircle.php)
 					$.ajax({
 						url : '../includes/registerSongcircle.php',
-						data : { formData, songcircleId	},
+						data : {
+							'formData' : formData,
+							'songcircleId' : songcircleId
+						},
 						method : 'POST',
 						success: function(data){
 
@@ -491,7 +514,7 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 							// try to parse return data in JSON format
 
 								// if songcircleObj is JSON
-								var songcircleObj = $.parseJSON(data);// parse return messages
+								var songcircleObj = $.parseJSON(data); // parse return messages
 
 								// construct return message
 								var notificationMsg = "<span>Thank You!</span><br /><br />";
@@ -506,11 +529,11 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 
 							} catch(e) {
 								// catch returned error message as 'data'
+								console.log(data);
 								var notificationMsg = data;
 
-								// collect error "id" from returned data
+								// collect error key from returned data
 								var newStr = notificationMsg.substring( notificationMsg.indexOf('=')+2, notificationMsg.indexOf("_") );
-								// console.log(newStr);
 
 								switch (newStr) {
 									case 'name':
@@ -546,14 +569,22 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 										} else if (emailFocus) {
 											emailInput.focus().select();
 										}
+										// hide notification box
+										confirmContainer.hide();
 									}, 2500);
-								} // end of: if(nameFocus || emailFocus)
-								else {
+								}
+								else
+								{
+									// overlay.show();
+									// registrationForm.show();
+
+									/* commented out for testing */
 									setTimeout(function(){
 										console.log('location error occurred');
 										overlay.show();
 										registrationForm.show();
 									}, 7500);
+
 								}
 
 							} finally {

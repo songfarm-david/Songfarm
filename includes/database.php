@@ -87,14 +87,31 @@ class MySQLDatabase{
 	*	Checks an email against the database
 	* for duplicate
 	*
-	* @param string a valid email
-	* @return result if result
+	* @param (string) a valid email
+	* @return (object) if result
 	*/
 	function unique_email($email) {
 		$sql = "SELECT user_email FROM user_register ";
 		$sql.= "WHERE user_email='{$email}' ";
 		$sql.= "LIMIT 1";
 		return $this->query($sql);
+	}
+
+	/**
+	* Looks for a user_id against a unique email -- 01/05/2016
+	*
+	* @param string email
+	*/
+	public function getIDbyEmail($email){
+		global $db;
+		$sql = "SELECT user_id FROM user_register WHERE user_email='{$email}' LIMIT 1";
+		if($result = $this->query($sql)){
+			$row = $this->fetch_array($result);
+			$user_id = $row['user_id'];
+			return $user_id;
+		} else {
+			return false;
+		}
 	}
 
 	/**
