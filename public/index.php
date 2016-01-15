@@ -104,10 +104,16 @@
           <div>
             <h2>About</h2>
             <p>
-              Songfarm is a video-based exposure and live-collaboration platform for singer/songwriters. It is also a talent and music discovery site for Industry Professionals and Fans.
-              With a focus on "campfire style" performances and live-streaming technology, Songfarm aims to create a more honest and authentic music experience over the web.
+              Songfarm is a video-based exposure and live-collaboration platform for singer/songwriters. It is also a talent and music discovery site for Industry professionals and fans.
+              With a focus on true performance and emerging live-streaming technology, Songfarm aims to create a more honest and authentic music experience over the web.
               No additives or by-products. Just pure music goodness.
             </p>
+            <!-- First copy //
+            <p>
+              Songfarm is a video-based exposure and live-collaboration platform for singer/songwriters. It is also a talent and music discovery site for Industry professionals and fans.
+              With a focus on "campfire style" performances and live-streaming technology, Songfarm aims to create a more honest and authentic music experience over the web.
+              No additives or by-products. Just pure music goodness.
+            </p> -->
             <div class="register"></div>
             <!-- contains the 'Register Today' button -->
           </div>

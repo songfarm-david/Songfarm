@@ -41,6 +41,13 @@ class MySQLDatabase{
 		}
 	}
 
+	/**
+	* Created: 01/12/2016
+	*/
+	public function hasAffectedRows(){
+		return mysqli_affected_rows($this->connection);
+	}
+
 	public function escape_value($value) {
 		return $value = mysqli_real_escape_string($this->connection, $value);
 	}

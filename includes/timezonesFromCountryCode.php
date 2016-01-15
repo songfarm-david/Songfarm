@@ -1,6 +1,5 @@
 <?php require('initialize.php');
 
-/* Ajax request/response from workshop.php */
 
 if(isset($_POST['country_code'])){
 	$country_code = $_POST['country_code'];
@@ -55,7 +54,7 @@ function timezones_from_countryCode($country_code, $city_name){
 		} else {
 			echo "<option value=\"$raw_timezone\">(".$pretty_offset.") " . $clean_timezone . ' ('.$timezone_abbr.')</option>';
 		}
-		
+
 	} // end of: foreach
 
 }

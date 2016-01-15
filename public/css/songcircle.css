@@ -36,16 +36,16 @@ article#main{
 }
 article#main h1#headline{
 	margin-left: 18.2%; color: white;
-	max-width: 62.5%; font-size:2.7em;
+	max-width: 62.5%; font-size:2.6em;
 	font-family: 'museo_sans700', Arial, Helvetica, sans-serif;
-	padding-top: 1.6em; margin-bottom: 1.6em;
+	padding-top: 1.5em; margin-bottom: 1.6em;
 	line-height: 1.4; text-transform: uppercase;
 }
 
-article#main h2#byline{
+article#main h2{
 	font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
 	font-size:2.1em; line-height: 1.2;
-	padding:1em 4em 0 18.2%;
+	padding:0.6em 4em 0 18.2%;
 	color: #fff;
 }
 
@@ -54,8 +54,9 @@ article#main h2#byline{
 * Schedule
 */
 article#schedule{
-	background-color: #efefef; height:300px;
-	padding-bottom: 1em;
+	background-color: #efefef;
+	/*height:300px;*/
+	padding-bottom: 2em;
 }
 article#schedule h3{
 	padding:2em 0 1em; margin-left: 18.2%; font-size: 2em;
@@ -84,15 +85,13 @@ td{
 	border-right:5px double #7CC919;
 }
 
-td:last-child{ border-right:none; }
-
 td.date{ width:31%; font-size:0.9em; }
-td.type{ font-size: 1.15em;	padding-top: 0.9em; }
+td.name{ font-size: 1.15em;	padding-top: 0.9em; position:relative; }
 
 span.registered{ width: 19%; }
-td:last-child{ width:27%; }
+td:last-child{ width:27%; padding: 0 0.5em; border-right:none; }
 
-td input[type="submit"]{
+td input[type="submit"], button.join{
 	background: #7CC919;
 	padding:9px 18px;
 	border-radius: 9px;
@@ -102,7 +101,9 @@ td input[type="submit"]{
 	box-shadow: 4px 4px 9px 2px #ccc;
 	transition: 0.250s;
 }
-td input[type="submit"]:hover{
+button.join{ margin: 0 auto; }
+
+td input[type="submit"]:hover, button.join:hover{
 	cursor: pointer;
 	color:white; background: #2E63AF;
 	transition: 0.250s;
@@ -110,35 +111,35 @@ td input[type="submit"]:hover{
 }
 
 /* Table participants pop-up */
-table#participants{
-  position: absolute;
-  border:2px solid black; border-bottom: none; border-right: none;
-	text-align: left;
-	width:33%;
-	font-size: .85em;
+table.participantsTable{
+  position: absolute; z-index:1;
+	left:7%; width:100%;
+  border:2px solid black;
+	border-bottom: none; border-right: none;
+	margin-top: 0.2em; font-size: .85em;
 	border-radius: 0;
 }
-table#participants td{
+table.participantsTable td{
 	width:50%;
 	line-height: 1;
 	padding:12px 0 12px 6px;
 	border-bottom: 2px solid black; border-right: 2px solid black;
 	border-spacing: inherit;
 }
-table#participants tr:nth-child(even){ background:#ddd; }
-table#participants tr:nth-child(odd){ background:#eee; }
+table.participantsTable tr:nth-child(even){ background:#ddd; }
+table.participantsTable tr:nth-child(odd){ background:#eee; }
 
 
 /*
 * About Songcircle
 */
 article#aboutSongcircle{
-	padding: 2em 10em 5em;
+	padding: 2em 2em 5em;
 	padding-left: 18.2%;
 	border:1px dotted black;
 }
 article#aboutSongcircle h3{ font-size: 2.1em; padding: 1em 0 1em 0; }
-article#aboutSongcircle p{ font-size: 1.5em; padding-bottom: .5em; }
+article#aboutSongcircle p{ font-size: 1.5em; padding: .5em; padding-left: 0; line-height: 1.3; width: 70%;}
 
 
 /*
@@ -152,9 +153,12 @@ footer{width:1600px; bottom:0; position: relative; }
 */
 #registration_form, #modal{
 	position: fixed; z-index:3000;
-	top:50%; left:50%;
-	margin-top:-400px;
-	width:30%; margin-left: -15%;
+	top:10%; left:50%;
+	transform: translateY(-50%);
+	transform: translateX(-50%);
+	/*margin-top:-400px;*/
+	/*width:30%;*/
+	/*margin-left: -15%;*/
 	background:#fff;
 	padding: 0 3em;
 	background: #ccc;
@@ -163,7 +167,8 @@ footer{width:1600px; bottom:0; position: relative; }
 #registration_form{ width:25%; }
 
 #modal.modalClass{
-	margin-top: -175px;
+	/*margin-top: -175px;*/
+	transform: translateY(-50%);
 	padding:54px 38px;
 	font-size:1.6em;
 	background: #FC3A3A;
@@ -278,10 +283,19 @@ footer{width:1600px; bottom:0; position: relative; }
 /*
 * Misc
 */
-span.register{ text-decoration: underline; transition-duration: .250s;}
-span.register:hover{ cursor: pointer; color:#7CC919; transition-duration: .250s; }
-.cannot_register input{ opacity: 0.5; }
-.registered{
+span.triggerParticipantsTable{ text-decoration: underline; transition-duration: .250s;}
+span.triggerParticipantsTable:hover{ cursor: pointer; color:#7CC919; transition-duration: .250s; }
+
+
+.cannot_register{ opacity: 0.5; }
+td input[type="submit"].cannot_register:hover{
+	cursor:default;
+	background: #7CC919;
+	color:#365A09;
+}
+
+
+.triggerParticipantsTable{
 	font-size: 0.65em;
   cursor: pointer;
   color:blue;
