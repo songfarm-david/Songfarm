@@ -137,7 +137,7 @@ class Songcircle extends MySQLDatabase{
 		// if result
 		if($result = $db->query($sql)){
 			// begin display output:
-			$output = "<table>";
+			$output = "<table id=\"songcircleTable\">";
 
 			// while array rows..
 			while($row = $db->fetch_array($result)){

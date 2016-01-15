@@ -221,10 +221,10 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 			// Where re-direction will go after successful registration:
 
 			/* local site */
-			var redirectURL = 'http://localhost/songfarm-oct2015/public/index.php';
+			// var redirectURL = 'http://localhost/songfarm-oct2015/public/index.php';
 
 			/* live test site */
-			// var redirectURL = 'http://test.songfarm.ca/public/';
+			var redirectURL = 'http://test.songfarm.ca/public/';
 
 			// Register button
 			var btnRegister = $('input[data-id="triggerRegForm"]');

@@ -56,7 +56,7 @@ article#main h2{
 article#schedule{
 	background-color: #efefef;
 	/*height:300px;*/
-	padding-bottom: 2em;
+	padding-bottom: 4em;
 }
 article#schedule h3{
 	padding:2em 0 1em; margin-left: 18.2%; font-size: 2em;
@@ -66,7 +66,7 @@ article#schedule h3{
 /*
 * Schedule table
 */
-table{
+table#songcircleTable{
 	width: 65%;
 	margin:0 auto;
 	border:5px double #7CC919;
@@ -77,6 +77,8 @@ table{
 	font-family: 'museo_sans300', Arial, Helvetica, sans-serif;
 	background-color: #fff;
 }
+#songcircleTable tr:not(:first-child) td{ border-top: 5px double #7CC919;; }
+
 td{
 	vertical-align: middle;
 	padding:16px 0;
