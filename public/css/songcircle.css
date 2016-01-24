@@ -113,20 +113,21 @@ td input[type="submit"]:hover, button.join:hover{
 }
 
 /* Table participants pop-up */
-table.participantsTable{
+#songcircleTable table.participantsTable{
   position: absolute; z-index:1;
 	left:7%; width:100%;
   border:2px solid black;
-	border-bottom: none; border-right: none;
-	margin-top: 0.2em; font-size: .85em;
-	border-radius: 0;
+	font-size: .85em;
+	border-spacing: 0;
+	border-collapse: inherit;;
 }
-table.participantsTable td{
+
+#songcircleTable table tr td:first-child{ border-right: 1px solid #ccc; }
+#songcircleTable table.participantsTable td{
 	width:50%;
 	line-height: 1;
-	padding:12px 0 12px 6px;
-	border-bottom: 2px solid black; border-right: 2px solid black;
-	border-spacing: inherit;
+	padding:12px 0;
+	border:none;
 }
 table.participantsTable tr:nth-child(even){ background:#ddd; }
 table.participantsTable tr:nth-child(odd){ background:#eee; }
@@ -155,12 +156,10 @@ footer{width:1600px; bottom:0; position: relative; }
 */
 #registration_form, #modal{
 	position: fixed; z-index:3000;
-	top:10%; left:50%;
-	transform: translateY(-50%);
-	transform: translateX(-50%);
-	/*margin-top:-400px;*/
-	/*width:30%;*/
-	/*margin-left: -15%;*/
+	top:50%; left:50%;
+	transform: translateY(-50%) translateX(-50%);
+	/* transform centers elements vertically and horizontally.. Guau! */
+	width:4em; min-width: 320px;
 	background:#fff;
 	padding: 0 3em;
 	background: #ccc;
@@ -169,14 +168,14 @@ footer{width:1600px; bottom:0; position: relative; }
 #registration_form{ width:25%; }
 
 #modal.modalClass{
-	/*margin-top: -175px;*/
-	transform: translateY(-50%);
+	transform: translateY(-50%) translateX(-50%);
 	padding:54px 38px;
 	font-size:1.6em;
 	background: #FC3A3A;
   color: #fff;
 	text-align: center;
 	line-height: 1.2;
+	width: 25em; min-width: 320px;
 }
 #modal.modalClass p{ margin:12px; }
 #modal span{

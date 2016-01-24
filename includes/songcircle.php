@@ -96,7 +96,7 @@ class Songcircle extends MySQLDatabase{
 		// initialize date of new open songcircle
 		if(!$last_scheduled_time){
 			// initiate a new custom time here
-			$dt = new DateTime("2016-03-11T19:00:00", new DateTimeZone("UTC"));
+			$dt = new DateTime("2016-01-16T22:00:00", new DateTimeZone("UTC"));
 		} else {
 			// use last scheduled time and add 1 week to it
 			$dt = new DateTime($last_scheduled_time, new DateTimeZone("UTC"));
@@ -178,9 +178,9 @@ class Songcircle extends MySQLDatabase{
 					// if partipants
 					if($participants = $this->fetchParticipantData($row['songcircle_id'])){
 
-						while($participant = $db->fetch_array($participants)){
+						foreach ($participants as $participant) {
 							$output.= "<tr><td><a href=\"profile.php?id=".$participant['user_id']."\">".$participant['user_name']."</a></td>";
-							$output.= "<td>".$participant['timezone'].", ".$participant['country_name']."</td></tr>";
+							$output.= "<td>".$this->formatTimezone($participant['timezone']).", ".$participant['country_name']."</td></tr>";
 						}
 
 					}	else {
@@ -290,7 +290,7 @@ class Songcircle extends MySQLDatabase{
 	* @param (int) a user id
 	* @return (bool) true if row affected
 	*/
-	public function updateUserRegistration($songcircle_id, $user_id){
+	public function confirmUserRegistration($songcircle_id, $user_id){
 		global $db;
 
 		$sql = "UPDATE songcircle_register SET confirm_status = 1, confirmation_key = NULL ";
@@ -378,14 +378,17 @@ class Songcircle extends MySQLDatabase{
 
 		$sql = "SELECT user_id FROM songcircle_register WHERE songcircle_id = '{$songcircle_id}' AND confirm_status = 1";
 		if($result = $db->query($sql)){
-			while( $row = $db->fetch_array($result) ){
-				$user_id = $row['user_id'];
-				$sql = "SELECT user_register.user_id, user_name, user_timezone.timezone, user_timezone.country_name FROM user_register, user_timezone WHERE user_timezone.user_id = {$user_id}";
-				if($result = $db->query($sql)){
-					return $result;
+			if($row = mysqli_num_rows($result) > 0){
+				while( $row = $db->fetch_array($result) ){
+					$user_id = $row['user_id'];
+					$sql = "SELECT user_register.user_id, user_name, user_timezone.timezone, country_name FROM user_register, user_timezone WHERE user_register.user_id = {$user_id}";
+					if($res = $db->query($sql)){
+						$returnData[] = $db->fetch_array($res);
+						mysqli_free_result($res);
+					}
 				}
+				return $returnData;
 			}
-			return false;
 		}
 	}
 
@@ -403,11 +406,25 @@ class Songcircle extends MySQLDatabase{
 		return $date->format('l, F jS, Y - \\<\\b\\r\\> g:i A T');
 	}
 
-
+	/**
+	*	Checks to see if current time is
+	* greater than start time of a songcircle
+	*
+	*	Created: 01/15/2016
+	*
+	* @param (datetime) the current time
+	* @param (datetime) start time of a songcircle
+	* @return (bool) true is expired
+	*/
+	public function isExpiredLink($current_time, $start_time){
+		if($current_time > $start_time){
+			return true;
+		}
+	}
 
 
 	/**
-	* Checks if a user is registered for a given songcircle
+	* Checks if a user is already registered for a given songcircle
 	* (referenced in includes/songcircleRegisterUser.php)
 	*
 	* Updated: 01/13/2016
@@ -431,7 +448,25 @@ class Songcircle extends MySQLDatabase{
 		}
 	}
 
+	/**
+	* Formats a timezone string
+	*
+	* @param (string) a user timezone
+	* @return (string) formatted timezone
+	*/
+	public function formatTimezone($timezone){
+		if( ($pos = strpos($timezone, '/') ) !== false ) { // remove 'America/'
+			$clean_timezone = substr($timezone, $pos+1);
+			if( ($pos = strpos($clean_timezone, '/')) !== false ) { // remove second level '.../'
+				$clean_timezone = substr($clean_timezone, $pos+1);
+				if( ($pos = strpos($clean_timezone, '/')) !== false ) { // remove third level if exist'.../'
+					$clean_timezone = substr($clean_timezone, $pos+1);
+				}
+			}
 
+		}
+		return $clean_timezone = str_replace('_',' ',$clean_timezone); // remove the '_' in city names
+	}
 
 
 

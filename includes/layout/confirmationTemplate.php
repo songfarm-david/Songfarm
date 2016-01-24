@@ -39,16 +39,17 @@ NOTE: this page needs styling
 		<div class="confirmMsg">
 			<?php
 
-				if($success_msg){
-					echo $success_msg;
-				} elseif ($error_msg){
+				if( $error_msg && is_array($error_msg) ){
 					foreach ($error_msg as $error) {
 						echo $error . '<br>';
+					}
+				} else {
+					if($success_msg){
+						echo $success_msg;
 					}
 				}
 
 			?>
 		</div>
-
 	</body>
 </html>

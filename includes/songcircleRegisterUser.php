@@ -166,14 +166,10 @@ if(isset($_POST['formData']) && isset($_POST['songcircleData'])){
 		// enter user into songcircle_register
 		$sql = "INSERT INTO songcircle_register (songcircle_id, user_id, confirmation_key) ";
 		$sql.= "VALUES ('$songcircle_id', $user_id, '$confirmation_key')";
-		if(!$result = $db->query($sql)){
-			echo 'error occurred inserting data into database';
-			// return $this->$message = "Failed to register you for this songcircle.";
-		} else {
-			// insert successful:
+		if($result = $db->query($sql)){
+		// insert successful:
 
 			/* for testing purposes */
-			// // create confirmation flag
 			// $confirmation_data['flag'] = true;
 			// $confirmation_data[] = 'User successfully registered. (Email would send here)';
 			// // json encode and send confirmation flag
@@ -190,7 +186,7 @@ if(isset($_POST['formData']) && isset($_POST['songcircleData'])){
 			$message.= "http://test.songfarm.ca/includes/songcircleConfirmUser.php?";
 			$message.= "conference_id={$songcircle_id}&user_email={$email}&confirmation_key={$confirmation_key}";
 			$message.= "\r\n\r\n";
-			$message.= "If you have received this email by mistake, please click the following link to unregister from this Songcircle.";
+			$message.= "If you have received this email by mistake, please click the following link to unregister from this Songcircle:\r\n";
 			$message.= "http://test.songfarm.ca/includes/songcircleRemoveUser.php?conference_id={$songcircle_id}&user_email={$email}";
 			// construct headers
 			$headers = "From: {$from}\r\n";

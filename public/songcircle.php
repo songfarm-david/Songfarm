@@ -1,5 +1,4 @@
 <?php require_once("../includes/initialize.php");
-error_reporting(E_ALL);
 /**
 * References 'functions.php' generate_ip_data() function
 */
@@ -80,11 +79,11 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
         <article id="aboutSongcircle">
           <h3>What is a Songcircle?</h3>
           <p>
-            A <a href="#linkToBlog" style="color:blue; text-decoration:underline;">Songcircle</a> is a <em>modern</em> way for Songwriters to come together, share song ideas, receive feedback, and collaborate with one another; It&apos;s Songfarm's (approach) to a traditional Songwriters' Circle
+            A <a href="#linkToBlog" style="color:blue; text-decoration:underline;">Songcircle</a> is the <em>modern</em> way for Songwriters to come together, workshop their song ideas, and receive real-time feedback from other artists just like you.
           </p>
-					<p>Conducted over the web in real-time, Songcircles are free to virtually anyone with an internet connection, a webcam, and a song</p>
+					<p>Conducted over the internet in real-time, Songcircles are free to virtually anyone with an internet connection, a webcam, and a song</p>
 					<p>
-						What traditionally had to be done in a brick and mortar establishment is now being pioneered by Songfarm as a way to offer songwriters the opportunity to perfect their craft and grow their network - all without having to leave the house.
+						What traditionally had to be done in a brick and mortar establishment is now being pioneered by Songfarm as a way to offer songwriters the opportunity to nurture their craft and grow their network - all without having to leave the house.
 					</p>
 					<p>
 						Why not experience one for yourself? <a href="#linkToRegister" style="color:blue; text-decoration:underline;">Register for a Songcircle today!</a>
@@ -221,10 +220,10 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 			// Where re-direction will go after successful registration:
 
 			/* local site */
-			// var redirectURL = 'http://localhost/songfarm-oct2015/public/index.php';
+			var redirectURL = 'http://localhost/songfarm-oct2015/public/index.php';
 
 			/* live test site */
-			var redirectURL = 'http://test.songfarm.ca/public/';
+			// var redirectURL = 'http://test.songfarm.ca/public/';
 
 			// Register button
 			var btnRegister = $('input[data-id="triggerRegForm"]');
@@ -676,11 +675,11 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 					// append modal container at end of body
 					$('body').append(codeOfConContainer);
 
-					// get width of modal container
-					var modalWidth = codeOfConContainer.width();
-
-					// adjust left margin to center modal
-					codeOfConContainer.css('margin-left','-'+modalWidth/2+'px');
+					// // get width of modal container
+					// var modalWidth = codeOfConContainer.width();
+					//
+					// // adjust left margin to center modal
+					// codeOfConContainer.css('margin-left','-'+modalWidth/2+'px');
 
 					codeOfConContainer.show();
 

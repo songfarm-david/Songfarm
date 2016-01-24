@@ -1,4 +1,4 @@
-<?php 
+<?php
 require_once('initialize.php');
 
 
@@ -20,13 +20,13 @@ require_once('initialize.php');
 				foreach ($result_array as $row )
 				{
 					//echo " song " . $row;
-					$songcircle_id .= $row. ",";
+					$songcircle_id.= $row. ",";
 				}
 			}
 		}
 		echo $songcircle_id;
 	}
-	
+
 	function is_songcircle_completed()
 	{
 		global $db;
@@ -45,21 +45,22 @@ require_once('initialize.php');
 				foreach ($result_array as $row )
 				{
 					//echo " song " . $row;
-					$songcircle_id .= $row. ",";
+					$songcircle_id.= $row. ",";
 				}
 			}
 		}
 		echo $songcircle_id;
 	}
-	
-	$type = $_REQUEST['type'];
-    switch($type)
-    {
-    	case 'start' :
-           is_songcircle_started();
-           break;
-         case 'complete' :
-           	is_songcircle_completed();
-           	break;
-    }
+
+		$type = $_REQUEST['type'];
+		switch($type)
+		{
+			case 'start' :
+				is_songcircle_started();
+				break;
+			case 'complete' :
+				is_songcircle_completed();
+				break;
+		}
+		
 ?>

@@ -2,6 +2,7 @@
 	require_once("../includes/initialize.php");
 	set_time_limit(3000);
 
+	/* who calls this page?? Where is this GET request originating from? */
 	switch($_GET['method']) {
 
 	 	case 'songcircleState':

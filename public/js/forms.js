@@ -169,7 +169,7 @@ $("form#contact-form div.button").on('click', function(){
 			var formData = form.serialize();
 			// send data to php validation file
 			$.ajax({
-				url:'../includes/contact_form_val.php',
+				url:'../includes/contactFormValidation.php',
 				type:'POST',
 				data: formData,
 				success: function(data){

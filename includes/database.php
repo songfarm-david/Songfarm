@@ -105,19 +105,21 @@ class MySQLDatabase{
 	}
 
 	/**
-	* Looks for a user_id against a unique email -- 01/05/2016
+	* Looks for a user_id against a unique email in the database
 	*
-	* @param string email
+	* Updated: 01/17/2016
+	*
+	* @param (string) an email
+	* @return (bool) true if user_id is found
 	*/
 	public function getIDbyEmail($email){
 		global $db;
 		$sql = "SELECT user_id FROM user_register WHERE user_email='{$email}' LIMIT 1";
 		if($result = $this->query($sql)){
-			$row = $this->fetch_array($result);
-			$user_id = $row['user_id'];
-			return $user_id;
-		} else {
-			return false;
+			if($row = $this->fetch_array($result)){
+				$user_id = $row['user_id'];
+				return $user_id;
+			}
 		}
 	}
 

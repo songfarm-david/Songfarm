@@ -586,7 +586,6 @@ div#thank-you_message{
 }
 
 /*Register Form*/
-.hide{ display:none; }
 #register-form span.error{
 	position:absolute;
 	left:90px;
@@ -832,33 +831,78 @@ form#login-form span#password-error{
 
 #cOcModal{
   position:fixed; z-index:3001;
-  top:0.75em; left:50%; bottom:0.75em;
-  width: 60%;
-  /*padding:1.2em 1.6em;*/
-  font-size: 2em; line-height: 1.1;
-  background: #fff;
-  display: none;
+  top:1em; bottom:1em;
+  left: 50%; transform: translateX(-50%);
+  width: 62.5%;
+  min-width: 320px;
+  background: #9ECB9E;
   font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
+  text-align: center;
+  display: none;
 }
-#cOcModal div{ background:#eee; margin:0.5em; border:1px dotted #ccc; padding: 0.5em; }
-#cOcModal p{ line-height: 1.2; margin-bottom: 0.35em; font-size: 0.8em; }
+#cOcModal div{
+  position:relative;
+  background:#eee;
+  margin:1em auto;
+  padding: 0.5em;
+  font-size: 0.85em;
+  text-align: left;
+  padding-bottom: 0.8em;
+}
+#cOcModal p{ margin-bottom: 0.25em; }
+#cOcModal p:last-child{ margin-bottom: 0;  }
+
 #cOcModal h2, #cOcModal ol li{ font-family: 'museo_sans300', Arial, Helvetica, sans-serif; }
 #cOcModal h2{
-  font-weight: bold;
-  margin:1em;
-  text-decoration: underline;
-  font-size:1.3em;
-  text-align: center;
+  margin:0;
+  font-size:1.8em;
+  padding-top: 1em;
 }
-#cOcModal ol{ margin:1em auto 2em; width:50%; padding-left: 4em;}
-#cOcModal ol li{padding:0.25em 0 0.25em 0.75em;}
+#cOcModal ol{
+  margin:1em auto;
+  padding:0.5em 0.25em;
+  list-style-type: none;
+  counter-reset: ol-counter;
+  list-style-type: decimal !ie;
+  font-size:1.2em;
+}
+#cOcModal ol > li:before {
+  content: counter(ol-counter);
+  counter-increment: ol-counter;
+  position: absolute;
+  top: 0;
+  left: -1.1em;
+  width: 0.8em;
+  font-size: 2.8em;
+  line-height: 1;
+  font-weight: bold;
+  text-align: right;
+  color: #464646;
+}
+#cOcModal ol li{
+  display: block;
+  text-align: left;
+  margin-left: 60%;
+  transform: translateX(-50%);
+  padding:0.5em 0.25em;
+  position: relative;
+  margin-bottom: 20px;
+  padding-left: 0.5em;
+  min-height: 2.4em;
+  border-left: 2px solid #464646;
+  width:70%;
+}
 
 #cOcModal button{
   margin:0 auto; display: block; padding:1em;
   border-radius: 6px; background:#bbb;
+  display: block;
+  margin:0.5em auto;
+  font-size:1em;
+  padding:0.25em 0.75em;
+  max-width:96%;
 }
 #cOcModal button[name="cOcAgree"]{
-  font-size:0.75em; margin-bottom: 1em;
   color:#365A09; background: #7CC919;
 }
 #cOcModal button[name="cOcAgree"]:hover{ color:white; background: #2E63AF; }
