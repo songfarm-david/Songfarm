@@ -38,7 +38,7 @@ if(isset($_POST['formData']) && isset($_POST['songcircleData'])){
 		// all required fields are present, continue processing...
 
 		// init array $clean_data and $errors
-		$clean_data = $errors = array();
+		$clean_data = $errors = $songcircle_user_data = array();
 
 		// sanitize data into $clean_data array
 		foreach ($form_data_array as $key => $value) {
@@ -58,7 +58,6 @@ if(isset($_POST['formData']) && isset($_POST['songcircleData'])){
 		$songcircle_id 		= $_POST['songcircleData'][0];
 		$songcircle_title = $_POST['songcircleData'][1];
 		$songcircle_date = str_replace('- ','at',$_POST['songcircleData'][2]);
-
 
 		/*
 		* Begin validation processing
@@ -163,6 +162,18 @@ if(isset($_POST['formData']) && isset($_POST['songcircleData'])){
 		// create unique confirmation key
 		$confirmation_key = getToken(40);
 
+		// make $songcircle_user_data array for email
+		$songcircle_user_data = [
+			"username" => $username,
+			"eventTitle" => $songcircle_title,
+			"date_time" => $songcircle_date,
+			"linkParams" => [
+				"conference_id" => $songcircle_id,
+				"user_email" => $email,
+				"confirmation_key" => $confirmation_key
+			]
+		];
+
 		// enter user into songcircle_register
 		$sql = "INSERT INTO songcircle_register (songcircle_id, user_id, confirmation_key) ";
 		$sql.= "VALUES ('$songcircle_id', $user_id, '$confirmation_key')";
@@ -178,34 +189,26 @@ if(isset($_POST['formData']) && isset($_POST['songcircleData'])){
 
 			// attempt to send confirmation email
 			$to = "{$username} <{$email}>"; // this may cause a bug on Windows systems
-			$subject = "Registration Confirmation: {$songcircle_title}";
+			$subject = "{$songcircle_title} - Confirm your registration!";
 			$from = "Songfarm <noreply@songfarm.ca>";
-			// construct message
-			$message = "You have registered for {$songcircle_title} on {$songcircle_date}.\r\n\r\n";
-			$message.= "Please confirm your registration by clicking the link below:\r\n\r\n";
-			$message.= "http://test.songfarm.ca/includes/songcircleConfirmUser.php?";
-			$message.= "conference_id={$songcircle_id}&user_email={$email}&confirmation_key={$confirmation_key}";
-			$message.= "\r\n\r\n";
-			$message.= "If you have received this email by mistake, please click the following link to unregister from this Songcircle:\r\n";
-			$message.= "http://test.songfarm.ca/includes/songcircleRemoveUser.php?conference_id={$songcircle_id}&user_email={$email}";
-			// construct headers
-			$headers = "From: {$from}\r\n";
-			$headers.= "MIME-Version: 1.0\r\n"; // unsure of this?
-			$headers.= "Content-Type: text/plain; charset=utf-8"; // unsure of this, too
-			/* use 'X-' ... in your headers to append non-standard headers */
-			if($result = mail($to, $subject, $message, $headers, '-fsongfarm')){ // 5th arg. possible bug
-				// email sent
-				// create confirmation flag
-				$confirmation_data['flag'] = true;
-				// json encode and send confirmation flag
-				echo json_encode($confirmation_data);
-			} else {
-			// email failed to send
-				// construct error message
-				$output = '<span>Oops!</span><br /><br />';
-				$output.= 'We\'re sorry but registration for '.$songcircle_title.' on '.$songcircle_date.' could not be completed';
-				$output.= '<br /><br />Please try again in a few minutes. <br>If you\'re still having trouble, please contact support at <a href="mailto:support@songfarm.ca">support@songfarm.ca</a>.';
-				print $output;
+			if($message = constructHTMLEmail($email_data['confirmation'],$songcircle_user_data)){
+				$headers = "From: {$from}\r\n";
+				// $headers.= "MIME-Version: 1.0\r\n"; // unsure of this?
+				$headers.= "Content-Type: text/html; charset=utf-8"; // unsure of this, too
+				/* use 'X-' ... in your headers to append non-standard headers */
+				if( $result = mail($to,$subject,$message,$headers,'-fsongfarm') ){
+					// create confirmation flag
+					$confirmation_data['flag'] = true;
+					// json encode and send confirmation flag
+					echo json_encode($confirmation_data);
+				} else {
+				// email failed to send
+					// construct error message
+					$output = '<span>Oops!</span><br /><br />';
+					$output.= 'We\'re sorry but registration for '.$songcircle_title.' on '.$songcircle_date.' could not be completed';
+					$output.= '<br /><br />Please try again in a few minutes. <br>If you\'re still having trouble, please contact support at <a href="mailto:support@songfarm.ca">support@songfarm.ca</a>.';
+					print $output;
+				}
 			}
 		}
 

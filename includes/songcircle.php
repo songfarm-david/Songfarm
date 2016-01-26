@@ -96,7 +96,7 @@ class Songcircle extends MySQLDatabase{
 		// initialize date of new open songcircle
 		if(!$last_scheduled_time){
 			// initiate a new custom time here
-			$dt = new DateTime("2016-01-16T22:00:00", new DateTimeZone("UTC"));
+			$dt = new DateTime("2016-02-16T22:00:00", new DateTimeZone("UTC"));
 		} else {
 			// use last scheduled time and add 1 week to it
 			$dt = new DateTime($last_scheduled_time, new DateTimeZone("UTC"));
@@ -106,6 +106,7 @@ class Songcircle extends MySQLDatabase{
 		$date_of_songcircle = $dt->format('Y-m-d\TH:i:00');
 		// create new songcircle id
 		$songcircle_id = uniqid('');
+		$max_participants = 6;
 
 		// create new Open Songcircle
 		$sql = "INSERT INTO songcircle_create (";
@@ -177,7 +178,7 @@ class Songcircle extends MySQLDatabase{
 					$output.= "<table class=\"participantsTable hide\">";
 					// if partipants
 					if($participants = $this->fetchParticipantData($row['songcircle_id'])){
-
+						
 						foreach ($participants as $participant) {
 							$output.= "<tr><td><a href=\"profile.php?id=".$participant['user_id']."\">".$participant['user_name']."</a></td>";
 							$output.= "<td>".$this->formatTimezone($participant['timezone']).", ".$participant['country_name']."</td></tr>";
@@ -381,7 +382,7 @@ class Songcircle extends MySQLDatabase{
 			if($row = mysqli_num_rows($result) > 0){
 				while( $row = $db->fetch_array($result) ){
 					$user_id = $row['user_id'];
-					$sql = "SELECT user_register.user_id, user_name, user_timezone.timezone, country_name FROM user_register, user_timezone WHERE user_register.user_id = {$user_id}";
+					$sql = "SELECT user_register.user_id, user_name, user_timezone.timezone, country_name FROM user_register, user_timezone WHERE user_register.user_id = {$user_id} AND user_timezone.user_id = {$user_id}";
 					if($res = $db->query($sql)){
 						$returnData[] = $db->fetch_array($res);
 						mysqli_free_result($res);
