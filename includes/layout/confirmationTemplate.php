@@ -32,8 +32,8 @@ NOTE: this page needs styling
 				top:50%; left:50%;
 				transform: translateY(-50%) translateX(-50%);
 				display: inline-block;
-				/*width:auto;*/
-				padding:1.5em 4em 8em;
+				line-height: 1.25;
+				padding:1.5em 3em;
 				margin: -2.5em auto;
 				border:1px dotted rgba(56, 97, 56, 0.71);
 				background: #fff;
@@ -41,15 +41,20 @@ NOTE: this page needs styling
 				text-align: center;
 				border-radius: 6px;
 				box-shadow: -1px 1px 5px 1px;
+				overflow:hidden;
 			}
 			div#spinLoader{
-				position: absolute;	z-index:50;
+				position: relative;	z-index:50;
 				top:50%; left:50%;
 				transform: translateY(-50%) translateX(-50%);
-				display: block;	width:50%; height:50%;
+				width:50%; height:50%;
+				margin: 2.5em 0;
+				display: block;
+				display:none;
+
 			}
 			div#spinLoader p{
-				position:absolute; bottom:-1.5em;
+				position:relative; bottom:-3.5em;
 				left:50%;	transform: translateX(-50%);
 				font-size: 0.75em; font-style: italic;
 			}
@@ -62,26 +67,23 @@ NOTE: this page needs styling
 	<body>
 		<div class="confirmMsg">
 			<?php
-
 				$error_msg = $success_msg = '';
-
+				// if error msgs
 				if( $error_msg && is_array($error_msg) ){
 					foreach ($error_msg as $error) {
 						echo $error . '<br>';
 					}
-				} elseif($success_msg){
+				}
+				elseif($success_msg){ // if success msg
 					echo $success_msg;
 				} else {
-					echo '<p>Nothing to show you</p>';
+					// default text
+					echo 'Well, this is embarassing..,<br />Let us redirect you somewhere a little more exciting, now, what do you say?</p>';
 				}
-
-
 			?>
 			<div id="spinLoader">
 				<p>redirecting<span id="ellipsis"></span></p>
 			</div>
-
-
 		</div>
 	</body>
 
@@ -93,38 +95,51 @@ NOTE: this page needs styling
 			redirectURL = 'http://test.songfarm.ca';
 
 			var target = document.getElementById('spinLoader');
-			var spinner = new Spinner(opts).spin(target);
 
-			// get the element
-			var para = $('div#spinLoader p');
+			// get the div element
+			var div = $('div#spinLoader');
 			var span = $('span#ellipsis');
-			// init counter
-			var counter =	0;
 
-			setInterval(function(){
 
-				if(counter <= 2){
-					// append a period on to the element
-					$(span).append('.');
-					// augment the counter
-					counter++;
-				} else {
-					var replace = $(span).text().replace('...','');
-					$(span).text(replace);
-					counter = 0;
-				}
-			}, 1000);
+			setTimeout(function(){
+				// init the spinner object
+				new Spinner(opts).spin(target);
+				// show the div after the timer
+				div.fadeIn().show();
+				// init counter
+				var counter =	0;
+
+				// call the set interval function.
+				setInterval(function(){
+
+					if(counter <= 2){
+						// append a period on to the element
+						$(span).append('.');
+						// augment the counter
+						counter++;
+					} else {
+						var replace = $(span).text().replace('...','');
+						$(span).text(replace);
+						counter = 0;
+					}
+				}, 1000);
+
+				// set timeout for redirect
+				setTimeout(function(){
+					window.location.replace(redirectURL);
+				},2500);
+
+			},4000);
 
 		}; // end of window.onload
 
-		// display a redirecting to... with a load wheel
 		var opts = {
-		  lines: 11 // The number of lines to draw
-		, length: 16 // The length of each line
-		, width: 14 // The line thickness
-		, radius: 26 // The radius of the inner circle
+		  lines: 10 // The number of lines to draw
+		, length: 20 // The length of each line
+		, width: 15 // The line thickness
+		, radius: 30 // The radius of the inner circle
 		, scale: 0.8 // Scales overall size of the spinner
-		, corners: 1 // Corner roundness (0..1)
+		, corners: 0.5 // Corner roundness (0..1)
 		, color: [
 			'#A0F122', // green
 			'#E1D11A', // yellow
@@ -132,12 +147,12 @@ NOTE: this page needs styling
 			'#557FC2', // blue
 			'#D86919', // pinky red
 		]// #rgb or #rrggbb or array of colors
-		, opacity: 0.25 // Opacity of the lines
+		, opacity: 0.5 // Opacity of the lines
 		, rotate: 0 // The rotation offset
 		, direction: 1 // 1: clockwise, -1: counterclockwise
-		, speed: 0.9 // Rounds per second
-		, trail: 60 // Afterglow percentage
-		, fps: 20 // Frames per second when using setTimeout() as a fallback for CSS
+		, speed: 1 // Rounds per second
+		, trail: 75 // Afterglow percentage
+		, fps: 30 // Frames per second when using setTimeout() as a fallback for CSS
 		, zIndex: 2e9 // The z-index (defaults to 2000000000)
 		, className: 'spinner' // The CSS class to assign to the spinner
 		, top: '50%' // Top position relative to parent
