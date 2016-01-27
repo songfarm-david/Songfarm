@@ -197,10 +197,17 @@ if(isset($_POST['formData']) && isset($_POST['songcircleData'])){
 				$headers.= "Content-Type: text/html; charset=utf-8"; // unsure of this, too
 				/* use 'X-' ... in your headers to append non-standard headers */
 				if( $result = mail($to,$subject,$message,$headers,'-fsongfarm') ){
+
+					// construct log text
+					$log_text = 'Register-- user_id: '.$user_id.'; songcircle_id: '.$songcircle_id.' ('.date('m/d/y g:iA T',time()).')'. PHP_EOL;
+					// write to log
+					file_put_contents('../logs/user_songcircle.txt',$log_text,FILE_APPEND);
+
 					// create confirmation flag
 					$confirmation_data['flag'] = true;
 					// json encode and send confirmation flag
 					echo json_encode($confirmation_data);
+
 				} else {
 				// email failed to send
 					// construct error message

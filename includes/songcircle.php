@@ -117,6 +117,12 @@ class Songcircle extends MySQLDatabase{
 		if($result = $db->query($sql)){
 			// check affected rows
 			while(mysqli_affected_rows($db->connection) > 0){
+
+				// create a text string for log file
+				$log_text = 'UTC-'.$date_of_songcircle.' '.$this->songcircle_name.' ('.$songcircle_id.') -- created by: '.$this->global_user_id.' on '.date('m/d/y g:iA T',time()). PHP_EOL;
+				// write to log file
+				file_put_contents('../logs/songcircle_create.txt',$log_text,FILE_APPEND);
+
 				return true;
 			}
 		}
@@ -178,7 +184,7 @@ class Songcircle extends MySQLDatabase{
 					$output.= "<table class=\"participantsTable hide\">";
 					// if partipants
 					if($participants = $this->fetchParticipantData($row['songcircle_id'])){
-						
+
 						foreach ($participants as $participant) {
 							$output.= "<tr><td><a href=\"profile.php?id=".$participant['user_id']."\">".$participant['user_name']."</a></td>";
 							$output.= "<td>".$this->formatTimezone($participant['timezone']).", ".$participant['country_name']."</td></tr>";

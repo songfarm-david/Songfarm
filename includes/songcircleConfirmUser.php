@@ -50,6 +50,7 @@ if(	( isset($_GET['conference_id']) && !empty($_GET['conference_id']) ) &&
 			// if the link is expired
 			if($songcircle->isExpiredLink($current_time,$start_time)){
 				$error_msg[] = 'The confirmation period for this songcircle has expired.';
+				// maybe remove user here too
 			} else {
 				// if the link is not expired
 
@@ -75,9 +76,16 @@ if(	( isset($_GET['conference_id']) && !empty($_GET['conference_id']) ) &&
 									// keys do match
 									// attempt to update user status for songcircle
 									if($songcircle->confirmUserRegistration($songcircle_id, $user_id)){
+
+										// construct log text
+										$log_text = 'Confirm--- user_id: '.$user_id.'; songcircle_id: '.$songcircle_id.' ('.date('m/d/y g:iA T',time()).')'. PHP_EOL;
+										// write to log
+										file_put_contents('../logs/user_songcircle.txt',$log_text,FILE_APPEND);
+
 										// update successful
 										$error_msg = false;
 										$success_msg = 'Thank you. Confirmation successful. <br><br>Redirecting now...';
+										
 									} else {
 										$error_msg[] = 'Error: user confirmation update failed.';
 									}
