@@ -831,80 +831,66 @@ form#login-form span#password-error{
 
 #cOcModal{
   position:fixed; z-index:3001;
-  top:1em; bottom:1em;
+  top:0.5em; bottom:0.5em;
   left: 50%; transform: translateX(-50%);
   width: 62.5%;
   min-width: 320px;
   background: #9ECB9E;
-  font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
   text-align: center;
+  border: 2px solid #555;
   display: none;
+  overflow: auto;
+  font-size: 20px;
 }
 #cOcModal div{
-  position:relative;
+  margin: 0.5em 0.5em; padding: 0.5em 0.5em;
+  font-size: 0.85em; text-align: left;
   background:#eee;
-  margin:1em auto;
-  padding: 0.5em;
-  font-size: 0.85em;
-  text-align: left;
-  padding-bottom: 0.8em;
 }
-#cOcModal p{ margin-bottom: 0.25em; }
-#cOcModal p:last-child{ margin-bottom: 0;  }
+#cOcModal p{ margin: 0; line-height: 1.1; padding: 0.25em 0; }
+#cOcModal h2{ margin: 2em 0 1em; font-size: 1.5em; font-weight: bold;}
 
 #cOcModal h2, #cOcModal ol li{ font-family: 'museo_sans300', Arial, Helvetica, sans-serif; }
-#cOcModal h2{
-  margin:0;
-  font-size:1.8em;
-  padding-top: 1em;
-}
 #cOcModal ol{
-  margin:1em auto;
-  padding:0.5em 0.25em;
-  list-style-type: none;
+  margin:0 auto; padding:0.5em 0;
+  list-style-type: none; list-style-type: decimal !ie;
   counter-reset: ol-counter;
-  list-style-type: decimal !ie;
-  font-size:1.2em;
+  background:#eee; border: 2px solid #aaa;
+  width: 50%; min-width: 284px;
+}
+#cOcModal ol li{
+  position: relative;
+  text-align: left;
+  margin: 1em 0;
+  margin-left: 60%; transform: translateX(-50%);
+  min-height: 2em;
+  border-left: 2px solid #464646; padding-left: 0.5em;
 }
 #cOcModal ol > li:before {
   content: counter(ol-counter);
   counter-increment: ol-counter;
-  position: absolute;
-  top: 0;
-  left: -1.1em;
-  width: 0.8em;
-  font-size: 2.8em;
-  line-height: 1;
-  font-weight: bold;
+  position: absolute; top: 0; left: -1.15em;
+  width: 0.85em; line-height: 0.9;
+  font-size: 2.5em; font-weight: bold;
   text-align: right;
   color: #464646;
 }
-#cOcModal ol li{
-  display: block;
-  text-align: left;
-  margin-left: 60%;
-  transform: translateX(-50%);
-  padding:0.5em 0.25em;
-  position: relative;
-  margin-bottom: 20px;
-  padding-left: 0.5em;
-  min-height: 2.4em;
-  border-left: 2px solid #464646;
-  width:70%;
-}
-
 #cOcModal button{
-  margin:0 auto; display: block; padding:1em;
-  border-radius: 6px; background:#bbb;
   display: block;
-  margin:0.5em auto;
-  font-size:1em;
-  padding:0.25em 0.75em;
-  max-width:96%;
+  margin:1em auto 0.5em; padding:0.5em 1em;
+  font-size:1em; line-height: 1.25;
+  width:49%; min-width: 284px;
+  border-radius: 6px 6px 6px 6px;
 }
 #cOcModal button[name="cOcAgree"]{
   color:#365A09; background: #7CC919;
 }
-#cOcModal button[name="cOcAgree"]:hover{ color:white; background: #2E63AF; }
-
-#cOcModal button:hover{ cursor: pointer; background: #eee; }
+a[name="cOcNotAgree"]{
+  display: block; width: 45%;
+  margin: 0 auto 1em; padding: 0.5em 1em;
+  font-size: 0.75em;
+  color:blue;
+  text-decoration: underline;
+}
+a[name="cOcNotAgree"]:hover{color:#D7F6E4;}
+#cOcModal button[name="cOcAgree"]:hover{ color:white; background: #2E63AF; cursor: pointer; }

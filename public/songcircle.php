@@ -713,18 +713,9 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 			/**
 			* Event: User does not agree with Code of Conduct
 			*/
-			$('body').on('click', 'button[name="cOcNotAgree"]', function(){
+			$('body').on('click', 'a[name="cOcNotAgree"]', function(){
 				codeOfConContainer.fadeOut().hide();
 			});
-
-			/*
-			*	Code for browser window resize event listener
-			*/
-			// $(window).resize(function(){
-			// 	// alert('resize');
-			// 	/* this function would be used in continuously resizing a margin when
-			// 	someone resizes the browser window */
-			// })
 
 		}); // end document.ready
 
