@@ -24,11 +24,17 @@
 			<li>
 				<a href="index.php#contactUs" title="Contact Us" rel="bookmark">Contact Us</a>
 			</li>
+			<!--
+			// commented out for songcircle2016 feature rollout
+
 			<li>
 				<a href="#" id="login" title="Log In" rel="next"><b>Log In</b></a>
-				<!-- Login form -->
-				<?php include_once('../includes/forms/login.php'); ?>
+				 Login form
+				<?php // include_once('../includes/forms/login.php'); ?>
 			</li>
+
+			// end of comment
+			-->
 		</ul>
 	</nav>
 	<div class="register medium"></div>

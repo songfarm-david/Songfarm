@@ -3,7 +3,7 @@
 * Receives and processes confirmation email link from user
 * after registration for a given songcircle occurs
 *
-* Updated: 01/12/2016
+* Updated: 01/29/2016
 *
 */
 if(	( isset($_GET['conference_id']) && !empty($_GET['conference_id']) ) &&
@@ -36,8 +36,7 @@ if(	( isset($_GET['conference_id']) && !empty($_GET['conference_id']) ) &&
 
 	/* values sanitized */
 	if($songcircle_id && $user_email && $confirmation_key){
-		// all values have been accounted for and sanitized
-
+	// all values have been accounted for and sanitized
 		// get start time of songcircle
 		$sql = "SELECT UNIX_TIMESTAMP(date_of_songcircle) FROM songcircle_create WHERE songcircle_id = '$songcircle_id'";
 		if($result = $db->query($sql)){
@@ -45,63 +44,65 @@ if(	( isset($_GET['conference_id']) && !empty($_GET['conference_id']) ) &&
 			$songcircle_data = $db->fetch_array($result);
 			// capture unix formatted start time in variable
 			$start_time = $songcircle_data['UNIX_TIMESTAMP(date_of_songcircle)'];
-			$current_time = time();
-
-			// if the link is expired
-			if($songcircle->isExpiredLink($current_time,$start_time)){
-				$error_msg[] = 'The confirmation period for this songcircle has expired.';
-				// maybe remove user here too
+			if(empty($start_time)){
+				$error_msg[] = 'Could not acquire start time of Songcircle.';
 			} else {
-				// if the link is not expired
-
-				// if NOT user_id for given email
-				if(!$user_id = $db->getIDbyEmail($user_email)){
-					$error_msg[] = 'No user exists for the email provided.';
+				$current_time = time();
+				// if the link is expired
+				if($songcircle->isExpiredLink($current_time,$start_time)){
+					$error_msg[] = 'The confirmation period for this songcircle has expired.';
+					// maybe remove user here too
 				} else {
-					// user id exists for given email
-					// Select all data where songcircle_id and user_id match
-					$sql = "SELECT * FROM songcircle_register WHERE songcircle_id = '{$songcircle_id}' AND user_id = {$user_id}";
-					if($result = $db->query($sql)){
-						// if rows
-						if($row = $db->has_rows($result)){
-							// if row
-							$user_array = $db->fetch_array($result);
-							if( isset($user_array['confirmation_key']) && !empty($user_array['confirmation_key']) ){
-								// assign confirmation key to variable
-								$user_key = (string) $user_array['confirmation_key'];
-								//compare confirmation key from email with database retrieved user key
-								if( $confirmation_key !== $user_key ){
-									$error_msg[] = 'Invalid confirmation key provided.';
-								} else {
-									// keys do match
-									// attempt to update user status for songcircle
-									if($songcircle->confirmUserRegistration($songcircle_id, $user_id)){
-
-										// construct log text
-										$log_text = 'Confirm--- user_id: '.$user_id.'; songcircle_id: '.$songcircle_id.' ('.date('m/d/y g:iA T',time()).')'. PHP_EOL;
-										// write to log
-										file_put_contents('../logs/user_songcircle.txt',$log_text,FILE_APPEND);
-
-										// update successful
-										$error_msg = false;
-										$success_msg = 'Thank you. Confirmation successful. <br><br>Redirecting now...';
-										
+				// if the link is not expired
+					// if NOT user_id for given email
+					if(!$user_id = $db->getIDbyEmail($user_email)){
+						$error_msg[] = 'No user exists for the email provided.';
+					} else {
+						// user id exists for given email
+						// Select all data where songcircle_id and user_id match
+						$sql = "SELECT * FROM songcircle_register WHERE songcircle_id = '{$songcircle_id}' AND user_id = {$user_id}";
+						if($result = $db->query($sql)){
+							// if rows
+							if($row = $db->has_rows($result)){
+								// if row
+								$user_array = $db->fetch_array($result);
+								if( isset($user_array['confirmation_key']) && !empty($user_array['confirmation_key']) ){
+									// assign confirmation key to variable
+									$user_key = (string) $user_array['confirmation_key'];
+									//compare confirmation key from email with database retrieved user key
+									if( $confirmation_key !== $user_key ){
+										$error_msg[] = 'Invalid confirmation key provided.';
 									} else {
-										$error_msg[] = 'Error: user confirmation update failed.';
+										// keys do match
+										// attempt to update user status for songcircle
+										if($songcircle->confirmUserRegistration($songcircle_id, $user_id)){
+
+											// construct log text
+											$log_text = 'Confirm--- user_id: '.$user_id.'; songcircle_id: '.$songcircle_id.' ('.date('m/d/y g:iA T',time()).')'. PHP_EOL;
+											// write to log
+											file_put_contents('../logs/user_songcircle.txt',$log_text,FILE_APPEND);
+
+											// update successful
+											$error_msg = false;
+											$success_msg = 'Thank you. Confirmation successful. <br><br>Redirecting now...';
+
+										} else {
+											$error_msg[] = 'Error: user confirmation update failed.';
+										}
 									}
+								} else {
+									$error_msg[] = 'User is already registered for the given songcircle.';
 								}
 							} else {
-								$error_msg[] = 'User is already registered for the given songcircle.';
+								// no rows exist
+								$error_msg[] = 'User has not registered.';
 							}
-						} else {
-							// no rows exist
-							$error_msg[] = 'User has not registered.';
 						}
 					}
 				}
 			}
 		}
-	}
+	} // end of: if($songcircle_id && $user_email && $confirmation_key)
 } // end of: if isset($_GET) and !empty($_GET)..
 else
 {

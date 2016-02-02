@@ -1,6 +1,6 @@
 <footer>
 	<p>
-		<small>&copy; 2015 Songfarm. All rights reserved.</small>
+		<small>&copy; <?php echo date("Y")?> Songfarm. All rights reserved.</small>
 	</p>
 	<div class="share-links">
 		<p>Share this page:</p>

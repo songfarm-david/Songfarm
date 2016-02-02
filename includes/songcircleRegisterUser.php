@@ -5,19 +5,28 @@
 *	It will attempt to register a user for a specific songcircle
 * If user is not registered, it will register them in user_register SQL table as well
 *
-*	Last Updated: 01/11/2016
+*	Last Updated: 01/28/2016
 */
-// NOTE: cannot use name of 'submit' value
-if(isset($_POST['formData']) && isset($_POST['songcircleData'])){
+if(isset($_POST['formData']) && !empty($_POST['formData'])){
+
+	// initialize all arrays
+	$required_data = $form_data = $clean_data = $errors = [];
 
 	// required data from user
-	$required_data = array('username','user_email','timezone','fullTimezone','country_name','country_code', 'codeOfConduct');
+	$required_data = [
+		'username', 'user_email',
+		'timezone','fullTimezone',
+		'country_name','country_code',
+		'codeOfConduct','songcircle_id',
+		'date_of_songcircle','songcircle_name',
+		'waiting_list'
+	];
 
 	// explode string into array
 	$form_data_array = explode('&',$_POST['formData']);
 
 	// loop through array and clean values
-	foreach ($form_data_array as $value) {
+	foreach($form_data_array as $value){
 		// remove anything after '='
 		$value = substr($value, 0, strpos($value,'='));
 		// put cleaned values into a new array
@@ -35,13 +44,9 @@ if(isset($_POST['formData']) && isset($_POST['songcircleData'])){
 		return false;
 
 	} else {
-		// all required fields are present, continue processing...
-
-		// init array $clean_data and $errors
-		$clean_data = $errors = $songcircle_user_data = array();
-
+	// all required fields are present, continue processing...
 		// sanitize data into $clean_data array
-		foreach ($form_data_array as $key => $value) {
+		foreach($form_data_array as $key => $value){
 			$clean_data[$key] = $db->escape_value(urldecode($value));
 		}
 
@@ -53,16 +58,14 @@ if(isset($_POST['formData']) && isset($_POST['songcircleData'])){
 	 	$country_name		= explode('=',$clean_data[4])[1];
 		$country_code		=	explode('=',$clean_data[5])[1];
 		$codeOfConduct 	= explode('=',$clean_data[6])[1];
+		$songcircle_id  = explode('=',$clean_data[7])[1];
+		$songcircle_date= explode('=',$clean_data[8])[1];
+		$songcircle_name= explode('=',$clean_data[9])[1];
+		$waiting_list		= explode('=',$clean_data[10])[1];
 
-		// assign variable to songcircleId
-		$songcircle_id 		= $_POST['songcircleData'][0];
-		$songcircle_title = $_POST['songcircleData'][1];
-		$songcircle_date = str_replace('- ','at',$_POST['songcircleData'][2]);
-
-		/*
-		* Begin validation processing
-		*/
-
+	/*
+	* Begin validation processing
+	*/
 		/* Username */
 		// if NOT has presence
 		if(!$db->has_presence($username)){
@@ -81,9 +84,9 @@ if(isset($_POST['formData']) && isset($_POST['songcircleData'])){
 			$errors['email_error'] = 'Please enter a valid email';
 		}
 		// if duplicate email in user register
-		elseif ( $db->has_rows($db->unique_email($email)) ){
+		elseif ($db->has_rows($db->unique_email($email))){
 
-			// flag if email is already in database
+			// set flag if email is already in database
 			$emailInDatabase = true;
 
 			// check user ID against email in user_register table
@@ -93,12 +96,10 @@ if(isset($_POST['formData']) && isset($_POST['songcircleData'])){
 
 			// check function to see if user is already registered for this songcircle
 			if($songcircle->userAlreadyRegistered($songcircle_id, $user_id)){
-				// echo $user_id;
-				$is_already_registered = true;
 				$errors['email_error'] = 'That email is already registered for this songcircle.';
 			}
 		}	else {
-			// email is not in database
+			// email is not in database, set flag
 			$emailInDatabase = false;
 		}
 
@@ -125,102 +126,144 @@ if(isset($_POST['formData']) && isset($_POST['songcircleData'])){
 			// exit processing
 			exit;
 
-		} elseif (!$emailInDatabase) { // if emailInDatabase is false
-			// User is not registered in the database
+		} elseif (!$emailInDatabase) {
+		// if emailInDatabase is false, user is not registered in the database
 
-			// insert user into database
-			$sql = "INSERT INTO user_register (user_name, user_email, reg_date)";
-			$sql.= "VALUES ('$username', '$email', NOW())";
-			if($result = $db->query($sql)){
-				// if result, get last inserted id
-				$user_id = $db->last_inserted_id($result);
-				// insert timezone into database
-				$sql = "INSERT INTO user_timezone (user_id, timezone, full_timezone, country_name, country_code) "; // city_name omitted
-				$sql.= "VALUES ($user_id, '$timezone', '$fullTimezone', '$country_name', '$country_code')";
-				// check for successful
-				if(!$db->query($sql)){
-					echo 'error inserting';
-					/* need a system whereif the second insert fails, it rolls back the first insert
-					and exits the whole process */
+		// begin transaction
+		$db->beginTransaction();
 
-					// NOTE: Look into transactions, roll backs, etc..
-
+			try {
+				// construct first query
+				$sql = "INSERT INTO user_register (user_name, user_email, reg_date)";
+				$sql.= "VALUES ('$username', '$email', NOW())";
+				if(!$result = $db->query($sql)){
+					// if no result, throw error
+					throw new Exception("Error Processing Registration Insert Request", 1);
+				} else {
+					// if result, get last inserted id
+					$user_id = $db->last_inserted_id($result);
+					// construct second query
+					$sql = "INSERT INTO user_timezone (user_id, timezone, full_timezone, country_name, country_code) ";
+					$sql.= "VALUES ($user_id, '$timezone', '$fullTimezone', '$country_name', '$country_code')";
+					// check for successful
+					if(!$result = $db->query($sql)){
+						// if no result, throw error
+						throw new Exception("Error Processing Timezone Insert Request", 1);
+					} else {
+						// commit query to database
+						$db->commit();
+						// construct log text
+						$log_text = 'Register User-- user_id: '.$user_id.'; username: '.$username.'; email: '.$email.' ('.date('m/d/y g:iA T',time()).')'. PHP_EOL;
+						// write to log
+						file_put_contents('../logs/user_register.txt',$log_text,FILE_APPEND);
+					}
 				}
-
-			} // end of: INSERT INTO user_register
+			} catch (Exception $e) {
+				// rollback any committed inserts
+				$db->rollback();
+			}
 
 		} // end of: elseif (!$emailInDatabase)
 
 		/*
-		So, no errors..
+		No errors..
 		User either was already IN the database or is NOW in the database
-
-		/*
-		So now enter user into songcircle_register table
 		*/
 
 		// create unique confirmation key
 		$confirmation_key = getToken(40);
+		// format date of songcircle
+		$songcircle_date 	= $songcircle->call_user_timezone($songcircle_date, $timezone);
 
-		// make $songcircle_user_data array for email
+		// make $songcircle_user_data array for emails
 		$songcircle_user_data = [
-			"username" => $username,
-			"eventTitle" => $songcircle_title,
-			"date_time" => $songcircle_date,
-			"linkParams" => [
-				"conference_id" => $songcircle_id,
-				"user_email" => $email,
-				"confirmation_key" => $confirmation_key
+			"username" 		=> $username,
+			"eventTitle" 	=> $songcircle_name,
+			"date_time" 	=> $songcircle_date,
+			"linkParams" 	=> [
+				"conference_id" 		=> $songcircle_id,
+				"user_email" 				=> $email,
+				"confirmation_key" 	=> $confirmation_key
 			]
 		];
 
-		// enter user into songcircle_register
-		$sql = "INSERT INTO songcircle_register (songcircle_id, user_id, confirmation_key) ";
-		$sql.= "VALUES ('$songcircle_id', $user_id, '$confirmation_key')";
-		if($result = $db->query($sql)){
-		// insert successful:
+		$confirmation_data['flag'] = true;
+		$confirmation_data['username'] = $username;
+		$confirmation_data['eventTitle'] = $songcircle_name;
+		$confirmation_data['date_time'] = $songcircle_date;
 
-			/* for testing purposes */
-			// $confirmation_data['flag'] = true;
-			// $confirmation_data[] = 'User successfully registered. (Email would send here)';
-			// // json encode and send confirmation flag
-			// echo json_encode($confirmation_data);
-			/* end of test */
+		// if NO waiting list
+		if( $waiting_list == 'false' ){
+			// send registration confirmation email
 
-			// attempt to send confirmation email
 			$to = "{$username} <{$email}>"; // this may cause a bug on Windows systems
-			$subject = "{$songcircle_title} - Confirm your registration!";
+			$subject = "{$songcircle_name} - Confirm your registration!";
 			$from = "Songfarm <noreply@songfarm.ca>";
 			if($message = constructHTMLEmail($email_data['confirmation'],$songcircle_user_data)){
 				$headers = "From: {$from}\r\n";
-				// $headers.= "MIME-Version: 1.0\r\n"; // unsure of this?
-				$headers.= "Content-Type: text/html; charset=utf-8"; // unsure of this, too
-				/* use 'X-' ... in your headers to append non-standard headers */
+				$headers.= "Content-Type: text/html; charset=utf-8";
 				if( $result = mail($to,$subject,$message,$headers,'-fsongfarm') ){
-
-					// construct log text
-					$log_text = 'Register-- user_id: '.$user_id.'; songcircle_id: '.$songcircle_id.' ('.date('m/d/y g:iA T',time()).')'. PHP_EOL;
-					// write to log
-					file_put_contents('../logs/user_songcircle.txt',$log_text,FILE_APPEND);
-
-					// create confirmation flag
-					$confirmation_data['flag'] = true;
-					// json encode and send confirmation flag
-					echo json_encode($confirmation_data);
-
+					// enter user into songcircle_register
+					$sql = "INSERT INTO songcircle_register (songcircle_id, user_id, confirmation_key) ";
+					$sql.= "VALUES ('$songcircle_id', $user_id, '$confirmation_key')";
+					if($result = $db->query($sql)){
+					// insert successful:
+						// construct log text
+						$log_text = 'Register-- user_id: '.$user_id.'; songcircle_id: '.$songcircle_id.' ('.date('m/d/y g:iA T',time()).')'. PHP_EOL;
+						// write to log
+						file_put_contents('../logs/user_songcircle.txt',$log_text,FILE_APPEND);
+						// json encode and send confirmation data
+						echo json_encode($confirmation_data);
+					}
 				} else {
 				// email failed to send
 					// construct error message
 					$output = '<span>Oops!</span><br /><br />';
-					$output.= 'We\'re sorry but registration for '.$songcircle_title.' on '.$songcircle_date.' could not be completed';
+					$output.= 'We\'re sorry but registration for '.$songcircle_name.' on '.$songcircle_date.' could not be completed';
 					$output.= '<br /><br />Please try again in a few minutes. <br>If you\'re still having trouble, please contact support at <a href="mailto:support@songfarm.ca">support@songfarm.ca</a>.';
 					print $output;
 				}
-			}
+			} // end of: if($message = constructHTMLEmail())
+
+		} else { // waiting list is open
+			// send waiting list confirmation email
+
+			// $to = "{$username} <{$email}>";
+			// $subject = "You're on the Waiting List!";
+			// $from = "Songfarm <noreply@songfarm.ca>";
+			// if($message = constructHTMLEmail($email_data['waiting_list'],$songcircle_user_data)){
+			// 	$headers = "From: {$from}\r\n";
+			// 	$headers.= "Content-Type: text/html; charset=utf-8";
+			// 	if( $result = mail($to,$subject,$message,$headers,'-fsongfarm') ){
+
+					/*
+						needs programming
+					*/
+					// enter user into songcircle_wait_register
+					$sql = "INSERT INTO songcircle_wait_register (songcircle_id, user_id) ";
+					$sql.= "VALUES ('$songcircle_id', $user_id)";
+					if($result = $db->query($sql)){
+					// insert successful:
+						// construct log text
+						$log_text = 'Wait List-- user_id: '.$user_id.'; songcircle_id: '.$songcircle_id.' ('.date('m/d/y g:iA T',time()).')'. PHP_EOL;
+						// write to log
+						file_put_contents('../logs/user_songcircle.txt',$log_text,FILE_APPEND);
+						// create waitlist flag
+						$confirmation_data['waitlist'] = true;
+						// json encode and send confirmation data
+						echo json_encode($confirmation_data);
+					}
+			// 	} else {
+			// 	// email failed to send
+			// 		// construct error message
+			// 		$output = '<span>Oops!</span><br /><br />';
+			// 		$output.= 'We\'re sorry but registration for '.$songcircle_name.' Waiting List on '.$songcircle_date.' could not be completed';
+			// 		$output.= '<br /><br />Please try again in a few minutes. <br>If you\'re still having trouble, please contact support at <a href="mailto:support@songfarm.ca">support@songfarm.ca</a>.';
+			// 		print $output;
+			// 	}
+			// }
 		}
-
 	} // end of: else ($diff = array_diff($required_data, $form_data))
-
 }
 else // end of: if(isset($_POST['formData']) && isset($_POST['songcircleId']))
 {
@@ -229,7 +272,6 @@ else // end of: if(isset($_POST['formData']) && isset($_POST['songcircleId']))
 	$output.= '<p>We are sorry for the inconvenience</p>.';
 	print $output;
 }
-
 
 /**
 *	Formats and display missing values received by Registration Form

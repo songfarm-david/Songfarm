@@ -17,9 +17,9 @@ NOTE: this page needs styling
 		<meta name="description" content="Share your newest song in a live virtual songwriter's circle">
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-		<link rel="stylesheet" href="../../public/css/index.css" type="text/css">
-		<script type="text/javascript" src="../../public/js/jquery-1.11.3.min.js"></script>
-		<script type="text/javascript" src="../../public/js/spin.js/spin.min.js"></script>
+		<link rel="stylesheet" href="../public/css/index.css" type="text/css">
+		<script type="text/javascript" src="../public/js/jquery-1.11.3.min.js"></script>
+		<script type="text/javascript" src="../public/js/spin.js/spin.min.js"></script>
 		<style>
 			body{
 				background: rgba(0, 255, 0, 0.09);
@@ -67,7 +67,6 @@ NOTE: this page needs styling
 	<body>
 		<div class="confirmMsg">
 			<?php
-				$error_msg = $success_msg = '';
 				// if error msgs
 				if( $error_msg && is_array($error_msg) ){
 					foreach ($error_msg as $error) {
@@ -92,7 +91,11 @@ NOTE: this page needs styling
 		window.onload = function(){
 
 			// target location
-			redirectURL = 'http://test.songfarm.ca';
+				// live config:
+				// redirectURL = 'http://test.songfarm.ca';
+
+				// test config:
+				redirectURL = '../public';
 
 			var target = document.getElementById('spinLoader');
 

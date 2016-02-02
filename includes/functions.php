@@ -13,7 +13,9 @@ function redirect_to($location) {
 /**
 * Auxillary function that constructs an autorespond HTML email
 *
-* Created: 25/01/2016
+*		Class 1 email
+*
+* Updated: 01/29/2016
 *
 * @param (array) email data
 * @return (string) an HTML email
@@ -21,28 +23,30 @@ function redirect_to($location) {
 function autorespondEmail($email_data){
 
 	// retrieve email template
-	$basic_email_template = file_get_contents(EMAIL_PATH.DS.'basicTemplate.html');
+	$autorespond_email = file_get_contents(EMAIL_PATH.DS.'autorespondTemplate.html');
 
 	// replace keys with data
-	$basic_email_template = str_replace('%title%',$email_data['title'],$basic_email_template);
-	$basic_email_template = str_replace('%link%',$email_data['link'],$basic_email_template);
-	$basic_email_template = str_replace('%logo%',$email_data['logo']['source'],$basic_email_template);
-	$basic_email_template = str_replace('%logoWidth%',$email_data['logo']['width'],$basic_email_template);
-	$basic_email_template = str_replace('%logoHeight%',$email_data['logo']['height'],$basic_email_template);
-	$basic_email_template = str_replace('%header%',$email_data['header'],$basic_email_template);
-	$basic_email_template = str_replace('%intro%',$email_data['intro'],$basic_email_template);
-	$basic_email_template = str_replace('%body%',$email_data['body'],$basic_email_template);
-	$basic_email_template = str_replace('%signature%',$email_data['signature'],$basic_email_template);
-	$basic_email_template = str_replace('%year%',$email_data['year'],$basic_email_template);
+	$autorespond_email = str_replace('%title%',$email_data['title'],$autorespond_email);
+	$autorespond_email = str_replace('%link%',$email_data['link'],$autorespond_email);
+	$autorespond_email = str_replace('%logo%',$email_data['logo']['source'],$autorespond_email);
+	$autorespond_email = str_replace('%logoWidth%',$email_data['logo']['width'],$autorespond_email);
+	$autorespond_email = str_replace('%logoHeight%',$email_data['logo']['height'],$autorespond_email);
+	$autorespond_email = str_replace('%header%',$email_data['header'],$autorespond_email);
+	$autorespond_email = str_replace('%intro%',$email_data['intro'],$autorespond_email);
+	$autorespond_email = str_replace('%body%',$email_data['body'],$autorespond_email);
+	$autorespond_email = str_replace('%signature%',$email_data['signature'],$autorespond_email);
+	$autorespond_email = str_replace('%year%',$email_data['year'],$autorespond_email);
 
 	// return email
-	echo $basic_email_template;
+	return $autorespond_email;
 }
 
 /**
 *	Auxillary function that constructs a songcircle confirmation HTML email
 *
-* Created: 25/01/2016
+*		Class 2 email
+*
+* Updated: 01/29/2016
 *
 * @param (array) email data
 * @param (array) songcircle/user specific data
@@ -51,35 +55,68 @@ function autorespondEmail($email_data){
 function confirmationEmail($email_data,$songcircle_user_data){
 
 	// retrieve advanced email template
-	$advanced_email_template = file_get_contents(EMAIL_PATH.DS.'advancedTemplate.html');
+	$registration_email = file_get_contents(EMAIL_PATH.DS.'registrationTemplate.html');
 
 	// replace keys with data
-	$advanced_email_template = str_replace('%title%',$email_data['title'],$advanced_email_template);
-	$advanced_email_template = str_replace('%logo%',$email_data['logo']['source'],$advanced_email_template);
-	$advanced_email_template = str_replace('%logoWidth%',$email_data['logo']['width'],$advanced_email_template);
-	$advanced_email_template = str_replace('%logoHeight%',$email_data['logo']['height'],$advanced_email_template);
-	$advanced_email_template = str_replace('%header%',$email_data['header'],$advanced_email_template);
-	$advanced_email_template = str_replace('%greeting%',$email_data['greeting'],$advanced_email_template);
-	$advanced_email_template = str_replace('%intro%',$email_data['intro'],$advanced_email_template);
-	$advanced_email_template = str_replace('%body%',$email_data['body'],$advanced_email_template);
-	$advanced_email_template = str_replace('%link%',$email_data['ctaLink']['linkLocation'],$advanced_email_template);
-	$advanced_email_template = str_replace('%linkText%',$email_data['ctaLink']['linkText'],$advanced_email_template);
-	$advanced_email_template = str_replace('%signature%',$email_data['signature'],$advanced_email_template);
-	$advanced_email_template = str_replace('%directive%',$email_data['directive'],$advanced_email_template);
-	$advanced_email_template = str_replace('%linkUnsubscribe%',$email_data['unsubscribeLink']['unsubscribeLinkLocation'],$advanced_email_template);
-
-	$advanced_email_template = str_replace('%year%',$email_data['year'],$advanced_email_template);
+	$registration_email = str_replace('%title%',$email_data['title'],$registration_email);
+	$registration_email = str_replace('%logo%',$email_data['logo']['source'],$registration_email);
+	$registration_email = str_replace('%logoWidth%',$email_data['logo']['width'],$registration_email);
+	$registration_email = str_replace('%logoHeight%',$email_data['logo']['height'],$registration_email);
+	$registration_email = str_replace('%header%',$email_data['header'],$registration_email);
+	$registration_email = str_replace('%greeting%',$email_data['greeting'],$registration_email);
+	$registration_email = str_replace('%intro%',$email_data['intro'],$registration_email);
+	$registration_email = str_replace('%body%',$email_data['body'],$registration_email);
+	$registration_email = str_replace('%link%',$email_data['ctaLink']['linkLocation'],$registration_email);
+	$registration_email = str_replace('%linkText%',$email_data['ctaLink']['linkText'],$registration_email);
+	$registration_email = str_replace('%signature%',$email_data['signature'],$registration_email);
+	$registration_email = str_replace('%directive%',$email_data['directive'],$registration_email);
+	$registration_email = str_replace('%linkUnsubscribe%',$email_data['unsubscribeLink']['unsubscribeLinkLocation'],$registration_email);
+	$registration_email = str_replace('%year%',$email_data['year'],$registration_email);
 
 	// replace user/event specific keys
-	$advanced_email_template = str_replace('%name%',$songcircle_user_data['username'],$advanced_email_template);
-	$advanced_email_template = str_replace('%event%',$songcircle_user_data['eventTitle'],$advanced_email_template);
-	$advanced_email_template = str_replace('%date_time%',$songcircle_user_data['date_time'],$advanced_email_template);
-	$advanced_email_template = str_replace('%conference_id%',$songcircle_user_data['linkParams']['conference_id'],$advanced_email_template);
-	$advanced_email_template = str_replace('%email%',$songcircle_user_data['linkParams']['user_email'],$advanced_email_template);
-	$advanced_email_template = str_replace('%confirmation_key%',$songcircle_user_data['linkParams']['confirmation_key'],$advanced_email_template);
+	$registration_email = str_replace('%name%',$songcircle_user_data['username'],$registration_email);
+	$registration_email = str_replace('%event%',$songcircle_user_data['eventTitle'],$registration_email);
+	$registration_email = str_replace('%date_time%',$songcircle_user_data['date_time'],$registration_email);
+	$registration_email = str_replace('%conference_id%',$songcircle_user_data['linkParams']['conference_id'],$registration_email);
+	$registration_email = str_replace('%email%',$songcircle_user_data['linkParams']['user_email'],$registration_email);
+	$registration_email = str_replace('%confirmation_key%',$songcircle_user_data['linkParams']['confirmation_key'],$registration_email);
 
 	// return email
-	return $advanced_email_template;
+	return $registration_email;
+}
+
+/**
+*	Auxillary function that constructs a songcircle Waiting List email
+*
+*		Class 2 email
+*
+* @param (array) email data
+* @param (array) songcircle/user specific data
+* @return (string) an HTML email
+*/
+function waitingListEmail($email_data,$songcircle_user_data){
+	// retrieve wait list email template
+	$wait_list_email = file_get_contents(EMAIL_PATH.DS.'wait_listTemplate.html');
+
+	$wait_list_email = str_replace('%title%',$email_data['title'],$wait_list_email);
+	$wait_list_email = str_replace('%logo%',$email_data['logo']['source'],$wait_list_email);
+	$wait_list_email = str_replace('%logoWidth%',$email_data['logo']['width'],$wait_list_email);
+	$wait_list_email = str_replace('%logoHeight%',$email_data['logo']['height'],$wait_list_email);
+	$wait_list_email = str_replace('%header%',$email_data['header'],$wait_list_email);
+	$wait_list_email = str_replace('%greeting%',$email_data['greeting'],$wait_list_email);
+	$wait_list_email = str_replace('%intro%',$email_data['intro'],$wait_list_email);
+	$wait_list_email = str_replace('%body%',$email_data['body'],$wait_list_email);
+	$wait_list_email = str_replace('%signature%',$email_data['signature'],$wait_list_email);
+	$wait_list_email = str_replace('%directive%',$email_data['directive'],$wait_list_email);
+	$wait_list_email = str_replace('%linkUnsubscribe%',$email_data['unsubscribeLink']['unsubscribeLinkLocation'],$wait_list_email);
+	$wait_list_email = str_replace('%year%',$email_data['year'],$wait_list_email);
+
+	// replace user/event specific keys
+	$wait_list_email = str_replace('%name%',$songcircle_user_data['username'],$wait_list_email);
+	$wait_list_email = str_replace('%event%',$songcircle_user_data['eventTitle'],$wait_list_email);
+	$wait_list_email = str_replace('%date_time%',$songcircle_user_data['date_time'],$wait_list_email);
+
+	return $wait_list_email;
 }
 
 /**
@@ -97,12 +134,14 @@ function constructHTMLEmail($email_data, $songcircle_user_data=''){
 	foreach($email_data as $email_flag){
 		// if email_flag matches..
 		switch ($email_flag) {
-			case 'autoresponder':
+			case 'class_1':
 				return autorespondEmail($email_data);
 				break;
-			case 'songcircle_confirmation':
+			case 'class_2':
 				return confirmationEmail($email_data, $songcircle_user_data);
 				break;
+			case 'class_3':
+				return waitingListEmail($email_data, $songcircle_user_data);
 			default:
 				return false;
 				break;

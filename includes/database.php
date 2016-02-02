@@ -2,7 +2,7 @@
 
 class MySQLDatabase{
 
-	protected $connection;
+	public $connection;
 
 	function __construct() {
 		$this->open_connection();
@@ -39,6 +39,18 @@ class MySQLDatabase{
 		if(!$result) {
 			die("Database query failed." . mysqli_error($this->connection));
 		}
+	}
+
+	public function beginTransaction(){
+		return mysqli_begin_transaction($this->connection);
+	}
+
+	public function commit(){
+		return mysqli_commit($this->connection);
+	}
+
+	public function rollback(){
+		return mysqli_rollback($this->connection);
 	}
 
 	/**

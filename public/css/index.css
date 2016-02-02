@@ -161,6 +161,10 @@ header ul#links li a:hover::before{
   content:url('../images/arrows_and_lines/navActive_arrow.png');
   position:absolute; left:-15px; top:3px;
 }
+/**
+  The following edited out for songcirle2016 purposes.
+  Uncomment out to re-initiate log in button styles
+
 header ul#links li:last-child{
   right:-12px;
 }
@@ -173,6 +177,9 @@ header ul#links li a[title="Log In"]:hover:before{
   content:'';
   position: relative;
 }
+
+  end of comment section
+*/
 header nav ul#links li a[href^="songcircle"]{ font-size:1.1em;}
 
 header .logo{

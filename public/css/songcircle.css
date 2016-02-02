@@ -77,7 +77,7 @@ table#songcircleTable{
 	font-family: 'museo_sans300', Arial, Helvetica, sans-serif;
 	background-color: #fff;
 }
-#songcircleTable tr:not(:first-child) td{ border-top: 5px double #7CC919;; }
+#songcircleTable tr:not(:first-child) td{ border-top: 5px double #7CC919; }
 
 td{
 	vertical-align: middle;
@@ -169,19 +169,28 @@ footer{width:1600px; bottom:0; position: relative; }
 
 #modal.modalClass{
 	transform: translateY(-50%) translateX(-50%);
-	padding:54px 38px;
+	padding:2em 2em 1.5em; margin: 0 0.25em;
 	font-size:1.6em;
 	background: #FC3A3A;
   color: #fff;
 	text-align: center;
-	line-height: 1.2;
-	width: 25em; min-width: 320px;
+	width: 30%; min-width: 320px;
+	border:1px solid #851D1D;
 }
-#modal.modalClass p{ margin:12px; }
-#modal span{
+#modal.modalClass span{
+	font-size: 1.4em;
+	display: block;
+	padding:0 1em;
 	font-weight: bold;
 }
-#modal span:first-child{ font-size: 1.4em; }
+#modal.modalClass p{
+	display: block;
+	margin:0 auto 1em;
+	max-width: 92.5%;
+	line-height: 1.2;
+}
+
+/*#modal span:first-child{ font-size: 1.4em; }*/
 /*#registration_form > div#details{ padding-bottom:2em; }*/
 #modal.modalClass a{ color:#fff; text-decoration: underline; }
 
