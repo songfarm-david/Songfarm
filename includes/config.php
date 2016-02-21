@@ -7,6 +7,7 @@ defined("DB_SERVER") 	? NULL : define("DB_SERVER",'localhost');
 defined("DB_USER") 		? NULL : define("DB_USER",'root');
 defined("DB_PASS") 		? NULL : define("DB_PASS",'');
 defined("DB_NAME") 		? NULL : define("DB_NAME",'songfarm-jul2015');
+defined("ADMIN_EMAIL") 		? NULL : define("ADMIN_EMAIL",'admin@songfarm.ca');
 // live config
 // defined("DB_SERVER") 	? NULL : define("DB_SERVER",'localhost');
 // defined("DB_USER") 		? NULL : define("DB_USER",'songfarm_david');

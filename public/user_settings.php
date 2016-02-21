@@ -22,7 +22,7 @@ $user->retrieve_user_data($session->user_id);
 		<hr>
 		<article>
 			<h2>Current Timezone:</h2>
-			<p><?php echo $user->city . ", " . $user->country . " -- " . $user->full_timezone; ?>&nbsp;<span class="edit">Edit</span></p>
+			<p><?php echo $user->city . ", " . $user->country_name . " -- " . $user->full_timezone; ?>&nbsp;<span class="edit">Edit</span></p>
 			<?php include_once('../includes/layout/timezone_form.php'); ?>
 		</article>
 		<a href="workshop.php">Back</a>
