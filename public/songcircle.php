@@ -1,5 +1,5 @@
 <?php require_once("../includes/initialize.php");
-error_reporting(E_ALL);
+error_reporting(0);
 /**
 * References 'functions.php' generate_ip_data() function
 */
@@ -80,11 +80,11 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
         <article id="aboutSongcircle">
           <h3>What is a Songcircle?</h3>
           <p>
-            A <a href="#linkToBlog" style="color:blue; text-decoration:underline;">Songcircle</a> is a <em>modern</em> way for Songwriters to come together, share song ideas, receive feedback, and collaborate with one another; It&apos;s Songfarm's (approach) to a traditional Songwriters' Circle
+            A <a href="#linkToBlog" style="color:blue; text-decoration:underline;">Songcircle</a> is the <em>modern</em> way for Songwriters to come together, workshop their song ideas, and receive real-time feedback from other artists just like you.
           </p>
-					<p>Conducted over the web in real-time, Songcircles are free to virtually anyone with an internet connection, a webcam, and a song</p>
+					<p>Conducted over the internet in real-time, Songcircles are free to virtually anyone with an internet connection, a webcam, and a song</p>
 					<p>
-						What traditionally had to be done in a brick and mortar establishment is now being pioneered by Songfarm as a way to offer songwriters the opportunity to perfect their craft and grow their network - all without having to leave the house.
+						What traditionally had to be done in a brick and mortar establishment is now being pioneered by Songfarm as a way to offer songwriters the opportunity to nurture their craft and grow their network - all without having to leave the house.
 					</p>
 					<p>
 						Why not experience one for yourself? <a href="#linkToRegister" style="color:blue; text-decoration:underline;">Register for a Songcircle today!</a>
@@ -192,7 +192,7 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
     		</div>
 				<!-- end of: Location -->
 
-				<!-- hidden inputs -->
+				<!-- hidden inputs for location -->
 				<input type="hidden" name="fullTimezone" value="">
 				<input type="hidden" name="city_name" value="<?php if(isset($city_name)){echo $city_name;}?>">
 				<input type="hidden" name="country_name" value="<?php if(isset($country_name)){echo $country_name;}?>">
@@ -221,18 +221,21 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 			// Where re-direction will go after successful registration:
 
 			/* local site */
-			// var redirectURL = 'http://localhost/songfarm-oct2015/public/index.php';
+			var redirectURL = 'http://localhost/songfarm-oct2015/public/index.php';
 
 			/* live test site */
-			var redirectURL = 'http://test.songfarm.ca/public/';
+			// var redirectURL = 'http://test.songfarm.ca/public/';
 
-			// Register button
+			// Register button from Songcircle Table
 			var btnRegister = $('input[data-id="triggerRegForm"]');
+			// Waiting list button from Songcircle Table
+			var btnWaitList = $('input[data-id="triggerWaitList"]');
 			// Registration Form
 			var registrationForm = $('#registration_form');
-			// Registration Form Submit
+			// Registration Form Submit Button
 			var formSubmit = $('#registration_form input[type="submit"]');
-
+			// registration form submit button
+			var formSubmit = $('form#registration_form input[type="submit"]');
 			// Overlay for Registration Form
 			var overlay = $('#overlay');
 
@@ -274,15 +277,9 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 			var confirmContainer = $(document.createElement('div')).attr('id','modal').addClass('modalClass');
 			$('body').prepend(confirmContainer);
 
-			/* retrieve songcircle id from display_songcircles() ('includes/songcircle.php'); */
-			var songcircleId = $('[data-conference-id]').data('conference-id');
-			var songcircleName = $('[data-songcircle-name]').data('songcircle-name');
-			var songcircleDate = $('td.date').text();
 			// create array
 			var songcircleData = [];
-
-			// push data onto array:
-			songcircleData.push(songcircleId, songcircleName, songcircleDate);
+			var otherArray = [];
 
 			/* Validation measures */
 			var nameIsValid 			= false;
@@ -314,15 +311,44 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 			* When user clicks on the 'Register' button on songcircle.php
 			* open the registration form
 			*/
-			btnRegister.on('click', function(e){
+			$(btnRegister).add(btnWaitList).on('click', function(e){
 				e.preventDefault();
 				overlay.show();
 				registrationForm.show();
-
-				/* call remove errors function here */
-
+				// call function to retrieve songcircle data by ROW number
+				getAndSetSongcircleDataByRow($(this).data('row'));
 				usernameInput.focus();
 			});
+
+			/**
+			* Gathers input data for a given row and
+			* Sets it into the registration form
+			*
+			*	Created: 01/28/2016
+			*
+			* @param (int) a row number
+			*/
+			function getAndSetSongcircleDataByRow(rowNumber){
+
+				// child inputs of songcircle data row
+				var childInputs = $('#songcircleTable tr[data-row="'+rowNumber+'"]').find('td.form').children('[type="hidden"]');
+
+				// loop through the child elements and extract key/value pairs
+				$(childInputs).each(function(index, element){
+					var name 	= $(element).attr('name');
+					var str = '<input type="hidden" name="'+name+'" value="'+$(element).val()+'">';
+					$(formSubmit).before(str);
+				});
+
+			}
+
+			/**
+			*	Targets specific hidden inputs in the registration form
+			* and Removes them
+			*/
+			function removeSongcircleData(){
+				var submitBtnParent = $(formSubmit).parent().find('input[type="hidden"]').remove();
+			}
 
 			/**
 			*	Find the selected option of timezone select field
@@ -414,6 +440,8 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 				confirmContainer.hide();
 				// hide Code of Conduct, if present
 				codeOfConContainer.hide();
+
+				removeSongcircleData();
 			});
 
 			/**
@@ -423,7 +451,6 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 				/**
 				* Write function for correct outlining of true or false validations
 				*/
-
 				// remove the hidden input containing city name so that it doesn't submit with the form
 					$('input[name="city_name"]').remove();
 
@@ -523,63 +550,53 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 					$.ajax({
 						url : '../includes/songcircleRegisterUser.php',
 						data : {
-							'formData' : formData,
-							'songcircleData' : songcircleData
+							'formData' : formData
 						},
 						method : 'POST',
 						success: function(data){
-
 							// hide form and overlay
 							registrationForm.hide();
 							overlay.hide();
 
-							try {
-							// try to parse return data in JSON format
+							try {	// try to parse return data in JSON format
 
-							// if songcircleObj is JSON
 							var songcircleObj = $.parseJSON(data); // parse return messages
-							// console.log(data);
-							var notificationMsg = "<span>Thank You!</span><br /><br />";
-									// notificationMsg += "You have successfully registered for <span>"+songcircleObj.name+'</span> on <span>'+songcircleObj.date_time+'</span><br /><br />';
-									notificationMsg += 'Please check your email to confirm your attendance and receive tips on how to get the most out of this Songcircle.';
-									notificationMsg += '<br /><br />';
+							var notificationMsg;
 
-								// timer for page redirect
+							// if returned data contains waitlist flag
+							if(songcircleObj.waitlist == true){
+								// waitlist message
+								notificationMsg = "<p><span>Thanks, "+songcircleObj.username+"!</span></p>";
+								notificationMsg+= "<p>You've been added to the Waiting List for <b>"+songcircleObj.eventTitle+"</b> on <b>"+songcircleObj.date_time+"</b></p>";
+								notificationMsg+= "<p>We'll notify as soon as a spot opens up!</p>"
+							} else {
+								// registration message
+								notificationMsg = "<p><span>Thank You, "+songcircleObj.username+"!</span></p>";
+								notificationMsg+= "<p>Please check your email to confirm your attendance to <b>"+songcircleObj.eventTitle+"</b> and receive tips on how to get the most out of this Songcircle.</p>";
+							}
+
+								// wait 5 seconds then redirect
 								setTimeout(function(){
 									window.location.replace(redirectURL);
 								}, 5000);
 
-							} catch(e) {
-								// catch returned error message as 'data'
+							} catch(e) { // catch returned error message as 'data'
+
 								var notificationMsg = data;
 
-								// collect error key from returned data
+								// trim returned data for keywords ('name','email')
 								var newStr = notificationMsg.substring( notificationMsg.indexOf('=')+2, notificationMsg.indexOf("_") );
 
 								switch (newStr) {
 									case 'name':
-										// usernameInput.css('outline','3px solid red');
 										var nameFocus = true;
 										break;
 									case 'email':
 										var emailFocus = true;
-										// usernameInput.css('outline','3px solid green');
-										// emailInput.css('outline','3px solid red').focus();
 										break;
-									// case 'timezone':
-									// 	console.log('timezone was found');
-									// 	break;
-									// case 'country':
-									// 	console.log('country was found');
-									// 	break;
-									// case 'code':
-									// 	console.log('code was found');
-									// 	break;
 									// default:
 									// 	console.log('End of Switch Statement');
-
 								}
-
 								if(nameFocus || emailFocus){
 									// set timeout to return to form
 									setTimeout(function(){
@@ -596,19 +613,13 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 								}
 								else
 								{
-									// overlay.show();
-									// registrationForm.show();
-
-									/* commented out for testing */
 									setTimeout(function(){
-										console.log('location error occurred');
+										console.log('mailing error occurred');
 										overlay.show();
 										registrationForm.show();
 										confirmContainer.hide();
 									}, 7500);
-
 								}
-
 							} finally {
 								// remove any child elements, if existing
 								$(confirmContainer).empty();
@@ -618,10 +629,9 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 								overlay.show();
 								confirmContainer.show();
 							}
-
 						} // end of: success: function(data)
 					}); // end of: $.ajax
-				} // end of: if( nameIsValid && emailIsValid && codeOfConductRead )
+				} // end of: if( nameIsValid && emailIsValid && timezoneValid && codeOfConductRead )
 			 	else
 				{
 					console.log('registration failed due to validation error..');
@@ -661,29 +671,18 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 			/* CSS for Code Of Conduct Modal */
 			var modalTrigger = $('#codeOfConduct a');
 			var codeOfConContainer = $('<div id="cOcModal"></div>');
-			// var modalClose = $('<button type="button" class="closeCoC">Ok, got it!</button>');
 
 			/**
 			* Function for retrieving 'Songfarm Code of Conduct' from filesystem
 			*/
 			$.fn.getCodeOfConduct = function(){
 				$.get('../codeOfConduct.html', function(data){
-
 					// construct modal
 					codeOfConContainer.html(data);
-					// codeOfConContainer.append(modalClose);
-
 					// append modal container at end of body
 					$('body').append(codeOfConContainer);
-
-					// get width of modal container
-					var modalWidth = codeOfConContainer.width();
-
-					// adjust left margin to center modal
-					codeOfConContainer.css('margin-left','-'+modalWidth/2+'px');
-
+					// show modal
 					codeOfConContainer.show();
-
 				});
 			}
 
@@ -691,7 +690,6 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 			modalTrigger.on('click', function(){
 				// get page
 				$(this).getCodeOfConduct();
-
 			});
 
 			/**
@@ -714,18 +712,9 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 			/**
 			* Event: User does not agree with Code of Conduct
 			*/
-			$('body').on('click', 'button[name="cOcNotAgree"]', function(){
+			$('body').on('click', 'a[name="cOcNotAgree"]', function(){
 				codeOfConContainer.fadeOut().hide();
 			});
-
-			/*
-			*	Code for browser window resize event listener
-			*/
-			// $(window).resize(function(){
-			// 	// alert('resize');
-			// 	/* this function would be used in continuously resizing a margin when
-			// 	someone resizes the browser window */
-			// })
 
 		}); // end document.ready
 

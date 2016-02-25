@@ -1,20 +1,32 @@
 <?php require_once('initialize.php');
 /**
-* NOTES:
-* -
+* Songcircle class
+*
 */
 class Songcircle extends MySQLDatabase{
 
 	/**
 	* Public variables
 	*
-	* @var $created_by_id (int) id of creator of a given songcircle
+	* @var (int) user_id of creator of a given songcircle
+	* @var (string) songcircle name
+	*	@var (datetime) date of songcircle
+	*	@var (int) number of participants allowed for a given songcircle
+	*	@var (int) number of waiting list participants allowed for a given songcircle
 	*/
 	public $created_by_id;
 	public $songcircle_name="Songfarm Open Songcircle";
 	public $date_of_songcircle;
-	public $max_participants=12;
+	public $max_participants=2;
+	public $max_wait_participants=2;
 
+	/**
+	*	Protected variables
+	*
+	* @var (int) user_id
+	* @var (string) a unique id
+	*	@var (int) permission rating for a given songcircle
+	*/
 	protected $user_id;
 	protected $songcircle_id;
 	protected $songcircle_permission=0;
@@ -22,7 +34,7 @@ class Songcircle extends MySQLDatabase{
 	/**
 	* Private variables
 	*
-	* @var $global_user_id (int) a global user id representing Songfarm global user
+	* @var (int) a global user id representing Songfarm global user
 	*/
 	private $global_user_id = 0;
 
@@ -57,11 +69,12 @@ class Songcircle extends MySQLDatabase{
 				// if status is not started
 				if( $data['songcircle_status'] == 0 ){
 					// check if songcircle is full
-					if ( $this->isFullSongcircle($data['songcircle_id'], $data['max_participants']) ){
-						// if returns true, then call create new songcircle function
+					if ( $this->isFullSongcircle($data['songcircle_id'],$data['max_participants'],$this->songcircle_permission) ){
+						// if full, return date to be used in createNewOpenSongcircle function
 						return $this->date_of_songcircle = $data['date_of_songcircle'];
 					}
 				} elseif( $data['songcircle_status'] == 1 ){
+					// if already started, return date to be used in createNewOpenSongcircle function
 					return $this->date_of_songcircle = $data['date_of_songcircle'];
 				}
 
@@ -85,6 +98,8 @@ class Songcircle extends MySQLDatabase{
 	/**
 	* Inserts new Open Songcircle into Database
 	*
+	* Also logs the creation of said songcircle into logs/
+	*
 	* Updated: 01/13/2016
 	*
 	* @param (datetime) last scheduled time of previous Open Songcircle
@@ -96,7 +111,7 @@ class Songcircle extends MySQLDatabase{
 		// initialize date of new open songcircle
 		if(!$last_scheduled_time){
 			// initiate a new custom time here
-			$dt = new DateTime("2016-03-11T19:00:00", new DateTimeZone("UTC"));
+			$dt = new DateTime("2016-02-16T22:00:00", new DateTimeZone("UTC"));
 		} else {
 			// use last scheduled time and add 1 week to it
 			$dt = new DateTime($last_scheduled_time, new DateTimeZone("UTC"));
@@ -107,15 +122,21 @@ class Songcircle extends MySQLDatabase{
 		// create new songcircle id
 		$songcircle_id = uniqid('');
 
-		// create new Open Songcircle
+		// Insert new Open Songcircle
 		$sql = "INSERT INTO songcircle_create (";
 		$sql.= "songcircle_id, created_by_id, songcircle_name, date_of_songcircle, max_participants";
 		$sql.= ") VALUES (";
 		$sql.= "'$songcircle_id', $this->global_user_id, '$this->songcircle_name', '$date_of_songcircle', '$this->max_participants')";
 
 		if($result = $db->query($sql)){
-			// check affected rows
+			// check if affected rows
 			while(mysqli_affected_rows($db->connection) > 0){
+
+				// construct log text
+				$log_text = 'UTC-'.$date_of_songcircle.' '.$this->songcircle_name.' ('.$songcircle_id.') -- created by: '.$this->global_user_id.' on '.date('m/d/y g:iA T',time()). PHP_EOL;
+				// write to log file
+				file_put_contents('../logs/songcircle_create.txt',$log_text,FILE_APPEND);
+
 				return true;
 			}
 		}
@@ -129,29 +150,24 @@ class Songcircle extends MySQLDatabase{
 	* @return (string) an html table
 	*/
 	public function display_songcircles(){
-		// global database variable
 		global $db;
+
+		// init row counter
+		$row_counter=0;
 
 		// select all from songcircle_create table
 		$sql = "SELECT * FROM songcircle_create WHERE created_by_id = $this->global_user_id";
 		// if result
 		if($result = $db->query($sql)){
+
 			// begin display output:
 			$output = "<table id=\"songcircleTable\">";
 
 			// while array rows..
 			while($row = $db->fetch_array($result)){
 				// begin table row
-				$output.= "<tr>";
+				$output.= "<tr data-row=\"".$row_counter."\">";
 
-			// hidden data
-				// hidden input containing songcircle_id (conference-id)
-				$output.= "<input type=\"hidden\" data-conference-id=\"".$row['songcircle_id']."\">";
-				// hidden input containing songcircle permission (conference-permission)
-				$output.= "<input type=\"hidden\" data-conference-permission=\"".$row['songcircle_permission']."\">";
-			// end of: hidden data
-
-			// table data: DATE
 				// if no $_SESSION data
 					if( empty($_SESSION['user_id']) && !isset($_SESSION['user_id']) ){
 						// format scheduled times in UTC
@@ -165,7 +181,7 @@ class Songcircle extends MySQLDatabase{
 					}
 
 			// table data: SONGCIRCLE NAME
-				$output.= "<td class=\"name\" data-songcircle-name=\"".$row['songcircle_name']."\">".$row['songcircle_name']."<br>";
+				$output.= "<td class=\"name\">".$row['songcircle_name']."<br>";
 
 				// registered participants display & jQuery Trigger
 					$output.= "<span class=\"triggerParticipantsTable\">";
@@ -178,9 +194,9 @@ class Songcircle extends MySQLDatabase{
 					// if partipants
 					if($participants = $this->fetchParticipantData($row['songcircle_id'])){
 
-						while($participant = $db->fetch_array($participants)){
+						foreach ($participants as $participant) {
 							$output.= "<tr><td><a href=\"profile.php?id=".$participant['user_id']."\">".$participant['user_name']."</a></td>";
-							$output.= "<td>".$participant['timezone'].", ".$participant['country_name']."</td></tr>";
+							$output.= "<td>".$this->formatTimezone($participant['timezone']).", ".$participant['country_name']."</td></tr>";
 						}
 
 					}	else {
@@ -197,8 +213,13 @@ class Songcircle extends MySQLDatabase{
 				// $output.= "<td class=\"created\">Created by: <br><a href=\"profile.php?id=user_id_here\">User name here</a></td>";
 
 			// FORM td
+			$output.= "<td class=\"form\">";
 				// if songcircle not started
 				if( $row['songcircle_status'] == 0 ){
+
+					$output.= "<input type=\"hidden\" name=\"songcircle_id\" value=\"".$row['songcircle_id']."\">";
+					$output.= "<input type=\"hidden\" name=\"date_of_songcircle\" value=\"".$row['date_of_songcircle']."\">";
+					$output.= "<input type=\"hidden\" name=\"songcircle_name\" value=\"".$row['songcircle_name']."\">";
 
 					// if $_SESSION data is provided
 					if( isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) ){
@@ -207,56 +228,49 @@ class Songcircle extends MySQLDatabase{
 						if( $this->isRegisteredUser($row['songcircle_id'], $_SESSION['user_id']) ){
 
 							// display unregister button
-							$output.= "<td>";
-							$output.= "<input type=\"hidden\" name=\"songcircle_id\" value=\"".$row['songcircle_id']."\">";
-							$output.= "<input type=\"hidden\" name=\"date_of_songcircle\" value=\"".$row['date_of_songcircle']."\">";
-							$output.= "<input type=\"hidden\" name=\"songcircle_name\" value=\"".$row['songcircle_name']."\">";
 							$output.= "<input type=\"submit\" value=\"Unregister\" name=\"unregister\">";
-							$output.= "</td>";
 
 						} // end of: if( $this->isRegisteredUser($row['songcircle_id']) )
-
 					}
 					else // end of: isset($_SESSION['user_id']) && !empty($_SESSION['user_id'])
 					{
-						if( $this->isFullSongcircle($row['songcircle_id'], $row['max_participants']) ){
+						if( $this->isFullSongcircle($row['songcircle_id'], $row['max_participants'], $row['songcircle_permission']) ){
 
-							// if( $this->isFullWaitingList ) {
-								// disable button
-							// } else {
-								// display register for waiting list button
-							// }
+							$output.= "<input type=\"hidden\" name=\"waiting_list\" value=\"true\">";
 
-							// disable register button
-							$output.= "<td><input type=\"submit\" class=\"cannot_register\" value=\"Register\"></td>";
+							// if full waiting list
+							if( $this->isFullWaitingList($row['songcircle_id'],$this->max_wait_participants) ) {
+								// disable register button
+								$output.= "<input type=\"submit\" class=\"cannot_register\" value=\"Register\">";
+							} else {
+								// show waiting list button
+								$output.= "<input type=\"submit\" value=\"Join Waiting List Now\" data-id=\"triggerWaitList\" data-row=\"".$row_counter."\">";
+							}
 
 						} else {
+
+							$output.= "<input type=\"hidden\" name=\"waiting_list\" value=\"false\">";
+
 							// display register button
-							// submission form
-								$output.= "<td>";
-								$output.= "<input type=\"hidden\" name=\"songcircle_id\" value=\"".$row['songcircle_id']."\">";
-								$output.= "<input type=\"hidden\" name=\"date_of_songcircle\" value=\"".$row['date_of_songcircle']."\">";
-								$output.= "<input type=\"hidden\" name=\"songcircle_name\" value=\"".$row['songcircle_name']."\">";
-								$output.= "<input type=\"submit\" value=\"Register\" data-id=\"triggerRegForm\">";
-								$output.= "</td>";
+								$output.= "<input type=\"submit\" value=\"Register\" data-id=\"triggerRegForm\" data-row=\"".$row_counter."\">";
+
 						}
 					}
 				}
 				// if songcircle started
-				elseif ( $row['songcircle_status'] == 1 ) {
+				elseif ( $row['songcircle_status'] == 1 )
+				{
 					if( !isset($_SESSION['user_id']) || empty($_SESSION['user_id']) ){
 
 						// display join button
-						$output.= "<td>";
 						$output.= "<button id=\"divJoin".$row['songcircle_id']."\" class=\"join\" style=\"display: block\">";
 						$output.= "<a href=\"startCall.php?songcircleid=".$row['songcircle_id']."\" target=\"new\">Join Now</a>";
 						$output.= "</button>";
-						$output.= "</td>";
 
 					} else {
 
 						// display "Songcircle In Progress" button
-						$output.= "<td><div><p>".$row['songcircle_name']." is in progress</p></div></td>";
+						$output.= "<div><p>".$row['songcircle_name']." is in progress</p></div>";
 
 					}
 				}
@@ -264,13 +278,17 @@ class Songcircle extends MySQLDatabase{
 				else
 				{
 					// display "Songcircle has Completed" button
-					$output.= "<td><div><p>".$row['songcircle_name']." has completed</p></div></td>";
+					$output.= "<div><p>".$row['songcircle_name']." has completed</p></div>";
 				}
 
-			// end of FORM td
+				// end of FORM td
+				$output.= "</td>";
 
-				// end of table row
-				$output.= "</tr>";
+			// end of table row
+			$output.= "</tr>";
+
+			// increment row count
+			$row_counter++;
 
 			} // end of: while($row = $db->fetch_array($result))
 
@@ -290,7 +308,7 @@ class Songcircle extends MySQLDatabase{
 	* @param (int) a user id
 	* @return (bool) true if row affected
 	*/
-	public function updateUserRegistration($songcircle_id, $user_id){
+	public function confirmUserRegistration($songcircle_id, $user_id){
 		global $db;
 
 		$sql = "UPDATE songcircle_register SET confirm_status = 1, confirmation_key = NULL ";
@@ -309,13 +327,14 @@ class Songcircle extends MySQLDatabase{
 	/**
 	*	Determines if a given songcircle is "full"
 	*
-	* Created: 01/13/2016
+	* Updated: 01/26/2016
 	*
 	* @param (string) a songcircle_id
 	* @param (int) the number of max_participants allowed for given songcircle
+	* @param (int) permission of songcircle
 	* @return (bool) true if given songcircle is full
 	*/
-	protected function isFullSongcircle($songcircle_id, $max_participants){
+	protected function isFullSongcircle($songcircle_id, $max_participants, $songcircle_permission){
 		global $db;
 		$sql = "SELECT COUNT(*) AS registered_participants FROM songcircle_register WHERE songcircle_id = '{$songcircle_id}' AND confirm_status = 1";
 		if($result = $db->query($sql)){
@@ -323,6 +342,36 @@ class Songcircle extends MySQLDatabase{
 			$count = $db->fetch_array($result);
 			// compare registered participants with max participants allowed
 			if( $count['registered_participants'] == $max_participants ){
+
+				mysqli_free_result($result);
+				// if permission is public
+				// if( $songcircle_permission == 0 ){
+				// 	// create new row into songcircle_wait_list
+				// 	$sql = "INSERT INTO songcircle_wait_list ";
+				// }
+				return true;
+			}
+		}
+	}
+
+	/**
+	* Checks to see if Waiting List for a given songcircle is full
+	*
+	* Created: 01/28/2016
+	*
+	* @param (srting) songcircle id
+	* @param (int) maximimum waiting list participants allowed
+	* @return (bool) true if given waiting list is full
+	*/
+	protected function isFullWaitingList($songcircle_id, $max_wait_participants){
+		global $db;
+
+		$sql = "SELECT COUNT(*) AS registered_wait_participants FROM songcircle_wait_register WHERE songcircle_id = '{$songcircle_id}'";
+		if($result = $db->query($sql)){
+			// fetch array set
+			$count = $db->fetch_array($result);
+			// compare registered wait participants with max wait participants allowed
+			if( $count['registered_wait_participants'] == $max_wait_participants ){
 				return true;
 			}
 		}
@@ -378,14 +427,17 @@ class Songcircle extends MySQLDatabase{
 
 		$sql = "SELECT user_id FROM songcircle_register WHERE songcircle_id = '{$songcircle_id}' AND confirm_status = 1";
 		if($result = $db->query($sql)){
-			while( $row = $db->fetch_array($result) ){
-				$user_id = $row['user_id'];
-				$sql = "SELECT user_register.user_id, user_name, user_timezone.timezone, user_timezone.country_name FROM user_register, user_timezone WHERE user_timezone.user_id = {$user_id}";
-				if($result = $db->query($sql)){
-					return $result;
+			if($row = mysqli_num_rows($result) > 0){
+				while( $row = $db->fetch_array($result) ){
+					$user_id = $row['user_id'];
+					$sql = "SELECT user_register.user_id, user_name, user_timezone.timezone, country_name FROM user_register, user_timezone WHERE user_register.user_id = {$user_id} AND user_timezone.user_id = {$user_id}";
+					if($res = $db->query($sql)){
+						$returnData[] = $db->fetch_array($res);
+						mysqli_free_result($res);
+					}
 				}
+				return $returnData;
 			}
-			return false;
 		}
 	}
 
@@ -403,11 +455,25 @@ class Songcircle extends MySQLDatabase{
 		return $date->format('l, F jS, Y - \\<\\b\\r\\> g:i A T');
 	}
 
-
+	/**
+	*	Checks to see if current time is
+	* greater than start time of a songcircle
+	*
+	*	Created: 01/15/2016
+	*
+	* @param (datetime) the current time
+	* @param (datetime) start time of a songcircle
+	* @return (bool) true is expired
+	*/
+	public function isExpiredLink($current_time, $start_time){
+		if($current_time > $start_time){
+			return true;
+		}
+	}
 
 
 	/**
-	* Checks if a user is registered for a given songcircle
+	* Checks if a user is already registered for a given songcircle
 	* (referenced in includes/songcircleRegisterUser.php)
 	*
 	* Updated: 01/13/2016
@@ -431,15 +497,60 @@ class Songcircle extends MySQLDatabase{
 		}
 	}
 
+	/**
+	* Formats a timezone string into a friendlier format
+	*
+	* Updated: 01/30/2016
+	*
+	* @param (string) a user timezone
+	* @return (string) formatted timezone
+	*/
+	public function formatTimezone($timezone){
+		if( ($pos = strpos($timezone, '/') ) !== false ) { // remove 'America/'
+			$clean_timezone = substr($timezone, $pos+1);
+			if( ($pos = strpos($clean_timezone, '/')) !== false ) { // remove second level '.../'
+				$clean_timezone = substr($clean_timezone, $pos+1);
+				if( ($pos = strpos($clean_timezone, '/')) !== false ) { // remove third level if exist'.../'
+					$clean_timezone = substr($clean_timezone, $pos+1);
+				}
+			}
+		}
+		return $clean_timezone = str_replace('_',' ',$clean_timezone); // remove the '_' in city names
+	}
 
+	/**
+	* An assistive function that laterally calls private user_timezone function
+	*
+	* @param (datetime) a songcircle datetime
+	* @param (name constant) php timezone name
+	* @return a formatted datetime according to the user's timezone
+	*/
+	public function call_user_timezone($date_of_songcircle, $timezone) {
+		$this->timezone = $timezone;
+		return $this->user_timezone($date_of_songcircle);
+	}
 
-
-
-
-
-
-
-
+	/**
+	* Private function - takes a datetime string (in UTC)
+	* and converts it to a users timezone
+	*
+	* @param datetime a datetime description of a date
+	*	@return string formatted date with user timezone
+	*/
+	protected function user_timezone($date_of_songcircle){
+		$date = new DateTime($date_of_songcircle, new DateTimeZone('UTC'));
+		$timezone = new DateTimeZone($this->timezone);
+		$date->setTimezone($timezone);
+		// debug_backtrace tells the last called function
+		// depending on the function, display time format accordingly
+		$callMethod = debug_backtrace();
+		if (isset($callMethod[1]['function']) && $callMethod[1]['function'] == 'display_songcircles')
+		{
+			return $date->format('l, F jS, Y - \\<\\b\\r\\> g:i A T');
+		} else {
+			return $date->format('l, F jS, Y - g:i A T');
+		}
+	}
 
 	/**
 	* Currently unwritten!
@@ -451,11 +562,6 @@ class Songcircle extends MySQLDatabase{
 	// 	// 3 hours past active songcircle OR when songcircle ends, remove it from database and list
 	// 	// log record of past songcircles
 	// }
-
-
-
-
-
 
 	/**
 	* UNTESTED
@@ -473,8 +579,6 @@ class Songcircle extends MySQLDatabase{
 	// 		Message::$message = "We were unable to delete this songcircle"; // should be more specific
 	// 	}
 	// }
-
-
 
 	// public function create_songcircle($user_id){
 	// 	global $db;
@@ -496,41 +600,10 @@ class Songcircle extends MySQLDatabase{
 	// 	}
 	// }
 
-	/**
-	* Private function - takes a datetime string (in UTC)
-	* and converts it to users timezone
-	*
-	* @param datetime a datetime description of a date
-	*	@return string formatted date with user timezone
-	*/
-	private function user_timezone($date_of_songcircle){
-		$date = new DateTime($date_of_songcircle, new DateTimeZone('UTC'));
-		$timezone = new DateTimeZone($this->timezone);
-		$date->setTimezone($timezone);
-		// debug_backtrace tells the last called function
-		// depending on the function, display time format accordingly
-		$callMethod = debug_backtrace();
-		if (isset($callMethod[1]['function']) && $callMethod[1]['function'] == 'display_songcircles')
-    {
-      return $date->format('l, F jS, Y - \\<\\b\\r\\> g:i A T');
-    } else {
-			return $date->format('l, F jS, Y - g:i A T');
-		}
-	}
 
-	/**
-	* An assistive function that laterally calls private user_timezone function
-	*
-	* @param (datetime) a songcircle datetime
-	* @param (name constant) php timezone name
-	* @return a formatted datetime according to the user's timezone
-	*/
-	public function call_user_timezone($date_of_songcircle, $timezone) {
-		$this->timezone = $timezone;
-		return $this->user_timezone($date_of_songcircle);
-	}
 
-}
+
+} // end of Class Songcircle
 
 $songcircle = new songcircle();
 

@@ -156,6 +156,9 @@ $sessionUserId ='';
 	}
 
 	function onParticipantLeft(evt) {
+		/*
+			Command "log" visible to end users?
+		*/
 	    log("user (" + evt.uid + ") left the conversation.");
 	    if (evt.uid) {
 	        var index = callParticipants.indexOf(evt.uid);
@@ -698,7 +701,7 @@ $sessionUserId ='';
                 <div class="popup_access_denied">
                 </div>
                 <div style="text-align:center;font-size:12px;margin-left:20px;margin-right:20px;">
-                Find this icon in the URL bar and allow songfarm access your media devices.</div>
+                Find this icon in the URL bar and allow songfarm access to your media devices.</div>
             </div>
             <div id="dvNotFound" class="popup_form" style="display: none; height: 165px; top: 163px;">
                 <h2>Media device not found </h2>
@@ -708,9 +711,9 @@ $sessionUserId ='';
             </div>
 
             <div id="dvWelcomeMessage" class="popup_form" style="display: none; height: 165px; top: 163px;">
-                <h2>Welcome to Song circle </h2>
+                <h2>Welcome to Songcircle</h2>
                 <div style="text-align:center;font-size:16px;margin-left:20px;margin-right:20px;">
-                  We will start once at least 2 participant join the Songcirlce. Please wait.
+                  We will start once at least 2 participant join the Songcircle. Please wait.
                 </div>
             </div>
             <div id="dvName" class="popup_form" style="height: 135px; top: 178px;">

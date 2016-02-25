@@ -161,6 +161,10 @@ header ul#links li a:hover::before{
   content:url('../images/arrows_and_lines/navActive_arrow.png');
   position:absolute; left:-15px; top:3px;
 }
+/**
+  The following edited out for songcirle2016 purposes.
+  Uncomment out to re-initiate log in button styles
+
 header ul#links li:last-child{
   right:-12px;
 }
@@ -173,6 +177,9 @@ header ul#links li a[title="Log In"]:hover:before{
   content:'';
   position: relative;
 }
+
+  end of comment section
+*/
 header nav ul#links li a[href^="songcircle"]{ font-size:1.1em;}
 
 header .logo{
@@ -586,7 +593,6 @@ div#thank-you_message{
 }
 
 /*Register Form*/
-.hide{ display:none; }
 #register-form span.error{
 	position:absolute;
 	left:90px;
@@ -832,35 +838,66 @@ form#login-form span#password-error{
 
 #cOcModal{
   position:fixed; z-index:3001;
-  top:0.75em; left:50%; bottom:0.75em;
-  width: 60%;
-  /*padding:1.2em 1.6em;*/
-  font-size: 2em; line-height: 1.1;
-  background: #fff;
-  display: none;
-  font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
-}
-#cOcModal div{ background:#eee; margin:0.5em; border:1px dotted #ccc; padding: 0.5em; }
-#cOcModal p{ line-height: 1.2; margin-bottom: 0.35em; font-size: 0.8em; }
-#cOcModal h2, #cOcModal ol li{ font-family: 'museo_sans300', Arial, Helvetica, sans-serif; }
-#cOcModal h2{
-  font-weight: bold;
-  margin:1em;
-  text-decoration: underline;
-  font-size:1.3em;
+  top:0.5em; bottom:0.5em;
+  left: 50%; transform: translateX(-50%);
+  width: 62.5%;
+  min-width: 320px;
+  background: #9ECB9E;
   text-align: center;
+  border: 2px solid #555;
+  display: none;
+  overflow: auto;
+  font-size: 20px;
 }
-#cOcModal ol{ margin:1em auto 2em; width:50%; padding-left: 4em;}
-#cOcModal ol li{padding:0.25em 0 0.25em 0.75em;}
+#cOcModal div{
+  margin: 0.5em 0.5em; padding: 0.5em 0.5em;
+  font-size: 0.85em; text-align: left;
+  background:#eee;
+}
+#cOcModal p{ margin: 0; line-height: 1.1; padding: 0.25em 0; }
+#cOcModal h2{ margin: 2em 0 1em; font-size: 1.5em; font-weight: bold;}
 
+#cOcModal h2, #cOcModal ol li{ font-family: 'museo_sans300', Arial, Helvetica, sans-serif; }
+#cOcModal ol{
+  margin:0 auto; padding:0.5em 0;
+  list-style-type: none; list-style-type: decimal !ie;
+  counter-reset: ol-counter;
+  background:#eee; border: 2px solid #aaa;
+  width: 50%; min-width: 284px;
+}
+#cOcModal ol li{
+  position: relative;
+  text-align: left;
+  margin: 1em 0;
+  margin-left: 60%; transform: translateX(-50%);
+  min-height: 2em;
+  border-left: 2px solid #464646; padding-left: 0.5em;
+}
+#cOcModal ol > li:before {
+  content: counter(ol-counter);
+  counter-increment: ol-counter;
+  position: absolute; top: 0; left: -1.15em;
+  width: 0.85em; line-height: 0.9;
+  font-size: 2.5em; font-weight: bold;
+  text-align: right;
+  color: #464646;
+}
 #cOcModal button{
-  margin:0 auto; display: block; padding:1em;
-  border-radius: 6px; background:#bbb;
+  display: block;
+  margin:1em auto 0.5em; padding:0.5em 1em;
+  font-size:1em; line-height: 1.25;
+  width:49%; min-width: 284px;
+  border-radius: 6px 6px 6px 6px;
 }
 #cOcModal button[name="cOcAgree"]{
-  font-size:0.75em; margin-bottom: 1em;
   color:#365A09; background: #7CC919;
 }
-#cOcModal button[name="cOcAgree"]:hover{ color:white; background: #2E63AF; }
-
-#cOcModal button:hover{ cursor: pointer; background: #eee; }
+a[name="cOcNotAgree"]{
+  display: block; width: 45%;
+  margin: 0 auto 1em; padding: 0.5em 1em;
+  font-size: 0.75em;
+  color:blue;
+  text-decoration: underline;
+}
+a[name="cOcNotAgree"]:hover{color:#D7F6E4;}
+#cOcModal button[name="cOcAgree"]:hover{ color:white; background: #2E63AF; cursor: pointer; }
