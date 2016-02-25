@@ -3,9 +3,14 @@
 	require_once("../includes/initialize.php");
 	require_once("../includes/cronjob_helper.php");
 	set_time_limit(3000);
+<<<<<<< HEAD
 	global $db;
 	
 	$api = new CronApi();
+=======
+
+	/* who calls this page?? Where is this GET request originating from? */
+>>>>>>> origin/master
 	switch($_GET['method']) {
 
 	 	case 'songcircleState':
