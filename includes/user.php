@@ -77,6 +77,7 @@ class User extends MySQLDatabase{
 
 		$sql = "INSERT INTO ".self::$table_name." (user_id, timezone, country_name, full_timezone) ";
 		$sql.= "VALUES ($user_id, '$timezone', '$country_name', '$full_timezone')";
+		echo " insert_timezone " .$sql;
 		$result = $db->query($sql);
 	}
 
@@ -86,12 +87,20 @@ class User extends MySQLDatabase{
 	* @var int user id
 	*/
 	public function update_timezone($id, $timezone, $country_name, $full_timezone){
+		
 		global $db;
-
-		$sql = "UPDATE ".self::$table_name." ";
-		$sql.= "SET timezone = '$timezone', country = '$country_name', full_timezone = '$full_timezone' ";
-		$sql.= "WHERE user_id = $id";
-		$result = $db->query($sql);
+		if ($this->has_location($id) == true)
+		{
+			$sql = "UPDATE ".self::$table_name." ";
+			$sql.= "SET timezone = '$timezone', country_name = '$country_name', full_timezone = '$full_timezone' ";
+			$sql.= "WHERE user_id = $id";
+			echo " update_timezone" .$sql;
+			$result = $db->query($sql);
+		}
+		else 
+		{
+			$temp = $this->insert_timezone($id, $timezone, $country_name, $full_timezone);
+		}
 	}
 
 	/**
@@ -110,6 +119,26 @@ class User extends MySQLDatabase{
 		}
 	}
 
+	
+	/**
+	* Public function - Takes a user id and queries
+	* database for user email address
+	*
+	* @param int id of user
+	* @return email address
+	*/
+	public function retrieve_user_email($profile_id){
+		global $db;
+		$user_email = '';
+		$sql = "SELECT * FROM user_register WHERE user_id = $profile_id";
+		if($result = $db->query($sql)){
+			$user_data = $db->fetch_array($result);
+			$user_email = $user_data['user_email'];
+		}
+		return $user_email;
+	}
+	
+	
 	/**
 	* Protected function - Sets timezone
 	* and country to class variables

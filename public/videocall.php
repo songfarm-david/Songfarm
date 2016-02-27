@@ -1,6 +1,6 @@
 <?php
 	require_once("../includes/initialize.php");
-	if(!$session->is_logged_in()) { redirect_to('index.php'); }
+	//if(!$session->is_logged_in()) { redirect_to('index.php'); }
 ?>
 <html lang="en">
     <head>
@@ -25,7 +25,28 @@
 <?php
 
 	$songcircle_id = $_GET['songcircleid'];
-
+	
+	
+$sessionUserId ='';
+	if(isset($session) && isset($session->user_id))
+	{
+		$sessionUserId = $session->user_id ;
+	}
+	else
+	{
+		$sessionUserId = $_GET['userid '] ;
+	}
+	
+	$sessionUserName ='';
+	if(isset($session) && isset($session->username))
+	{
+		$sessionUserName = $session->username ;
+	}
+	else
+	{
+		//$sessionUserId = $_GET['username '] ;
+	}
+	
 ?>
 
     <script type="text/javascript" src="js/songfarm.VideoHelper-0.0.5.js"></script>
@@ -46,7 +67,8 @@
 	var resolution = "NORMAL";		//"HIGH";
 	var isResolutionSupported = true;
 	var enableLogs = true;
-	var username = "<?php  echo $session->username ?>";
+	//var username = "<?php  echo $session->username ?>";
+	var username = "<?php  echo $sessionUserName ?>";
 
 	try {
 	    document.addEventListener("fullscreenchange", onFullScreenStateChanged, false);
@@ -55,13 +77,14 @@
 	} catch(e){}
 
 
+	
 
 	var myId = "";
 	var callParticipants = new Array();
 
 	if (!sessionToken) {
 	    //login to get session token
-	    participantId = "123" + <?php  echo $session->user_id ?>;
+	    participantId = "123" + <?php  echo $sessionUserId ?>;
 
 	    var redirectUrl = location.href + "&pid=" + participantId;
 	    ooVoo.API.connect({
@@ -318,7 +341,17 @@
 	    log("calling: ooVoo.API.Conference.setConfig: " + resolution);
 	    conf.setConfig({ videoResolution: ooVoo.API.VideoResolution[resolution], videoFrameRate: new Array(5, 15) }, onConference_setConfig);
 		//enterFullScreen();
+
+		
+		//start the timer to disaply message before 15 minutes of songcircel end time. 
+		setTimeout("displayReminder", 3000)
 	}
+	function displayReminder() {
+	    if (enableLogs) {
+	        console.log(msg);
+	    }
+	}
+
 	function log(msg) {
 	    if (enableLogs) {
 	        console.log(msg);
@@ -652,7 +685,7 @@
 	<div>
       <input type="hidden" id="confid" value="<?php echo $songcircle_id; ?>" />
       <input type="hidden" id="user_token" value=""  />
-      <input type="hidden" id="user_id" value="<?php echo $_SESSION['user_id']; ?>" />
+      <input type="hidden" id="user_id" value="<?php echo $sessionUserId; ?>" />
   </div>
     <div class="callContainer" ondblclick="toggleFullScreen();" >
         <div id="popupsContainer" align=center>

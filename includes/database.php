@@ -31,6 +31,7 @@ class MySQLDatabase{
 
 	public function query($sql) {
 		$result = mysqli_query($this->connection, $sql);
+		//echo " dbresult " . print_r($result);
 		$this->confirm_query($result);
 		return $result;
 	}
@@ -38,6 +39,8 @@ class MySQLDatabase{
 	private function confirm_query($result) {
 		if(!$result) {
 			die("Database query failed." . mysqli_error($this->connection));
+			file_put_contents('../logfile/log_'.date("j.n.Y").'.txt',PHP_EOL. date("G:i:s"). ' errors '. mysqli_error($this->connection), FILE_APPEND);
+				
 		}
 	}
 
@@ -178,6 +181,18 @@ class MySQLDatabase{
 		} else {
 			return true;
 		}
+	}
+	
+	public function getRows($sql)
+	{
+		$result = $this->query( $sql);
+		$data = array();
+	
+		while ($row = $result->fetch_object()){
+	        $data[] = $row;
+	    }
+		
+		return $data;
 	}
 
 }

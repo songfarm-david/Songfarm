@@ -1,6 +1,6 @@
 <?php
 	require_once("../includes/initialize.php");
-	if(!$session->is_logged_in()) { redirect_to('index.php'); }
+	//if(!$session->is_logged_in()) { redirect_to('index.php'); }
 ?>
 <html lang="en">
     <head>
@@ -29,6 +29,16 @@
 		echo  "No Songcircle is provided, please try to jon after login to songfarm.ca";
 		return;
 	}
+	
+	$sessionUserId ='';
+	if(isset($session) && isset($session->user_id))
+	{
+		$sessionUserId = $session->user_id ;
+	}
+	else 
+	{
+		$sessionUserId = $_GET['userid '] ;
+	}
 ?>
 <body>
 
@@ -38,9 +48,13 @@
 	var appToken = "<?php echo APP_TOKEN ?>";
 	var sessionToken = getQSParam("t");
 	var participantId = getQSParam("pid");
+	var sessionUserId = "<?php echo $sessionUserId ?>";;
+	
+		
+	
 	if (!sessionToken) {
 	    //login to get session token
-	    participantId = "123" + <?php  echo $session->user_id ?>;
+	    participantId = "123" + sessionUserId;
 
 		//	"url to send response with the session token";
 	    var redirectUrl = location.href;
