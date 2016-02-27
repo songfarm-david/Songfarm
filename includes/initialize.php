@@ -3,10 +3,15 @@
 // DIRECTORY_SEPARATOR is a PHP pre-defined constant
 defined('DS') ? NULL : define('DS', DIRECTORY_SEPARATOR);
 
+/* Local site root */
+defined('SITE_ROOT') 	? NULL : define('SITE_ROOT', DS.'wamp'.DS.'www'.DS.'Songfarm-Oct2015');
+
 /* Site root for test.songfarm.ca */
 // defined('SITE_ROOT') ? NULL : define('SITE_ROOT', DS.'home'.DS.'songfarm'.DS.'public_html'.DS.'test');
 
-defined('SITE_ROOT') 	? NULL : define('SITE_ROOT', DS.'wamp'.DS.'www'.DS.'Songfarm-Oct2015'); //DS.'Songfarm'.
+/* LIVE site root */
+// defined('SITE_ROOT') ? NULL : define('SITE_ROOT', DS.'home'.DS.'songfarm'.DS.'public_html');
+
 defined('LIB_PATH') 	? NULL : define('LIB_PATH', SITE_ROOT.DS.'includes');
 defined('CORE_PATH') 	? NULL : define('CORE_PATH' , SITE_ROOT.DS.'public');
 defined('IMAGE_PATH') ? NULL : define('IMAGE_PATH', SITE_ROOT.DS.'uploaded_images');
@@ -26,6 +31,6 @@ require_once(LIB_PATH.DS."songcircle.php");
 require_once(LIB_PATH.DS."message.php");
 // Load basic functions
 require_once(LIB_PATH.DS."functions.php");
-include_once(EMAIL_PATH.DS.'emailData.php');
+include_once(EMAIL_PATH.DS.'email_data.php');
 
 ?>

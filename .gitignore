@@ -1,4 +1,13 @@
-#sandbox/
+#any items in the sandbox
+sandbox/
+.gitignore
+.htaccess
+#any test-uploaded images
 uploaded_images/
+
+#config file
+config.php
+
 phpinfo.php
 template.htm
+#*.sql

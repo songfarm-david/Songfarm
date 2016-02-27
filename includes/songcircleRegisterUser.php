@@ -197,9 +197,9 @@ if(isset($_POST['formData']) && !empty($_POST['formData'])){
 			// send registration confirmation email
 
 			$to = "{$username} <{$email}>"; // this may cause a bug on Windows systems
-			$subject = "{$songcircle_name} - Confirm your registration!";
+			$subject = "Confirm your registration!";
 			$from = "Songfarm <noreply@songfarm.ca>";
-			if($message = constructHTMLEmail($email_data['confirmation'],$songcircle_user_data)){
+			if($message = constructHTMLEmail($email_data['confirm_registration'],$songcircle_user_data)){
 				$headers = "From: {$from}\r\n";
 				$headers.= "Content-Type: text/html; charset=utf-8";
 				if( $result = mail($to,$subject,$message,$headers,'-fsongfarm') ){
@@ -224,6 +224,9 @@ if(isset($_POST['formData']) && !empty($_POST['formData'])){
 					print $output;
 				}
 			} // end of: if($message = constructHTMLEmail())
+			else {
+				echo 'construct email failed';
+			}
 
 		} else { // waiting list is open
 			// send waiting list confirmation email

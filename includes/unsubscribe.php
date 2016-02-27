@@ -24,6 +24,13 @@ if(isset($_GET['user_email']) && !empty($_GET['user_email'])){
 					// delete from tables anywhere the user id matches
 					$sql = "DELETE user_register, user_timezone, songcircle_register FROM user_register INNER JOIN user_timezone INNER JOIN songcircle_register WHERE user_register.user_id = $user_id AND user_timezone.user_id = $user_id AND songcircle_register.user_id = $user_id";
 					if($result = $db->query($sql)){
+
+						// construct unsubscribe text
+						$log_text = 'Unsubscribe-- user_id: '.$user_id.'; email: '.$user_email.' ('.date('m/d/y g:iA T',time()).')'. PHP_EOL;
+
+						// write to log
+						file_put_contents('../logs/user_register.txt',$log_text,FILE_APPEND);
+
 						$success_msg = 'You have successfully been unsubscribed from Songfarm';
 					} else {
 						$error_msg[] = 'There was an error unsubscribing you. Please contact support at support@songfarm.ca';

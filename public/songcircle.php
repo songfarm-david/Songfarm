@@ -1,5 +1,4 @@
 <?php require_once("../includes/initialize.php");
-error_reporting(0);
 /**
 * References 'functions.php' generate_ip_data() function
 */
@@ -44,7 +43,6 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
           <script src="js/respond.js" type="text/javascript"></script>
           <script src="//ie7-js.googlecode.com/svn/version/2.1(beta4)/IE9.js"></script>
         <![end if]-->
-
     </head>
 		<body>
       <?php include("../includes/layout/header.php") ?>
@@ -80,14 +78,14 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
         <article id="aboutSongcircle">
           <h3>What is a Songcircle?</h3>
           <p>
-            A <a href="#linkToBlog" style="color:blue; text-decoration:underline;">Songcircle</a> is the <em>modern</em> way for Songwriters to come together, workshop their song ideas, and receive real-time feedback from other artists just like you.
+            A <a href="#linkToBlog" style="color:blue; text-decoration:underline;">Songcircle</a> is an <em>opportunity</em> for Songwriters to gather together, share their ideas, play their songs and get real-time feedback from other artists from around the world.
           </p>
 					<p>Conducted over the internet in real-time, Songcircles are free to virtually anyone with an internet connection, a webcam, and a song</p>
 					<p>
 						What traditionally had to be done in a brick and mortar establishment is now being pioneered by Songfarm as a way to offer songwriters the opportunity to nurture their craft and grow their network - all without having to leave the house.
 					</p>
 					<p>
-						Why not experience one for yourself? <a href="#linkToRegister" style="color:blue; text-decoration:underline;">Register for a Songcircle today!</a>
+						Experience one for yourself today! <a href="songcircle.php#headline" style="color:blue; text-decoration:underline;">Register for a Songcircle today!</a>
 					</p>
 
         </article>
@@ -572,7 +570,7 @@ if( $location_by_ip = generate_ip_data() ){ // if ip array comes back
 							} else {
 								// registration message
 								notificationMsg = "<p><span>Thank You, "+songcircleObj.username+"!</span></p>";
-								notificationMsg+= "<p>Please check your email to confirm your attendance to <b>"+songcircleObj.eventTitle+"</b> and receive tips on how to get the most out of this Songcircle.</p>";
+								notificationMsg+= "<p>Please go your email and confirm your attendance to <b>"+songcircleObj.eventTitle+"</b> plus receive some simple tips on getting the most out of this upcoming Songcircle.</p>";
 							}
 
 								// wait 5 seconds then redirect

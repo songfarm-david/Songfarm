@@ -553,6 +553,30 @@ class Songcircle extends MySQLDatabase{
 	}
 
 	/**
+	* Unregisters a user from a given songcircle
+	*
+	* @param (string) a songcircle id
+	*	@param (int) a user id
+	* @return (bool) true on successful unregister
+	*/
+	public function unregisterUserFromSongcircle($songcircle_id, $user_id){
+		global $db;
+		$sql = "SELECT id FROM songcircle_register WHERE songcircle_id = '$songcircle_id' AND user_id = $user_id";
+		if($result = $db->query($sql)){
+			if($row = $db->has_rows($result) > 0){
+				$data = $db->fetch_array($result);
+				$id = $data['id'];
+				mysqli_free_result($result);
+
+				$sql = "DELETE * FROM songcircle_register WHERE id = $id";
+				if($result = $db->query($sql)){
+					return true;
+				}
+			}
+		}
+	}
+
+	/**
 	* Currently unwritten!
 	*
 	* Will remove expired songcircles

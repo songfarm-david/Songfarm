@@ -23,7 +23,7 @@ function redirect_to($location) {
 function autorespondEmail($email_data){
 
 	// retrieve email template
-	$autorespond_email = file_get_contents(EMAIL_PATH.DS.'autorespondTemplate.html');
+	$autorespond_email = file_get_contents(EMAIL_PATH.DS.'templates/autorespondTemplate.html');
 
 	// replace keys with data
 	$autorespond_email = str_replace('%title%',$email_data['title'],$autorespond_email);
@@ -55,34 +55,53 @@ function autorespondEmail($email_data){
 function confirmationEmail($email_data,$songcircle_user_data){
 
 	// retrieve advanced email template
-	$registration_email = file_get_contents(EMAIL_PATH.DS.'registrationTemplate.html');
+	if( ($email_data['email_type'] == 'confirm_registration') ){
+		$email = file_get_contents(EMAIL_PATH.DS.'templates/confirmationTemplate.html');
+	}
+	elseif( ($email_data['email_type'] == 'registration') ){
+		$email = file_get_contents(EMAIL_PATH.DS.'templates/registrationTemplate.html');
+	}
 
 	// replace keys with data
-	$registration_email = str_replace('%title%',$email_data['title'],$registration_email);
-	$registration_email = str_replace('%logo%',$email_data['logo']['source'],$registration_email);
-	$registration_email = str_replace('%logoWidth%',$email_data['logo']['width'],$registration_email);
-	$registration_email = str_replace('%logoHeight%',$email_data['logo']['height'],$registration_email);
-	$registration_email = str_replace('%header%',$email_data['header'],$registration_email);
-	$registration_email = str_replace('%greeting%',$email_data['greeting'],$registration_email);
-	$registration_email = str_replace('%intro%',$email_data['intro'],$registration_email);
-	$registration_email = str_replace('%body%',$email_data['body'],$registration_email);
-	$registration_email = str_replace('%link%',$email_data['ctaLink']['linkLocation'],$registration_email);
-	$registration_email = str_replace('%linkText%',$email_data['ctaLink']['linkText'],$registration_email);
-	$registration_email = str_replace('%signature%',$email_data['signature'],$registration_email);
-	$registration_email = str_replace('%directive%',$email_data['directive'],$registration_email);
-	$registration_email = str_replace('%linkUnsubscribe%',$email_data['unsubscribeLink']['unsubscribeLinkLocation'],$registration_email);
-	$registration_email = str_replace('%year%',$email_data['year'],$registration_email);
+	$email = str_replace('%title%',$email_data['title'],$email);
+	$email = str_replace('%logo%',$email_data['logo']['source'],$email);
+	$email = str_replace('%logoWidth%',$email_data['logo']['width'],$email);
+	$email = str_replace('%logoHeight%',$email_data['logo']['height'],$email);
+	$email = str_replace('%header%',$email_data['header'],$email);
+	$email = str_replace('%greeting%',$email_data['greeting'],$email);
+	if(array_key_exists('intro',$email_data)){
+		$email = str_replace('%intro%',$email_data['intro'],$email);
+	}
+	$email = str_replace('%body%',$email_data['body'],$email);
+	$email = str_replace('%link%',$email_data['ctaLink']['linkLocation'],$email);
+	$email = str_replace('%linkText%',$email_data['ctaLink']['linkText'],$email);
+	$email = str_replace('%signature%',$email_data['signature'],$email);
+	if(isset($email_data['unregister']) && !empty($email_data['unregister'])){
+		$email = str_replace('%unregisterText%',$email_data['unregister']['unregisterText'],$email);
+		$email = str_replace('%unregisterLinkLocation%',$email_data['unregister']['unregisterLinkLocation'],$email);
+		$email = str_replace('%unregisterLinkText%',$email_data['unregister']['unregisterLinkText'],$email);
+	}
+	$email = str_replace('%directive%',$email_data['directive'],$email);
+	$email = str_replace('%linkUnsubscribe%',$email_data['unsubscribeLink']['unsubscribeLinkLocation'],$email);
+	$email = str_replace('%year%',$email_data['year'],$email);
 
 	// replace user/event specific keys
-	$registration_email = str_replace('%name%',$songcircle_user_data['username'],$registration_email);
-	$registration_email = str_replace('%event%',$songcircle_user_data['eventTitle'],$registration_email);
-	$registration_email = str_replace('%date_time%',$songcircle_user_data['date_time'],$registration_email);
-	$registration_email = str_replace('%conference_id%',$songcircle_user_data['linkParams']['conference_id'],$registration_email);
-	$registration_email = str_replace('%email%',$songcircle_user_data['linkParams']['user_email'],$registration_email);
-	$registration_email = str_replace('%confirmation_key%',$songcircle_user_data['linkParams']['confirmation_key'],$registration_email);
+	$email = str_replace('%name%',$songcircle_user_data['username'],$email);
+	if(array_key_exists('user_email',$songcircle_user_data)){
+		$email = str_replace('%email%',$songcircle_user_data['user_email'],$email);
+	}
+	$email = str_replace('%event%',$songcircle_user_data['eventTitle'],$email);
+	$email = str_replace('%date_time%',$songcircle_user_data['date_time'],$email);
+
+	// if linkParams exist
+	if(isset($songcircle_user_data['linkParams']) && !empty($songcircle_user_data['linkParams'])){
+		$email = str_replace('%conference_id%',$songcircle_user_data['linkParams']['conference_id'],$email);
+		$email = str_replace('%email%',$songcircle_user_data['linkParams']['user_email'],$email);
+		$email = str_replace('%confirmation_key%',$songcircle_user_data['linkParams']['confirmation_key'],$email);
+	}
 
 	// return email
-	return $registration_email;
+	return $email;
 }
 
 /**
@@ -96,7 +115,7 @@ function confirmationEmail($email_data,$songcircle_user_data){
 */
 function waitingListEmail($email_data,$songcircle_user_data){
 	// retrieve wait list email template
-	$wait_list_email = file_get_contents(EMAIL_PATH.DS.'wait_listTemplate.html');
+	$wait_list_email = file_get_contents(EMAIL_PATH.DS.'templates/waitlistTemplate.html');
 
 	$wait_list_email = str_replace('%title%',$email_data['title'],$wait_list_email);
 	$wait_list_email = str_replace('%logo%',$email_data['logo']['source'],$wait_list_email);
@@ -129,21 +148,23 @@ function waitingListEmail($email_data,$songcircle_user_data){
 * @return (string) an HTML email
 */
 function constructHTMLEmail($email_data, $songcircle_user_data=''){
-
 	// get first dimension of array keys
 	foreach($email_data as $email_flag){
 		// if email_flag matches..
 		switch ($email_flag) {
-			case 'class_1':
+			case 'autorespond':
 				return autorespondEmail($email_data);
 				break;
-			case 'class_2':
+			case 'confirm_registration':
 				return confirmationEmail($email_data, $songcircle_user_data);
 				break;
-			case 'class_3':
+			case 'registration':
+				return confirmationEmail($email_data, $songcircle_user_data);
+				break;
+			case 'waitlist':
 				return waitingListEmail($email_data, $songcircle_user_data);
 			default:
-				return false;
+				echo 'got to end of construct email switch statement';
 				break;
 		} // end of switch
 	} // end of foreach

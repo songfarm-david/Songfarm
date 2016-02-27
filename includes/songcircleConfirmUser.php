@@ -8,7 +8,9 @@
 */
 if(	( isset($_GET['conference_id']) && !empty($_GET['conference_id']) ) &&
 		( isset($_GET['user_email']) && !empty($_GET['user_email']) ) &&
-		( isset($_GET['confirmation_key']) && !empty($_GET['confirmation_key']) )	)
+		( isset($_GET['confirmation_key']) && !empty($_GET['confirmation_key']) )	&&
+		( isset($_GET['username']) && !empty($_GET['username']) )
+		)
 	{
 
 	$error_msg = array();
@@ -33,15 +35,19 @@ if(	( isset($_GET['conference_id']) && !empty($_GET['conference_id']) ) &&
 		$error_msg[] = 'Invalid confirmation key';
 		$confirmation_key = false;
 	}
+	$username = $db->escape_value($_GET['username']);
 
 	/* values sanitized */
 	if($songcircle_id && $user_email && $confirmation_key){
 	// all values have been accounted for and sanitized
 		// get start time of songcircle
-		$sql = "SELECT UNIX_TIMESTAMP(date_of_songcircle) FROM songcircle_create WHERE songcircle_id = '$songcircle_id'";
+		$sql = "SELECT songcircle_name, date_of_songcircle, UNIX_TIMESTAMP(date_of_songcircle) FROM songcircle_create WHERE songcircle_id = '$songcircle_id'";
 		if($result = $db->query($sql)){
 			// fetch data array
 			$songcircle_data = $db->fetch_array($result);
+			// get variables from array
+			$songcircle_name = $songcircle_data['songcircle_name'];
+			$date_time = $songcircle_data['date_of_songcircle'];
 			// capture unix formatted start time in variable
 			$start_time = $songcircle_data['UNIX_TIMESTAMP(date_of_songcircle)'];
 			if(empty($start_time)){
@@ -77,15 +83,34 @@ if(	( isset($_GET['conference_id']) && !empty($_GET['conference_id']) ) &&
 										// attempt to update user status for songcircle
 										if($songcircle->confirmUserRegistration($songcircle_id, $user_id)){
 
-											// construct log text
-											$log_text = 'Confirm--- user_id: '.$user_id.'; songcircle_id: '.$songcircle_id.' ('.date('m/d/y g:iA T',time()).')'. PHP_EOL;
-											// write to log
-											file_put_contents('../logs/user_songcircle.txt',$log_text,FILE_APPEND);
+											$date_time = $songcircle->call_user_timezone($date_time,)
+											// create user_data array
+											$songcircle_user_data = [
+												"username" => $username,
+												"user_email" => $user_email,
+												"eventTitle" => $songcircle_name,
+												"date_time" => $date_time
+											];
 
-											// update successful
-											$error_msg = false;
-											$success_msg = 'Thank you. Confirmation successful. <br><br>Redirecting now...';
+											// craft email
+											$to = "{$username} <{$user_email}>"; // this may cause a bug on Windows systems
+											$subject = "Registration Confirmed!";
+											$from = "Songfarm <noreply@songfarm.ca>";
+											if($message = constructHTMLEmail($email_data['registration'],$songcircle_user_data)){
+												$headers = "From: {$from}\r\n";
+												$headers.= "Content-Type: text/html; charset=utf-8";
+												if( $result = mail($to,$subject,$message,$headers,'-fsongfarm') ){
 
+													// construct log text
+													$log_text = 'Confirm--- user_id: '.$user_id.'; songcircle_id: '.$songcircle_id.' ('.date('m/d/y g:iA T',time()).')'. PHP_EOL;
+													// write to log
+													file_put_contents('../logs/user_songcircle.txt',$log_text,FILE_APPEND);
+													// update successful
+													$error_msg = false;
+													$success_msg = 'Thanks. Confirmation successful.';
+
+												}
+											} // end of: if($message = constructHTMLEmail())
 										} else {
 											$error_msg[] = 'Error: user confirmation update failed.';
 										}

@@ -77,7 +77,7 @@ NOTE: this page needs styling
 					echo $success_msg;
 				} else {
 					// default text
-					echo 'Well, this is embarassing..,<br />Let us redirect you somewhere a little more exciting, now, what do you say?</p>';
+					echo 'Well, this is embarassing..,<br />Let\'s redirect you somewhere a little more exciting, now, what do you think?</p>';
 				}
 			?>
 			<div id="spinLoader">

@@ -4,7 +4,7 @@
     <head>
         <meta charset="utf-8">
         <meta name="description" content="Songfarm nurtures music talent and cultivates songwriters' careers from the ground up!">
-        <title>Songfarm - Growing Music Talent From The Ground Up</title>
+        <title>Songfarm - Grow Your Music</title>
         <!-- <link rel="shortcut icon" type="image/x-icon" href="images/songfarm_favicon.png" /> -->
         <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
         <meta property="og:url" content="http://www.songfarm.ca">
@@ -13,7 +13,7 @@
         <meta property="og:image" content="http://www.songfarm.ca/images/songfarm_logo_l.png">
         <meta property="og:image:width" content="1772">
         <meta property="og:image:height" content="1170">
-        <!-- <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png"> -->
+        <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
         <link href="css/index.css" rel="stylesheet" type="text/css">
         <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
         <script type="text/javascript" src="//platform.linkedin.com/in.js">
