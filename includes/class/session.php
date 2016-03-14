@@ -2,11 +2,23 @@
 
 class Session{
 
-	private $logged_in = false;
+	/**
+	* @var (int) user_id
+	* @var (string) username
+	* @var (int) permission of user (0=false or 1=has_permission)
+	*/
 	public $user_id;
 	public $username;
 	public $permission;
 
+	/**
+	*
+	*/
+	private $logged_in = false;
+
+	/**
+	* On execution, calls check_login function
+	*/
 	function __construct() {
 		session_start();
 		$this->check_login();
@@ -20,6 +32,15 @@ class Session{
 		}
 	}
 
+	/**
+	* Checks if $_SESSION exists
+	*
+	* if TRUE, sets all public session variables
+	* AND sets $logged_in = true
+	*
+	* ELSE unsets all public variables
+	* AND sets $logged_in = false
+	*/
 	private function check_login() {
 		if(isset($_SESSION['user_id'])) {
 			$this->user_id = $_SESSION['user_id'];
@@ -34,10 +55,20 @@ class Session{
 		}
 	}
 
+	/**
+	* Checks state of private $logged_in var
+	*
+	* @return (bool) value of boolean
+	*/
 	public function is_logged_in() {
 		return $this->logged_in;
 	}
 
+	/**
+	* Unsets all $_SESSION data
+	* AND unsets all public vars
+	* AND sets $logged_in = false
+	*/
 	public function logout() {
 			unset($_SESSION['user_id']);
 			unset($_SESSION['username']);

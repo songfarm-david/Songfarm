@@ -1,11 +1,12 @@
-<?php require('initialize.php');
-
-
+<?php require('../initialize.php');
+/**
+* This page is AJAX called from
+*/
 if(isset($_POST['country_code'])){
 	$country_code = $_POST['country_code'];
 	$city_name = $_POST['city_name'];
 	// echo back response to Ajax
-	return timezones_from_countryCode($country_code, $city_name);
+	return timezonesFromCountryCode($country_code, $city_name);
 }
 
 /*
@@ -19,7 +20,7 @@ if(isset($_POST['country_code'])){
 * @param string a country code (eg. EC, CA)
 * @return string html options with formatted timezones
 */
-function timezones_from_countryCode($country_code, $city_name){
+function timezonesFromCountryCode($country_code, $city_name){
 	$dt = new DateTime();
 
 	// create a list of timezones based on that country code..
@@ -46,7 +47,7 @@ function timezones_from_countryCode($country_code, $city_name){
 		$pretty_offset = "UTC${offset_prefix}${offset_formatted}";
 
 		// clean up raw timezone
-		$clean_timezone = User::clean_city($raw_timezone);
+		$clean_timezone = User::cleanCity($raw_timezone);
 		// echo back options to a select dropdown on workshop.php
 
 		if($city_name == $clean_timezone){

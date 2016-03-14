@@ -36,7 +36,7 @@ $("#register-form").validate({
 	errorElement : 'span',
 	rules : {
 		user_name : {
-			required 		: true,
+			required 	: true,
 			maxlength	: 255 // letters and numbers
 		},
 		user_email : {
@@ -44,7 +44,7 @@ $("#register-form").validate({
 			email : true
 		},
 		user_password : {
-			required : true,
+			required 	: true,
 			minlength : 7
 		},
 		conf_password : {
@@ -83,7 +83,12 @@ $("#register-form").validate({
 			success: function(data, textStatus, jqXHR){
 				// console.log(data, textStatus, jqXHR);
 				if($.inArray(true,data) != -1){
-					window.location.href = 'workshop.php?id='+data[0];
+					// window.location.href = 'workshop.php?id='+data[0];
+					/*
+					* Here we will return a confirmation and perhaps do other actions upon
+					* successful user registration
+					*/
+					window.location.href = 'index.php';
 				} else {
 					$("#register-form div#message").append("<p>"+data+"</p>");
 					$("#register-form div#message").removeClass('hide');

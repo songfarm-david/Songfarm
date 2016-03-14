@@ -628,7 +628,8 @@ div#thank-you_message{
 	bottom:0;
 	left:0;
 	color: #2A5C03;
-	width:30%; height: 500px;
+  max-width:30%;
+	min-width:480px; height: 500px;
 	margin:auto;
 	padding:2em auto;
 	text-align: center;

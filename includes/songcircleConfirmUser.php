@@ -18,24 +18,24 @@ if(	( isset($_GET['conference_id']) && !empty($_GET['conference_id']) ) &&
 	// necesary data has been provided in the $_GET request
 
 	/* sanitize values */
-	$songcircle_id = $db->escape_value($_GET['conference_id']);
+	$songcircle_id = $db->escapeValue($_GET['conference_id']);
 	if(strlen($songcircle_id) != 13){
 		$error_msg[] = 'Invalid conference id';
 		$songcircle_id = false;
 	}
-	$user_email = $db->escape_value($_GET['user_email']);
+	$user_email = $db->escapeValue($_GET['user_email']);
 	// check if NOT valid email
 	if(!$user_email = $db->is_valid_email($user_email)){
 		// redirect to generic error page.
 		$error_msg[] = 'Invalid email sent with request. User confirmation failed.';
 		$user_email = false;
 	}
-	$confirmation_key = (string) $db->escape_value($_GET['confirmation_key']);
+	$confirmation_key = (string) $db->escapeValue($_GET['confirmation_key']);
 	if(strlen($confirmation_key) != 40){
 		$error_msg[] = 'Invalid confirmation key';
 		$confirmation_key = false;
 	}
-	$username = $db->escape_value($_GET['username']);
+	$username = $db->escapeValue($_GET['username']);
 
 	/* values sanitized */
 	if($songcircle_id && $user_email && $confirmation_key){
@@ -44,7 +44,7 @@ if(	( isset($_GET['conference_id']) && !empty($_GET['conference_id']) ) &&
 		$sql = "SELECT songcircle_name, date_of_songcircle, UNIX_TIMESTAMP(date_of_songcircle) FROM songcircle_create WHERE songcircle_id = '$songcircle_id'";
 		if($result = $db->query($sql)){
 			// fetch data array
-			$songcircle_data = $db->fetch_array($result);
+			$songcircle_data = $db->fetchArray($result);
 			// get variables from array
 			$songcircle_name = $songcircle_data['songcircle_name'];
 			$date_time = $songcircle_data['date_of_songcircle'];
@@ -69,9 +69,9 @@ if(	( isset($_GET['conference_id']) && !empty($_GET['conference_id']) ) &&
 						$sql = "SELECT * FROM songcircle_register WHERE songcircle_id = '{$songcircle_id}' AND user_id = {$user_id}";
 						if($result = $db->query($sql)){
 							// if rows
-							if($row = $db->has_rows($result)){
+							if($row = $db->hasRows($result)){
 								// if row
-								$user_array = $db->fetch_array($result);
+								$user_array = $db->fetchArray($result);
 								if( isset($user_array['confirmation_key']) && !empty($user_array['confirmation_key']) ){
 									// assign confirmation key to variable
 									$user_key = (string) $user_array['confirmation_key'];
@@ -83,7 +83,7 @@ if(	( isset($_GET['conference_id']) && !empty($_GET['conference_id']) ) &&
 										// attempt to update user status for songcircle
 										if($songcircle->confirmUserRegistration($songcircle_id, $user_id)){
 
-											$date_time = $songcircle->call_user_timezone($date_time,)
+											$date_time = $songcircle->callUserTimezone($date_time,)
 											// create user_data array
 											$songcircle_user_data = [
 												"username" => $username,
@@ -132,7 +132,7 @@ if(	( isset($_GET['conference_id']) && !empty($_GET['conference_id']) ) &&
 else
 {
 	// redirect back to index.php
-	redirect_to('../public/index.php');
+	redirectTo('../public/index.php');
 }
 ?>
 <?php	include('layout/confirmationTemplate.php');

@@ -1,4 +1,4 @@
-<?php require_once('initialize.php');
+<?php require_once(LIB_PATH.DS.'initialize.php');
 
 class songbook{
 

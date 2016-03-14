@@ -1,43 +1,42 @@
-<?php
-	require_once("../includes/initialize.php");
-	//if(!$session->is_logged_in()) { redirect_to('index.php'); }
+<?php	require_once("../includes/initialize.php");
+//if(!$session->is_logged_in()) { redirectTo('index.php'); }
 ?>
 <html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width">
-        <meta name="description" content="Songfarm nurtures music talent and cultivates songwriters' careers from the ground up!">
-        <title>Songfarm - Growing Music Talent From The Ground Up</title>
-        <!-- <link rel="shortcut icon" type="image/x-icon" href="images/songfarm_favicon.png" /> -->
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-        <meta property="og:url" content="http://www.songfarm.ca">
-        <meta property="og:title" content="Cultivating Music Talent From The Ground Up">
-        <meta property="og:description" content="Songfarm is a feedback, exposure and live-collaboration platform for aspiring singer/songwriters. Upload your raw videos, receive feedback from the Songfarm Community of Artists, Industry Professionals and Fans and begin growing your career. Register Today!">
-        <meta property="og:image" content="http://www.songfarm.ca/images/songfarm_logo_l.png">
-        <meta property="og:image:width" content="1772">
-        <meta property="og:image:height" content="1170">
-        <link href="css/index.css" rel="stylesheet" type="text/css">
-        <link href="css/songfarmvideo.css" rel="stylesheet" type="text/css">
-        <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
-        <script src="https://code.oovoo.com/webrtc/oovoosdk-2.0.0.min.js"></script>
-        <script type="text/javascript" src="js/jquery-ui.js"></script>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width">
+    <meta name="description" content="Songfarm nurtures music talent and cultivates songwriters from the ground up">
+    <title>Songfarm - Growing Music Talent From The Ground Up</title>
+    <!-- <link rel="shortcut icon" type="image/x-icon" href="images/songfarm_favicon.png" /> -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta property="og:url" content="http://www.songfarm.ca">
+    <meta property="og:title" content="Cultivating Music Talent From The Ground Up">
+    <meta property="og:description" content="Songfarm is a feedback, exposure and live-collaboration platform for aspiring singer/songwriters. Upload your raw videos, receive feedback from the Songfarm Community of Artists, Industry Professionals and Fans and begin growing your career. Register Today!">
+    <meta property="og:image" content="http://www.songfarm.ca/images/songfarm_logo_l.png">
+    <meta property="og:image:width" content="1772">
+    <meta property="og:image:height" content="1170">
+    <link href="css/index.css" rel="stylesheet" type="text/css">
+    <link href="css/songfarmvideo.css" rel="stylesheet" type="text/css">
+    <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
+    <script src="https://code.oovoo.com/webrtc/oovoosdk-2.0.0.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
 	</head>
 <?php
 
-	$songcircle_id = $_GET['songcircleid'];
-	
-	
-$sessionUserId ='';
+	$songcircle_id = $_GET['songcircle_id'];
+	$sessionUserId = '';
+
+	// ternary operator here
 	if(isset($session) && isset($session->user_id))
 	{
 		$sessionUserId = $session->user_id ;
 	}
 	else
 	{
-		$sessionUserId = $_GET['userid '] ;
+		$sessionUserId = $_GET['user_id '] ;
 	}
-	
-	$sessionUserName ='';
+
+	$sessionUserName = '';
 	if(isset($session) && isset($session->username))
 	{
 		$sessionUserName = $session->username ;
@@ -46,13 +45,13 @@ $sessionUserId ='';
 	{
 		//$sessionUserId = $_GET['username '] ;
 	}
-	
+
 ?>
 
-    <script type="text/javascript" src="js/songfarm.VideoHelper-0.0.5.js"></script>
-    <script>
+  <script type="text/javascript" src="js/songfarm.VideoHelper-0.0.5.js"></script>
+  <script>
 
-    var isFireFox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
+  var isFireFox = navigator.userAgent.toLowerCase().indexOf('firefox') > -1;
 
 	var conference = null;
 	var conferenceId = "<?php echo $songcircle_id ?>";
@@ -67,8 +66,8 @@ $sessionUserId ='';
 	var resolution = "NORMAL";		//"HIGH";
 	var isResolutionSupported = true;
 	var enableLogs = true;
-	//var username = "<?php  echo $session->username ?>";
-	var username = "<?php  echo $sessionUserName ?>";
+	//var username = "<?php echo $session->username ?>";
+	var username = "<?php echo $sessionUserName ?>";
 
 	try {
 	    document.addEventListener("fullscreenchange", onFullScreenStateChanged, false);
@@ -76,83 +75,77 @@ $sessionUserId ='';
 	    document.addEventListener("mozfullscreenchange", onFullScreenStateChanged, false);
 	} catch(e){}
 
-
-	
-
 	var myId = "";
 	var callParticipants = new Array();
 
 	if (!sessionToken) {
-	    //login to get session token
-	    participantId = "123" + <?php  echo $sessionUserId ?>;
+    //login to get session token
+    participantId = "123" + <?php  echo $sessionUserId ?>;
 
-	    var redirectUrl = location.href + "&pid=" + participantId;
-	    ooVoo.API.connect({
-	        token: appToken,
-	        isSandbox: true,
-	        userId: participantId,
-	        callbackUrl: redirectUrl
-	    });
+    var redirectUrl = location.href + "&pid=" + participantId;
+    ooVoo.API.connect({
+        token: appToken,
+        isSandbox: true,
+        userId: participantId,
+        callbackUrl: redirectUrl
+    });
 	}
 	else {
 		ooVoo.API.init({
-	        userToken: sessionToken
-	    }, onAPI_init);
+	    userToken: sessionToken
+    }, onAPI_init);
 	}
 
 	function onAPI_init(res) {
-	    if (res && res.error) {
-			//alert(res.error);
-	        showPopup('dvNotSupported');
-	    } else {
-	        log("callback: getUserMedia");
-	        log("calling: ooVoo.API.Conference.init");
-	        conf = ooVoo.API.Conference.init({ video: true, audio: true}, onConference_init);
-	    }
+    if (res && res.error) {
+		//alert(res.error);
+        showPopup('dvNotSupported');
+    } else {
+        log("callback: getUserMedia");
+        log("calling: ooVoo.API.Conference.init");
+        conf = ooVoo.API.Conference.init({ video: true, audio: true}, onConference_init);
+    }
 	}
 
 	function onConference_init(res) {
-	    log("callback: ooVoo.API.Conference.init: " + JSON.stringify(res));
-	    if (!res.error) {
-	        log("init callback event functions");
-	        conf.onParticipantJoined = onParticipantJoined;
-	        conf.onParticipantLeft = onParticipantLeft;
-	        conf.onRecvData = onRecieveData;
-	        conf.onVideoRotate = onVideoRotate;
-	        conf.onConferenceStateChanged = onConferenceStateChanged
-	        conf.onRemoteVideoStateChanged = onRemoteVideoStateChanged;
-	        conf.onLocalStreamPublished = onStreamPublished;
+    log("callback: ooVoo.API.Conference.init: " + JSON.stringify(res));
+    if (!res.error) {
+        log("init callback event functions");
+        conf.onParticipantJoined = onParticipantJoined;
+        conf.onParticipantLeft = onParticipantLeft;
+        conf.onRecvData = onRecieveData;
+        conf.onVideoRotate = onVideoRotate;
+        conf.onConferenceStateChanged = onConferenceStateChanged
+        conf.onRemoteVideoStateChanged = onRemoteVideoStateChanged;
+        conf.onLocalStreamPublished = onStreamPublished;
 
-	        join();
-	    }
-	    else {
-	        error(JSON.stringify(res));
-	    }
+        join();
+    }
+    else {
+        error(JSON.stringify(res));
+    }
 	}
 
 	function onConference_setConfig(res) {
-	    showPopup("dvAccess");
-	    log("callback: ooVoo.API.Conference.setConfig:" + JSON.stringify(res));
-	    if (!res.error) {
-
-	    	//alert(username);
-	    	$("#dname").val(username);
-	        log("calling: conf.join");
-	        //user login
-	        conf.join(document.getElementById("confid").value, $("#user_id").val(), user_token, document.getElementById("dname").value, function (res) {
-	            log("callback: conf.join: " + JSON.stringify(res));
-	            if (!res.error) {
-	                log("Trying to join conversation: " + document.getElementById("confid").value);
-	            }
-	            else
-	                error(JSON.stringify(res));
-	        });
-
-
-	    }
-	    else {
-	        error(JSON.stringify(res));
-	    }
+    showPopup("dvAccess");
+    log("callback: ooVoo.API.Conference.setConfig:" + JSON.stringify(res));
+    if (!res.error) {
+    	//alert(username);
+    	$("#dname").val(username);
+      log("calling: conf.join");
+      //user login
+      conf.join(document.getElementById("confid").value, $("#user_id").val(), user_token, document.getElementById("dname").value, function (res) {
+          log("callback: conf.join: " + JSON.stringify(res));
+          if (!res.error) {
+              log("Trying to join conversation: " + document.getElementById("confid").value);
+          }
+          else
+              error(JSON.stringify(res));
+      });
+    }
+    else {
+        error(JSON.stringify(res));
+    }
 	}
 
 	function onParticipantLeft(evt) {
@@ -168,6 +161,7 @@ $sessionUserId ='';
 	        VideoHelper.removeParticipantThatlLeft(evt.uid);
 	    }
 	}
+
 	function onParticipantJoined(evt) {
 	    if (evt.stream && evt.uid != null) {
 	        log("someone (" + evt.uid + ") else joined the conversation.");
@@ -342,8 +336,8 @@ $sessionUserId ='';
 	    conf.setConfig({ videoResolution: ooVoo.API.VideoResolution[resolution], videoFrameRate: new Array(5, 15) }, onConference_setConfig);
 		//enterFullScreen();
 
-		
-		//start the timer to disaply message before 15 minutes of songcircel end time. 
+
+		//start the timer to disaply message before 15 minutes of songcircel end time.
 		setTimeout("displayReminder", 3000)
 	}
 	function displayReminder() {

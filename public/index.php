@@ -39,7 +39,6 @@
       <?php include("../includes/layout/header.php") ?>
       <!-- Main Content -->
       <main>
-
         <!-- Banner Slide -->
         <article id="banner" class="slide-container">
           <h2 class="hide">Highlights</h2><!-- hide this, too -->

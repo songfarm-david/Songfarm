@@ -1,13 +1,16 @@
-<?php
-$errors = [];
-$user_data = [];
+<?php require_once('../includes/initialize.php');
+
+$errors = $user_data = [];
+
 if(isset($_POST['submit'])){
+
+	echo '<pre>';
+	print_r($_POST);
+	echo '</pre>';
 	// get the value of user_type
-	$user_type = (int)$_POST["user_type"];
-	// assign user_type to user_data array..
-	$user_data['user_type'] = $user_type;
+	$user_data['user_type'] = (int) $_POST["user_type"];
 	// check for the presence of a user_name
-	if(has_presence($_POST["user_name"])) {
+	if($db->has_presence($_POST["user_name"])) {
 		$user_name = htmlspecialchars($_POST["user_name"]);
 		$user_data['user_name'] = $user_name;
 	} else {
@@ -15,9 +18,9 @@ if(isset($_POST['submit'])){
 		$errors[] = "Please enter your Artist name or real name.";
 	}
 	// check for the presence of an email
-	if(has_presence($_POST['user_email'])) {
+	if($db->has_presence($_POST['user_email'])) {
     // make sure email is valid
-    if(is_valid_email($_POST['user_email'])) {
+    if($db->is_valid_email($_POST['user_email'])) {
       // assign clean, valid 'email' variable
       $user_email = htmlspecialchars($_POST['user_email']);
 			$user_data['user_email'] = $user_email;
@@ -30,13 +33,13 @@ if(isset($_POST['submit'])){
     $errors[] = "Please enter an email address";
   }
 	// check for presence of a password
-	if(has_presence($_POST['user_password'])) {
+	if($db->has_presence($_POST['user_password'])) {
 		// make sure its at least 7 characters long
-		if(has_min_length($_POST['user_password'],7)) {
+		if($db->has_min_length($_POST['user_password'],7)) {
 			// check for presence of a conf_password
-			if(has_presence($_POST['conf_password'])) {
+			if($db->has_presence($_POST['conf_password'])) {
 				// compare the two password for exactness
-				if(is_exact($_POST['user_password'], $_POST['conf_password'])) {
+				if($db->string_is_exact($_POST['user_password'], $_POST['conf_password'])) {
 					// passwords match
 					$user_password = htmlspecialchars($_POST['conf_password']);
 					$conf_password = htmlspecialchars($_POST['conf_password']);
@@ -66,20 +69,20 @@ if(isset($_POST['submit'])){
 	// if no errors, proceed to database
 	if(empty($errors)){
 		// check if email is unique
-		if(has_rows(unique_email($user_email))) {
+		if($db->has_rows($db->unique_email($user_email))) {
 			$messages[] = "That email address has already been registered.";
 			// echo json_encode($messages);
 		} else {
 			// insert user into the database
-			if(insert_user($user_data)) {
+			if($db->insert_user($user_data)) {
 				// success
-				$messages[] = "Thanks for registering";
-				$_SESSION['id'] = last_inserted_id($db);
+				$messages[] = "Thanks for registering!";
+				$_SESSION['id'] = $db->last_inserted_id();
 				$_SESSION['username'] = $user_data['user_name'];
 				// $message[] = true;
 				// echo json_encode($message);
 
-				// NOTE: HERE WE SEND AN EMAIL ... 
+				// NOTE: HERE WE SEND AN EMAIL ...
 
 			} else {
 				// failure
@@ -111,16 +114,16 @@ if(isset($_POST['submit'])){
 			<p>Please Select Your User Type:</p>
 			<div class="user active" value="1">Artist</div>
 			<!-- Added inactive classes for user types Industry and Fans -->
-			<div class="user inactive" value="2">Industry</div>
-			<div class="user inactive" value="3">Fan</div>
+			<div class="user active" value="2">Industry</div>
+			<div class="user active" value="3">Fan</div>
 			<input type="hidden" id="user_type" name="user_type" value="">
 		</div>
 		<div id="second" class="hide">
 			<p>Complete the form below to register</p>
-			<input type="text" id="username" name="user_name" value="<?php echo $user_name ?>" placeholder="Artist Name or Real Name" required><!--data-msg-required="The name field is required"-->
-			<input type="email" id="useremail" name="user_email" value="<?php echo $user_email ?>" placeholder="Email" required><!--data-msg-required="The email field is required"-->
-			<input type="password" id="userpassword" name="user_password" value="<?php echo $user_password ?>" placeholder="Password" required minlength="7">
-			<input type="password" id="confpassword" name="conf_password" value="<?php echo $conf_password ?>" placeholder="Confirm password" required><!-- data-msg-required="Please confirm your password" -->
+			<input type="text" id="username" name="user_name" value="<?php echo $user_name ?>" placeholder="Artist Name or Real Name" ><!--data-msg-required="The name field is required" required-->
+			<input type="text" id="useremail" name="user_email" value="<?php echo $user_email ?>" placeholder="Email" ><!--data-msg-required="The email field is required" required type="email"-->
+			<input type="password" id="userpassword" name="user_password" value="<?php echo $user_password ?>" placeholder="Password"  minlength="7"><!-- required -->
+			<input type="password" id="confpassword" name="conf_password" value="<?php echo $conf_password ?>" placeholder="Confirm password" ><!-- data-msg-required="Please confirm your password" required -->
 			<input type="submit" name="submit" id="submitForm" value="Register Me!"><br>
 			<!-- form result message -->
 			<div id="message" class="hide">

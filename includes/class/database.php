@@ -1,4 +1,4 @@
-<?php require_once('initialize.php');
+<?php require_once(LIB_PATH.DS.'initialize.php');
 
 class MySQLDatabase{
 
@@ -31,16 +31,22 @@ class MySQLDatabase{
 
 	public function query($sql) {
 		$result = mysqli_query($this->connection, $sql);
-		//echo " dbresult " . print_r($result);
 		$this->confirm_query($result);
 		return $result;
 	}
 
+	/**
+	* Confirms a query result exists
+	*
+	* @param (sql object) an SQL result
+	* @return (bool) true if NO result
+	**
+	* writes database query error to logfile
+	*/
 	private function confirm_query($result) {
 		if(!$result) {
 			die("Database query failed." . mysqli_error($this->connection));
-			file_put_contents('../logfile/log_'.date("j.n.Y").'.txt',PHP_EOL. date("G:i:s"). ' errors '. mysqli_error($this->connection), FILE_APPEND);
-				
+			file_put_contents('../logs/log_'.date("m-d-Y").'.txt',date("G:i:s").mysqli_error($this->connection).PHP_EOL, FILE_APPEND);
 		}
 	}
 
@@ -63,7 +69,7 @@ class MySQLDatabase{
 		return mysqli_affected_rows($this->connection);
 	}
 
-	public function escape_value($value) {
+	public function escapeValue($value) {
 		return $value = mysqli_real_escape_string($this->connection, $value);
 	}
 
@@ -80,11 +86,11 @@ class MySQLDatabase{
 		return $this->query($sql);
 	}
 
-	function has_rows($result) {
+	function hasRows($result) {
 		return mysqli_num_rows($result);
 	}
 
-	function fetch_array($result) {
+	function fetchArray($result) {
 		return mysqli_fetch_assoc($result);
 	}
 
@@ -97,11 +103,11 @@ class MySQLDatabase{
 		return $this->query($sql);
 	}
 
-	function last_inserted_id(){
+	function lastInsertedID(){
 		return mysqli_insert_id($this->connection);
 	}
 
-	function is_valid_email($email) {
+	function isValidEmail($email) {
 		return filter_var($email, FILTER_VALIDATE_EMAIL);
 	}
 
@@ -112,7 +118,7 @@ class MySQLDatabase{
 	* @param (string) a valid email
 	* @return (object) if result
 	*/
-	function unique_email($email) {
+	function uniqueEmail($email) {
 		$sql = "SELECT user_email FROM user_register ";
 		$sql.= "WHERE user_email='{$email}' ";
 		$sql.= "LIMIT 1";
@@ -131,7 +137,7 @@ class MySQLDatabase{
 		global $db;
 		$sql = "SELECT user_id FROM user_register WHERE user_email='{$email}' LIMIT 1";
 		if($result = $this->query($sql)){
-			if($row = $this->fetch_array($result)){
+			if($row = $this->fetchArray($result)){
 				$user_id = $row['user_id'];
 				return $user_id;
 			}
@@ -144,7 +150,7 @@ class MySQLDatabase{
 	* @param mixed a value
 	* @return $value
 	*/
-	public function has_presence($value) {
+	public function hasPresence($value) {
 		$value = trim($value);
 		if(isset($value) && !empty($value)){
 			return $value;
@@ -182,18 +188,22 @@ class MySQLDatabase{
 			return true;
 		}
 	}
-	
-	public function getRows($sql)
-	{
-		$result = $this->query( $sql);
+
+	/**
+	* Written by Pradip -- 02/21/16
+	*
+	* @param (mysql string) an SQL query string
+	* @return (array) array of data
+	*/
+	public function getRows($sql){
+		$result = $this->query($sql);
 		$data = array();
-	
-		while ($row = $result->fetch_object()){
+		while ($row = $result->fetch_array(MYSQLI_ASSOC)){ // changed this from $result->fetch_object() for simplicity
 	        $data[] = $row;
 	    }
-		
 		return $data;
 	}
+
 
 }
 

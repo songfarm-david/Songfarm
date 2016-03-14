@@ -2,7 +2,7 @@
 
 
 // check if user is logged in, if no, redirect to index.php
-if(!$session->is_logged_in()) { redirect_to('index.php'); }
+if(!$session->is_logged_in()) { redirectTo('index.php'); }
 
 if(isset($_SESSION['message'])){echo $_SESSION['message'];}
 
@@ -13,13 +13,13 @@ upon initial entry into workshop.php */
 // if user submit's the country code form, insert data into database
 if(isset($_POST['submit_location'])){
 	// check if user has a timezone, if so update
-	if($user->has_location($session->user_id)){
+	if($user->hasLocation($session->user_id)){
 		$user->update_timezone($session->user_id);
 	} else {
 		$user->insert_timezone($session->user_id, $_POST['timezone'], $_POST['country'], $_POST['full_timezone']); }
 	}
 // if user timezone is NOT set, request geoplugin
-if(!$user->has_location($session->user_id)){
+if(!$user->hasLocation($session->user_id)){
 	// catch returned array in $country_array from generate_ip_data()
 	$country_array = generate_ip_data();
 	// create new variables from the array
@@ -27,7 +27,7 @@ if(!$user->has_location($session->user_id)){
 }
 else
 {
-	$user->has_location($session->user_id);
+	$user->hasLocation($session->user_id);
 }
 ?>
 <!doctype html>
@@ -181,10 +181,10 @@ else
 
 				// if user register/unregister for songcircle
 				if(isset($_POST['register'])){
-					$songcircle->timezone = $user->has_location($session->user_id);
+					$songcircle->timezone = $user->hasLocation($session->user_id);
 					$songcircle->register($_POST['songcircle_id'], $session->user_id, $session->username, $_POST['songcircle_name'], $_POST['date_of_songcircle'], $songcircle->timezone, $user->country);
 				} elseif(isset($_POST['unregister'])){
-					$songcircle->timezone = $user->has_location($session->user_id);
+					$songcircle->timezone = $user->hasLocation($session->user_id);
 					$songcircle->unregister($_POST['songcircle_id'], $session->user_id, $_POST['songcircle_name'], $_POST['date_of_songcircle']);
 				}
 				// if user creates a songcircle
@@ -320,9 +320,9 @@ else
 				if(data != "")
 		  		{
 					var arr = data.split(",");
-					
-					for (var i = 0; i < (arr.length-1); i++) 
-					{ 
+
+					for (var i = 0; i < (arr.length-1); i++)
+					{
 						$('#divJoin' + arr[i]).show();
 					}
 		      	}
@@ -330,7 +330,7 @@ else
 		});
 	}
 	var interval = setInterval(ifsongcirclestarted, 110000);
-		
+
 	function ifsongcirclecomlpeted() {
 
 		var methodtype = "complete";
@@ -343,9 +343,9 @@ else
 				if(data != "")
 		  		{
 					var arr = data.split(",");
-					
-					for (var i = 0; i < (arr.length-1); i++) 
-					{ 
+
+					for (var i = 0; i < (arr.length-1); i++)
+					{
 						$('#divJoin' + arr[i]).hide();
 					}
 		      	}
@@ -353,7 +353,7 @@ else
 		});
 	}
 	var interval = setInterval(ifsongcirclecomlpeted, 120000);
-	
+
 	// host songcircle overlay
   $('#host_songcircle').on('click', function(){
     $('form#host_a_songcircle, div#overlay').fadeIn().removeClass('hide');
@@ -397,6 +397,6 @@ else
 	<?php include(LIB_PATH.DS.'global_message.php'); ?>
 	<!-- end of Global messages -->
 
-	
+
 </body>
 </html>

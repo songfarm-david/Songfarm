@@ -1,5 +1,8 @@
 <?php require_once('initialize.php');
 /**
+* NOTE: this function has been relocated to songcircle_user_action
+*/
+/**
 * Receives, processes and removes user from given songcircle
 *
 * Created: 01/12/2016

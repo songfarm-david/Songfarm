@@ -1,0 +1,9 @@
+// This document outlines general coding rules
+
+/**
+	For files:
+		use_underscores.php
+
+/**
+	For functions:
+		useCamelCase()

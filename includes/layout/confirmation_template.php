@@ -65,37 +65,43 @@ NOTE: this page needs styling
 		</style>
 	</head>
 	<body>
+		<!--
+		NOTE: be nice to have a nice big songfarm logo on the confirm page
+	-->
+		<?php // if no msgs
+		if( ($success_msg == '') && ($error_msg == '') ){
+			exit;
+		}?>
 		<div class="confirmMsg">
 			<?php
-				// if error msgs
-				if( $error_msg && is_array($error_msg) ){
+
+				if ($error_msg && is_array($error_msg)) {
 					foreach ($error_msg as $error) {
 						echo $error . '<br>';
 					}
-				}
-				elseif($success_msg){ // if success msg
+				} elseif ($success_msg) {
 					echo $success_msg;
 				} else {
-					// default text
-					echo 'Well, this is embarassing..,<br />Let\'s redirect you somewhere a little more exciting, now, what do you think?</p>';
+					// redirect somewhere
+					redirectTo('../public/index.php');
 				}
 			?>
+			<!-- jQuery plug-in for spin loader -->
 			<div id="spinLoader">
 				<p>redirecting<span id="ellipsis"></span></p>
 			</div>
 		</div>
 	</body>
-
 	<script>
 		// on page load event, set timer.
 		window.onload = function(){
 
 			// target location
 				// live config:
-				// redirectURL = 'http://test.songfarm.ca';
+				redirectURL = 'http://test.songfarm.ca';
 
 				// test config:
-				redirectURL = '../public';
+				// redirectURL = '../public';
 
 			var target = document.getElementById('spinLoader');
 

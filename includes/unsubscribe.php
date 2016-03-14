@@ -1,39 +1,34 @@
 <?php require_once('initialize.php');
-/*
-	This page will clear data from the database by email
+/**
+* Removes a user from the site by email address
 */
 if(isset($_GET['user_email']) && !empty($_GET['user_email'])){
-
 	// init error array
 	$error_msg = [];
 	// sanitize the data
-	$user_email = $db->escape_value($_GET['user_email']);
+	$user_email = $db->escapeValue($_GET['user_email']);
 	// verify IS valid email
-	if(!$db->is_valid_email($user_email)){
+	if(!$db->isValidEmail($user_email)){
 		$error_msg[] = "The email provided is not a valid email. Unsubscribe failed.";
 	} else {
 		// query the database for rows
-		// $sqlTrigger = "CREATE TRIGGER get_last_id BEFORE DELETE ON user_register"
-		$sql = "SELECT user_id FROM user_register WHERE user_email = '{$user_email}'";
+		$sql = "SELECT user_id FROM user_register WHERE user_email = '{$user_email}' LIMIT 1";
 		if($result = $db->query($sql)){
-			if($row = $db->has_rows($result)){
-				if($data = $db->fetch_array($result)){
+			if($row = $db->hasRows($result)){
+				if($data = $db->fetchArray($result)){
+					// get user_id
 					$user_id = $data['user_id'];
-					mysqli_free_result($result);
-
-					// delete from tables anywhere the user id matches
-					$sql = "DELETE user_register, user_timezone, songcircle_register FROM user_register INNER JOIN user_timezone INNER JOIN songcircle_register WHERE user_register.user_id = $user_id AND user_timezone.user_id = $user_id AND songcircle_register.user_id = $user_id";
-					if($result = $db->query($sql)){
-
+					// remove user from the system
+					if($user->removeUserFromSongfarm($user_id)){
+					// user successfully removed
 						// construct unsubscribe text
-						$log_text = 'Unsubscribe-- user_id: '.$user_id.'; email: '.$user_email.' ('.date('m/d/y g:iA T',time()).')'. PHP_EOL;
-
-						// write to log
-						file_put_contents('../logs/user_register.txt',$log_text,FILE_APPEND);
-
-						$success_msg = 'You have successfully been unsubscribed from Songfarm';
-					} else {
-						$error_msg[] = 'There was an error unsubscribing you. Please contact support at support@songfarm.ca';
+						$log_text = ' Unsubscribe -- user_id: '.$user_id.'; email: '.$user_email;
+						// write to USER log
+						file_put_contents(SITE_ROOT.'/logs/user_'.date("m-d-Y").'.txt',date("G:i:s").$log_text.PHP_EOL,FILE_APPEND);
+						$success_msg = "You have successfully been unsubscribed from Songfarm.<br>";
+						$success_msg.= "We're sorry to see you go but thanks for checking us out!";
+					}	else {
+						$error_msg[] = "There was an error unsubscribing you. Please contact support at <a href=\"mailto:support@songfarm.ca\">support@songfarm.ca</a>";
 					}
 				}
 			}
@@ -45,7 +40,7 @@ if(isset($_GET['user_email']) && !empty($_GET['user_email'])){
 	}
 }
 ?>
-<?php	include('layout/confirmationTemplate.php');
+<?php	include('layout/confirmation_template.php');
 
 	/* above include reads success or error messages and displays them here */
 
