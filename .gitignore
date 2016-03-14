@@ -1,5 +1,6 @@
 #any items in the sandbox
 sandbox/
+logs/
 .gitignore
 .htaccess
 #any test-uploaded images
@@ -12,4 +13,4 @@ phpinfo.php
 template.htm
 *.sql
 includes/initialize.php
-includes/user.php
+#includes/user.php
