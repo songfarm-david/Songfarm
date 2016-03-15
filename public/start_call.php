@@ -4,8 +4,8 @@
 *
 * It first validates url query parameters before connecting user to video_call.php
 *
-// NOTE: commented out to bypass $_SESSION data -- 03/01/16
-// if(!$session->is_logged_in()) { redirectTo('index.php'); }
+* NOTE: commented out to bypass $_SESSION data -- 03/01/16
+* if(!$session->is_logged_in()) { redirectTo('index.php'); }
 *
 */
 /* begin validation */
@@ -60,27 +60,27 @@
 		var participantId = getQSParam("pid");
 		var sessionUserId = "<?php echo $user_id ?>";;
 
-		// if (!sessionToken) {
-	  //   //login to get session token
-	  //   participantId = "123" + sessionUserId;
-    //
-		// 	//"url to send response with the session token";
-	  //   var redirectUrl = location.href;
-	  //   var newredirectUrl = redirectUrl.replace("start_call.php","video_call.php");
-	  //   redirectUrl = newredirectUrl + "&pid=" + participantId;
-    //
-	  //   ooVoo.API.connect({
-	  //       token: appToken,
-	  //       isSandbox: true,
-	  //       userId: participantId,
-	  //       callbackUrl: redirectUrl
-	  //   });
-		// }
-		// else {
-		// 	ooVoo.API.init({
-		//     userToken: sessionToken
-	  //   }, onAPI_init);
-		// }
+		if (!sessionToken) {
+	    //login to get session token
+	    participantId = "123" + sessionUserId;
+
+			//"url to send response with the session token";
+	    var redirectUrl = location.href;
+	    var newredirectUrl = redirectUrl.replace("start_call.php","video_call.php");
+	    redirectUrl = newredirectUrl + "&pid=" + participantId;
+
+	    ooVoo.API.connect({
+	        token: appToken,
+	        isSandbox: true,
+	        userId: participantId,
+	        callbackUrl: redirectUrl
+	    });
+		}
+		else {
+			ooVoo.API.init({
+		    userToken: sessionToken
+	    }, onAPI_init);
+		}
 
 		function getQSParam(name) {
 	    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
