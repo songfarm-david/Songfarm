@@ -219,10 +219,10 @@ class Songcircle extends MySQLDatabase{
 	* @param (int) a user id
 	* @return (bool) true if row affected
 	*/
-	public function confirmUserRegistration($songcircle_id, $user_id){
+	public function confirmUserRegistration($songcircle_id, $user_id, $verification_key){
 		global $db;
 
-		$sql = "UPDATE songcircle_register SET confirm_status = 1, confirmation_key = NULL ";
+		$sql = "UPDATE songcircle_register SET confirm_status = 1, confirmation_key = NULL, verification_key = '{$verification_key}' ";
 		$sql.= "WHERE songcircle_id = '{$songcircle_id}' AND user_id = {$user_id}";
 		if($result = $db->query($sql)){
 			// confirm affected rows:
@@ -265,6 +265,31 @@ class Songcircle extends MySQLDatabase{
 				file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',date("G:i:s").' Status Changed -- '.$songcircle_id.' => status: '.$int_status.PHP_EOL,FILE_APPEND);
 				return true;
 			}
+		}
+	}
+
+	/**
+	* Checks for match between a database-stored
+	* verification key and a user provided one
+	*
+	* Created: 03/15/2016
+	*
+	* @param (string) a songcircle_id
+	* @param (int) a user id
+	* @param (string) a verification key
+	* @return (bool) true on verification
+	*/
+	public function verifyKeys($songcircle_id,$user_id,$verification_key){
+		global $db;
+		// retrieve database-stored verification key by user id
+		$sql = "SELECT verification_key ";
+		$sql.= "FROM songcircle_register ";
+		$sql.= "WHERE songcircle_id = '{$songcircle_id}' ";
+		$sql.= "AND user_id = {$user_id}";
+		// if rows
+		if($database_key = $db->getRows($sql)){
+			// return result from compare keys
+			return $db->strIsExact($verification_key,$database_key[0]['verification_key']);
 		}
 	}
 
@@ -519,12 +544,8 @@ class Songcircle extends MySQLDatabase{
 
 
 	/**
-	* Checks if a user is already registered for a given songcircle
+	* Checks by user id if user is already registered for a given songcircle by songcircle_id
 	* (referenced in includes/songcircleRegisterUser.php)
-	*
-	* Updated: 01/13/2016
-	*
-	* NOTE: used on public/songcircle.php in the songcircle schedule table
 	*
 	* @param (string) songcircle_id
 	* @param (int) user_id

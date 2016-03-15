@@ -370,8 +370,9 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 												$error_msg[] = 'Invalid confirmation key provided.';
 											} else {
 												// keys do match
+												$verification_key = getToken(40);
 												// attempt to update user status for songcircle
-												if($songcircle->confirmUserRegistration($songcircle_id, $user_id)){
+												if($songcircle->confirmUserRegistration($songcircle_id, $user_id, $verification_key)){
 													// retrieve user's timezone
 													if($user->hasLocation($user_id)){
 														// convert songcircle date_time to user timezone
@@ -521,20 +522,21 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 	*/
 		case 'join_songcircle':
 		if( (isset($_GET['songcircle_id']) && !empty($_GET['songcircle_id'])) &&
-				(isset($_GET['user_id']) && !empty($_GET['user_id']))	// &&
-				// (isset($_GET['confirmation_key']) && !empty($_GET['confirmation_key']))
+				(isset($_GET['user_id']) && !empty($_GET['user_id']))	&&
+				(isset($_GET['verification_key']) && !empty($_GET['verification_key']))
 			)
 			{
 				// set variables
-				$songcircle_id = $_GET['songcircle_id'];
-				$user_id = $_GET['user_id'];
-				// $confirmation_key = $_GET['confirmation_key']; // do I need this??
-				// confirm user if already registered
+				$songcircle_id = $db->escapeValue($_GET['songcircle_id']);
+				$user_id = $db->escapeValue($_GET['user_id']);
+				$verification_key = $_GET['verification_key'];
+
 				if($songcircle->userAlreadyRegistered($songcircle_id,$user_id)){
 					// construct join link
 					$link_join_songcircle = $_SERVER['SERVER_ADDR'].'public/start_call.php?';
 					$link_join_songcircle.= 'songcircle_id='.$songcircle_id.'&';
-					$link_join_songcircle.= 'user_id='.$user_id;
+					$link_join_songcircle.= 'user_id='.$user_id.'&';
+					$link_join_songcircle.= 'verification_key='.$verification_key;
 					// redirect to start_call.php
 					redirectTo($link_join_songcircle);
 				}

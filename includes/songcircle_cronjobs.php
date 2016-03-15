@@ -89,12 +89,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 				// write to log
 				file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' CALL: reminder_songcircle'.PHP_EOL,FILE_APPEND);
 
-				// $sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, ";
-				// $sql.= "sr.user_id, sr.confirmation_key, sr.confirm_status ";
-				// $sql.= "FROM songcircle_create AS sc, songcircle_register AS sr	WHERE sc.songcircle_id = sr.songcircle_id ";
-				// $sql.= "AND sc.songcircle_status = 0 AND sr.confirm_status = 1 ";
-				// $sql.= "AND DATE(date_of_songcircle) = DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 6 DAY))";
-
+				// query database
 				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, sr.user_id, ur.user_name, user_email, SUBSTR(ut.full_timezone,5,6) AS user_timezone ";
 				$sql.= "FROM songcircle_create AS sc, songcircle_register AS sr ";
 				$sql.= "INNER JOIN user_register AS ur ON sr.user_id = ur.user_id ";
@@ -102,61 +97,51 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 				$sql.= "WHERE sc.songcircle_id = sr.songcircle_id ";
 				$sql.= "AND sc.songcircle_status = 0 ";
 				$sql.= "AND sr.confirm_status = 1";
-
-				// this is a test query for convert_tz
-				// SELECT sc.date_of_songcircle, sr.user_id, SUBSTR(ut.full_timezone,5,6) as user_timezone FROM songcircle_create AS sc, songcircle_register AS sr INNER JOIN user_register AS ur ON sr.user_id = ur.user_id INNER JOIN user_timezone AS ut ON ur.user_id = ut.user_id WHERE sc.songcircle_id = sr.songcircle_id AND sc.songcircle_status = 0 AND sr.confirm_status = 1;
+				/* NOTE: need to input user timezone variable below somewhere */
+				$sql.= "AND DATE(date_of_songcircle) = DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 3 DAY))";
 
 				if($result = $db->getRows($sql)){
-
-					// TEST
-					// write to log
-					// file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' -- got result'.PHP_EOL,FILE_APPEND);
 
 					// foreach result/user
 					foreach($result as $songcircle_data){
 
-						// TEST
-						// write to log
-						file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' -- '.$songcircle_data['date_of_songcircle'].' - '.$songcircle_data['songcircle_id'].' ('.$songcircle_data['songcircle_name'].') '.$songcircle_data['user_id'].' - '.$songcircle_data['user_name'].' - '.$songcircle_data['timezone'].' ('.$songcircle_data['full_timezone'].')'.PHP_EOL,FILE_APPEND);
-
 						// query for user information
-						// if($user->setUserData($songcircle_data['user_id'])){
-						// 	// convert time of songcircle to user timezone
-						// 	$date_of_songcircle = $songcircle->callUserTimezone($songcircle_data['date_of_songcircle'],$user->timezone);
+						if($user->setUserData($songcircle_data['user_id'])){
 
-							// build event/user array
-							// $songcircle_user_data = [
-							// 	"songcircle_id" => $songcircle_data['songcircle_id'],
-							// 	"event_name" => $songcircle_data['songcircle_name'],
-							// 	"date_time" => $date_of_songcircle,
-							// 	"user_id" => $user->user_id,
-							// 	"username" => $user->username,
-							// 	"user_email" => $user->$user_email
-							// ];
+							// convert time of songcircle to user timezone
+							$songcircle_data['date_of_songcircle'] = $songcircle->callUserTimezone($songcircle_data['date_of_songcircle'],$user->timezone);
 
-							// // construct email
-							// $to = "{$user->username} <{$user->user_email}>"; // this may cause a bug on Windows systems
-							// $subject = $songcircle_data['songcircle_name']." is happening soon!";
-							// $from = "Songfarm <noreply@songfarm.ca>";
-							// file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s").' building email now.. '.$to.' '.$subject.' '.$from.PHP_EOL,FILE_APPEND);
-							// if($message = constructHTMLEmail($email_data['first_reminder'],$songcircle_user_data)){
-							// 	$headers = "From: {$from}\r\n";
-							// 	$headers.= "Content-Type: text/html; charset=utf-8";
-							// 	if(mail($to,$subject,$message,$headers,'-fsongfarm')){
-							// 		// write to log
-							// 		file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s").' -- Email sent: User '.$songcircle_data['user_id'].', '.$songcircle_data['songcircle_id'].' ('.$songcircle_data['songcircle_name'].') '.$songcircle_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
-							// 	} else {
-							// 		// write to log
-							// 		file_put_contents(SITE_ROOT.'/logs/cronjobs/error_'.date("m-d-Y").'.txt',date("G:i:s").' '.error_get_last().' -- FAILED to send email: ('.$_SERVER['PHP_SELF'].__LINE__.') User '.$songcircle_data['user_id'].' >> '.$songcircle_data['songcircle_id'].' ('.$songcircle_data['songcircle_name'].') '.$songcircle_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
-							// 	}
-							// } // end of: if($message = constructHTMLEmail($email_data['reminder_email'],$songcircle_data))
-							// else {
-							// 	// write to log
-							// 	file_put_contents(SITE_ROOT.'/logs/cronjobs/error_'.date("m-d-Y").'.txt',date("G:i:s").' '.error_get_last().' -- FAILED to construct email: ('.$_SERVER['PHP_SELF'].__LINE__.') '.$songcircle_data['songcircle_id'].' ('.$songcircle_data['songcircle_name'].') '.$songcircle_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
-							// }
+							// construct email
+							$to = "{$user->username} <{$user->user_email}>";
+							$subject = $songcircle_data['songcircle_name']." is happening soon!";
+							$from = "Songfarm <noreply@songfarm.ca>";
+							if($message = constructHTMLEmail($email_data['first_reminder'],$songcircle_user_data)){
+								$headers = "From: {$from}\r\n";
+								$headers.= "Content-Type: text/html; charset=utf-8";
 
-						// } // end of: if($user->setUserData($songcircle_data['user_id']))
+								// if mail successful
+								if( mail($to,$subject,$message,$headers,'-fsongfarm') ){
+									// write to log
+									file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' -- Email sent: User '.$songcircle_data['user_id'].', '.$songcircle_data['songcircle_id'].' ('.$songcircle_data['songcircle_name'].') '.$songcircle_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
+								} else {
+									// could not send email
+									// log error
+									file_put_contents(SITE_ROOT.'/logs/cronjobs/error_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' '.error_get_last().' -- FAILED: Could not send email ('.$_SERVER['PHP_SELF'].__LINE__.') '.$songcircle_data['songcircle_id'].' ('.$songcircle_data['songcircle_name'].') '.$songcircle_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
+								}
 
+							} // end of: if($message = constructHTMLEmail($email_data['reminder_email'],$songcircle_data))
+							else {
+								// could not construct email
+								// log error
+								file_put_contents(SITE_ROOT.'/logs/cronjobs/error_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' '.error_get_last().' -- FAILED: Could not construct email ('.$_SERVER['PHP_SELF'].__LINE__.') '.$songcircle_data['songcircle_id'].' ('.$songcircle_data['songcircle_name'].') '.$songcircle_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
+							}
+
+						} // end of: if($user->setUserData($songcircle_data['user_id']))
+							else {
+								// No user information available for given user id
+								// log error
+								file_put_contents(SITE_ROOT.'/logs/cronjobs/error_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' '.error_get_last().' -- FAILED: No user information available for user id: '.$songcircle_data['user_id']. '('.$_SERVER['PHP_SELF'].__LINE__.') '.PHP_EOL,FILE_APPEND);
+							}
 					} // end of: foreach($result as $row)
 
 				} // end of: if($result = $db->getRows($sql))
@@ -167,32 +152,56 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 				}
 					break;
 
-				// sends join link
+			/**
+			* Sends join link to user, RELATIVE TO USER TIMEZONE, 15 minutes before event
+			*
+			* NOTE: Cron runs every 15 minutes
+			*/
 				case 'join_songcircle':
 
-				// NOTE: this runs every 15 minutes
-
 				// write to log
-				file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s").' CALLED -- join_songcircle'.PHP_EOL,FILE_APPEND);
+				file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' CALL: join_songcircle'.PHP_EOL,FILE_APPEND);
 
-				/**
-				* Examine this query
-				*/
+				// query database
 				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, ";
-				$sql.= "sr.user_id, sr.confirmation_key, sr.confirm_status ";
-				$sql.= "FROM songcircle_create AS sc, songcircle_register AS sr	WHERE sc.songcircle_id = sr.songcircle_id ";
+				$sql.= "sr.user_id, verification_key, confirm_status, ur.user_name, user_email, SUBSTR(ut.full_timezone,5,6) AS user_timezone ";
+				$sql.= "FROM songcircle_create AS sc, songcircle_register AS sr	";
+				$sql.= "INNER JOIN user_register AS ur ON sr.user_id = ur.user_id ";
+				$sql.= "INNER JOIN user_timezone AS ut ON ur.user_id = ut.user_id ";
+				$sql.= "WHERE sc.songcircle_id = sr.songcircle_id ";
 				$sql.= "AND sc.songcircle_status = 0 AND sr.confirm_status = 1 ";
-				$sql.= "AND DATE(date_of_songcircle) = DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 15 MINUTES))"; // 15 MINUTES??
+				/* NOTE: need to input user timezone variable below somewhere */
+				$sql.= "AND DATE(date_of_songcircle) = DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 15 MINUTES))";
+
 				if($result = $db->getRows($sql)){
+
 					foreach($result as $songcircle_data){
+
 						// construct email
-						if(constructHTMLEmail($email_data['join_songcircle'],$songcircle_data)){
-							// write to log
-							file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s").' -- Join link sent: User '.$songcircle_data['user_id'].' >> '.$songcircle_data['songcircle_id'].' ('.$songcircle_data['songcircle_name'].') '.$songcircle_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
-						} else {
-							// write to log
-							file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s").' -- FAILED to send join link: User '.$songcircle_data['user_id'].' >> '.$songcircle_data['songcircle_id'].' ('.$songcircle_data['songcircle_name'].') '.$songcircle_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
+						$to = "{$songcircle_data['user_name']} <{$songcircle_data['user_email']}>";
+						$subject = "Join ".$songcircle_data['songcircle_name']." now!";
+						$from = "Songfarm <noreply@songfarm.ca>";
+						if($message = constructHTMLEmail($email_data['join_songcircle'],$songcircle_data)){
+							$headers = "From: {$from}\r\n";
+							$headers.= "Content-Type: text/html; charset=utf-8";
+
+							// if mail successful
+							if( mail($to,$subject,$message,$headers,'-fsongfarm') ){
+								// write to log
+								file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' -- Join link sent: User '.$songcircle_data['user_id'].', '.$songcircle_data['songcircle_id'].PHP_EOL,FILE_APPEND);
+							} else {
+								// could not send email
+								// log error
+								file_put_contents(SITE_ROOT.'/logs/cronjobs/error_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' '.error_get_last().' -- FAILED: Could not send email ('.$_SERVER['PHP_SELF'].__LINE__.') '.$songcircle_data['songcircle_id'].' ('.$songcircle_data['songcircle_name'].') '.$songcircle_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
+							}
+
+						} // end of: if($message = constructHTMLEmail())
+						else {
+							// could not construct email
+							// log error
+							file_put_contents(SITE_ROOT.'/logs/cronjobs/error_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' '.error_get_last().' -- FAILED: Could not construct email ('.$_SERVER['PHP_SELF'].__LINE__.') '.$songcircle_data['songcircle_id'].' ('.$songcircle_data['songcircle_name'].') '.$songcircle_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
 						}
+
 					} // end of: foreach($result as $row)
 				} // end of: if($result = $db->getRows($sql))
 
@@ -206,10 +215,12 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 				case 'clear_expired_songcircle':
 
 				// write to log
-				file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' CALLED: clear_expired_songcircle'.PHP_EOL,FILE_APPEND);
+				file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' CALL: clear_expired_songcircle'.PHP_EOL,FILE_APPEND);
 
 				// if songcircle start time + duration of songcircle is less than current time (in UTC)
-				$sql = "SELECT id, songcircle_id, date_of_songcircle FROM songcircle_create WHERE DATE_ADD(date_of_songcircle, INTERVAL duration HOUR_SECOND) < DATE_ADD(NOW(), INTERVAL '5' HOUR)";
+				$sql = "SELECT id, songcircle_id, date_of_songcircle "
+				$sql.= "FROM songcircle_create ";
+				$sql.= "WHERE DATE_ADD(date_of_songcircle, INTERVAL duration HOUR_SECOND) < DATE_ADD(NOW(), INTERVAL '5' HOUR)";
 
 				if($result = $db->getRows($sql)){
 
@@ -231,12 +242,14 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 						if($result = $db->query($sql)){
 							// check affected rows
 							if(mysqli_affected_rows($db->connection) > 0){
-
 								// if successful delete, write to log
 								file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' -- REMOVE_EXPIRED: '.$songcircle_id.', date_of_songcircle: '.$songcircle['date_of_songcircle'].PHP_EOL,FILE_APPEND);
-
+							} else {
+								// failed to delete record
+								// log error
+								file_put_contents(SITE_ROOT.'/logs/cronjobs/error_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' '.error_get_last().' -- FAILED: No record deleted ('.$_SERVER['PHP_SELF'].__LINE__.') id: '.$id.', songcircle_id: '.$songcircle_id.PHP_EOL,FILE_APPEND);
 							}
-						}
+						} // end of: if($result = $db->query($sql))
 					} // end of: foreach ($result as $songcircle)
 				}
 				else {

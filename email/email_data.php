@@ -141,7 +141,7 @@ $email_data = [
 		"greeting" => "Here we go!",
 		"intro" => "Click the link below now to be connected live to %event%.",
 		"ctaLink" => [
-			"linkLocation" => "http://test.songfarm.ca/public/start_call.php?action=join_songcircle&songcircle_id=%songcircle_id%&user_id=%user_id%",
+			"linkLocation" => "http://test.songfarm.ca/public/songcircle_user_action.php?action=join_songcircle&songcircle_id=%songcircle_id%&user_id=%user_id%&verification_key=%verification_key%",
 			"linkText" => "Join Now!"
 		],
 		"signature" => "Break a leg!<br />

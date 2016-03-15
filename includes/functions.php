@@ -145,11 +145,11 @@ function songcircleFirstReminder($email_data,$songcircle_user_data){
 
 	// user/event specific data
 	$reminder_email = str_replace('%songcircle_id%',$songcircle_user_data['songcircle_id'],$reminder_email);
-	$reminder_email = str_replace('%event%',$songcircle_user_data['event_name'],$reminder_email);
-	$reminder_email = str_replace('%date_time%',$songcircle_user_data['date_time'],$reminder_email);
+	$reminder_email = str_replace('%event%',$songcircle_user_data['songcircle_name'],$reminder_email);
+	$reminder_email = str_replace('%date_time%',$songcircle_user_data['date_of_songcircle'],$reminder_email);
 
 	$reminder_email = str_replace('%user_id%',$songcircle_user_data['user_id'],$reminder_email);
-	$reminder_email = str_replace('%name%',$songcircle_user_data['username'],$reminder_email);
+	$reminder_email = str_replace('%name%',$songcircle_user_data['user_name'],$reminder_email);
 	$reminder_email = str_replace('%email%',$songcircle_user_data['user_email'],$reminder_email);
 
 	return $reminder_email;
@@ -180,16 +180,17 @@ function songcircleJoinSongcircle($email_data,$songcircle_user_data){
 	$join_songcircle = str_replace('%linkText%',$email_data['ctaLink']['linkText'],$join_songcircle);
 	// signature
 	$join_songcircle = str_replace('%signature%',$email_data['signature'],$join_songcircle);
-	// directive
-	// $join_songcircle = str_replace('%directive%',$email_data['directive'],$join_songcircle);
-	// $join_songcircle = str_replace('%linkUnsubscribe%',$email_data['unsubscribeLink']['unsubscribeLinkLocation'],$join_songcircle);
+
 	// copyright year
 	$join_songcircle = str_replace('%year%',$email_data['year'],$join_songcircle);
+
 	// user/songcircle specific data
 	$join_songcircle = str_replace('%event%',$songcircle_user_data['songcircle_name'],$join_songcircle);
 	$join_songcircle = str_replace('%songcircle_id%',$songcircle_user_data['songcircle_id'],$join_songcircle);
 	$join_songcircle = str_replace('%user_id%',$songcircle_user_data['user_id'],$join_songcircle);
 	$join_songcircle = str_replace('%email%',$songcircle_user_data['user_email'],$join_songcircle);
+	$join_songcircle = str_replace('%verification_key%',$songcircle_user_data['verification_key'],$join_songcircle);
+
 	// return the email
 	return $join_songcircle;
 }

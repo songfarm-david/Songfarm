@@ -178,14 +178,15 @@ class MySQLDatabase{
 	* public function - checks to see if
 	* two values are exact
 	*
-	* @param string the string to check
-	* @param string the string to check against
+	* @param (string) the string to check
+	* @param (string) the string to check against
+	* @return (bool) true if exact, false if not exact
 	*/
-	public function string_is_exact($str1, $str2){
-		if($str1 !== $str2){
-			return false;
-		} else {
+	public function strIsExact($str1, $str2){
+		if($str1 === $str2){
 			return true;
+		} else {
+			return false;
 		}
 	}
 
@@ -198,7 +199,7 @@ class MySQLDatabase{
 	public function getRows($sql){
 		$result = $this->query($sql);
 		$data = array();
-		while ($row = $result->fetch_array(MYSQLI_ASSOC)){ // changed this from $result->fetch_object() for simplicity
+		while ($row = $result->fetch_array(MYSQLI_ASSOC)){ // changed this from $result->fetch_object()
 	        $data[] = $row;
 	    }
 		return $data;
