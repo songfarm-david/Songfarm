@@ -3,7 +3,7 @@
 // if profile
 if( strstr($_SERVER['PHP_SELF'], 'profile') ){
 	$image->retrieve_user_photo($_GET['id']);
-	$user->has_location($_GET['id']);
+	$user->hasLocation($_GET['id']);
 	$session->username = $user->username;
 	?>
 <?php

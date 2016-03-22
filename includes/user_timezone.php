@@ -1,11 +1,11 @@
 <?php
 // if user has a location in the database
 // skip timezone selection and display songcircles
-if($user->has_location($session->user_id)) {
+if($user->hasLocation($session->user_id)) {
 	// set songcircle timezone to user timezone
 	$songcircle->timezone = $user->timezone;
 	// display songcircles
-	$songcircle->display_songcircles();
+	$songcircle->displaySongcircles();
 }
 else // if user does NOT have a location set, display a countries select dropdown
 {
@@ -24,7 +24,7 @@ else // if user does NOT have a location set, display a countries select dropdow
 	<p>Please select your country and most accurate timezone from the list to begin..</p>
 
 	<!-- Timezone form -->
-	<?php include_once('../includes/layout/timezone_form.php'); ?>
+	<?php include_once('../includes/forms/timezone_form.php'); ?>
 	<!-- end of Timezone form -->
 
 	<!-- if generate_ip_data returns a country code, put into value of hidden input -->

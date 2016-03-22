@@ -79,7 +79,7 @@ class MySQLDatabase{
 		}
 	}
 
-	function user_name_exists($username) {
+	function userNameExists($username) {
 		$sql = "SELECT * FROM user_register ";
 		$sql.= "WHERE user_name = '{$username}'";
 		$sql.= " OR user_email = '{$username}'";
@@ -94,7 +94,7 @@ class MySQLDatabase{
 		return mysqli_fetch_assoc($result);
 	}
 
-	function insert_user($array=[]) {
+	function insertUser($array=[]) {
 		$this->escape_values($array);
 		$sql = "INSERT INTO user_register (";
 		$sql.= join(", ", array_keys($array)).", reg_date";
@@ -166,7 +166,7 @@ class MySQLDatabase{
 	* @param int the minimum length to be checked against
 	* @return true on success, false if not has min length
 	*/
-	public function has_min_length($string, $min){
+	public function hasMinLength($string, $min){
 		if((strlen($string)) < $min){
 			return false;
 		} else {

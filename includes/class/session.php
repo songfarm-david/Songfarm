@@ -17,11 +17,11 @@ class Session{
 	private $logged_in = false;
 
 	/**
-	* On execution, calls check_login function
+	* On execution, calls checkLogin function
 	*/
 	function __construct() {
 		session_start();
-		$this->check_login();
+		$this->checkLogin();
 		// could take additional action here
 		if($this->logged_in) {
 			// do something if user is logged in
@@ -41,7 +41,7 @@ class Session{
 	* ELSE unsets all public variables
 	* AND sets $logged_in = false
 	*/
-	private function check_login() {
+	private function checkLogin() {
 		if(isset($_SESSION['user_id'])) {
 			$this->user_id = $_SESSION['user_id'];
 			$this->username = $_SESSION['username'];
@@ -60,7 +60,7 @@ class Session{
 	*
 	* @return (bool) value of boolean
 	*/
-	public function is_logged_in() {
+	public function isLoggedIn() {
 		return $this->logged_in;
 	}
 

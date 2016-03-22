@@ -2,6 +2,6 @@
 
 $session->logout();
 
-redirect_to('../public/index.php');
+redirectTo('../public/index.php');
 
 ?>

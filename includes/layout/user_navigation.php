@@ -23,7 +23,7 @@
 					</li>
 				<?php } ?>
 				<li>
-					<a href="../includes/sign_out.php">Log Out</a>
+					<a href="../includes/logout.php">Log Out</a>
 				</li>
 			</ul>
 		</li>

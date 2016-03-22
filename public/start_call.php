@@ -5,7 +5,7 @@
 * It first validates url query parameters before connecting user to video_call.php
 *
 * NOTE: commented out to bypass $_SESSION data -- 03/01/16
-* if(!$session->is_logged_in()) { redirectTo('index.php'); }
+* if(!$session->isLoggedIn()) { redirectTo('index.php'); }
 *
 */
 /* begin validation */

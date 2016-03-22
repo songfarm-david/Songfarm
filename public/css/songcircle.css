@@ -3,15 +3,6 @@
 */
 
 /*
-* Global
-*/
-.bold{
-	text-shadow: 1px 1px rgba(0,0,0,.3); font-weight: bold;
-	font-family: 'museo_sans900', Arial, Helvetica, sans-serif;
-}
-
-
-/*
 * Header
 */
 #header nav ul li a[href="songcircle.php"]:before{
@@ -21,8 +12,7 @@
 #header nav ul li a[href="songcircle.php"]{ color: #7CC919; }
 
 /* hides big register button on header */
-div.register.medium{ display: none; }
-
+button.register, div.register.medium{ display: none; }
 
 /*
 * Main
@@ -63,74 +53,10 @@ article#schedule h3{
 }
 
 
-/*
-* Schedule table
-*/
-table#songcircleTable{
-	width: 65%;
-	margin:0 auto;
-	border:5px double #7CC919;
-	border-spacing: 0;
-	text-align: center;
-	border-radius: 6px;
-	font-size:1.3em;
-	font-family: 'museo_sans300', Arial, Helvetica, sans-serif;
-	background-color: #fff;
-}
-#songcircleTable tr:not(:first-child) td{ border-top: 5px double #7CC919; }
 
-td{
-	vertical-align: middle;
-	padding:16px 0;
-	line-height: 1.3;
-	border: none;
-	border-right:5px double #7CC919;
-}
 
-td.date{ width:31%; font-size:0.9em; }
-td.name{ font-size: 1.15em;	padding-top: 0.9em; position:relative; }
 
-span.registered{ width: 19%; }
-td:last-child{ width:27%; padding: 0 0.5em; border-right:none; }
 
-td input[type="submit"], button.join{
-	background: #7CC919;
-	padding:9px 18px;
-	border-radius: 9px;
-	border:1px solid #66A811;
-	color:#365A09;
-	font-size: 1.4em;
-	box-shadow: 4px 4px 9px 2px #ccc;
-	transition: 0.250s;
-}
-button.join{ margin: 0 auto; }
-
-td input[type="submit"]:hover, button.join:hover{
-	cursor: pointer;
-	color:white; background: #2E63AF;
-	transition: 0.250s;
-	outline: none;
-}
-
-/* Table participants pop-up */
-#songcircleTable table.participantsTable{
-  position: absolute; z-index:1;
-	left:7%; width:100%;
-  border:2px solid black;
-	font-size: .85em;
-	border-spacing: 0;
-	border-collapse: inherit;;
-}
-
-#songcircleTable table tr td:first-child{ border-right: 1px solid #ccc; }
-#songcircleTable table.participantsTable td{
-	width:50%;
-	line-height: 1.25;
-	padding:9px 6px;
-	border:none;
-}
-table.participantsTable tr:nth-child(even){ background:#ddd; }
-table.participantsTable tr:nth-child(odd){ background:#eee; }
 
 
 /*
@@ -145,135 +71,211 @@ article#aboutSongcircle h3{ font-size: 2.1em; padding: 1em 0 1em 0; }
 article#aboutSongcircle p{ font-size: 1.5em; padding: .5em; padding-left: 0; line-height: 1.3; width: 70%;}
 
 
-/*
-* Footer
-*/
-footer{width:1600px; bottom:0; position: relative; }
+
 
 
 /*
 * Registration Form
 */
-#registration_form, #modal{
+#registration_form{
+	font-family: 'museo_sans300', Arial, helvetica, sans-serif;
+	font-size: 1.2em;	color: #666666; padding: 2em 3em;
+	border: 1px solid #7ec919;
+	width:25%; min-width: 320px;
 	position: fixed; z-index:3000;
 	top:50%; left:50%;
 	transform: translateY(-50%) translateX(-50%);
 	/* transform centers elements vertically and horizontally.. Guau! */
-	width:4em; min-width: 320px;
-	background:#fff;
-	padding: 0 3em;
-	background: #ccc;
+	border-radius: 30px 30px 30px 30px;
+	-moz-border-radius: 30px 30px 30px 30px;
+	-webkit-border-radius: 30px 30px 30px 30px;
 	display: none;
 }
-#registration_form{ width:25%; }
-
-#modal.modalClass{
-	transform: translateY(-50%) translateX(-50%);
-	padding:2em 2em 1.5em; margin: 0 0.25em;
-	font-size:1.6em;
-	background: #FC3A3A;
-  color: #fff;
-	text-align: center;
-	width: 30%; min-width: 320px;
-	border:1px solid #851D1D;
-}
-#modal.modalClass span{
-	font-size: 1.4em;
-	display: block;
-	padding:0 1em;
-	font-weight: bold;
-}
-#modal.modalClass p{
-	display: block;
-	margin:0 auto 1em;
-	max-width: 92.5%;
-	line-height: 1.2;
-}
-
-/*#modal span:first-child{ font-size: 1.4em; }*/
-/*#registration_form > div#details{ padding-bottom:2em; }*/
-#modal.modalClass a{ color:#fff; text-decoration: underline; }
-
-#registration_form h4{
-	font-size: 1.8em; border-bottom: 2px dotted black;
-	padding-bottom: 0.3em;
-}
-#registration_form h4 + p{ font-size:1.4em; margin-bottom:2em; }
-#registration_form p{
-	font-size:1.6em; margin-bottom: 1em;
-	font-family: 'museo_sans300', Arial, helvetica, sans-serif;
-}
-#registration_form p span{color: blue; cursor: pointer; font-size:0.8em;}
-
-#registration_form div#loc{ text-align: center; margin-top: 2.6em; border-top: 2px dotted black;}
-#registration_form div#loc p{
-	font-size:1.4em; padding-top: 1.2em;
-	line-height: 1.4;
-}
-
-#registration_form div#loc p b{ font-size:1.1em; text-decoration: underline; }
-#registration_form p#timezone{  font-size:2.5em; font-family: 'museo_sans700', arial, helvetica, sans-serif; }
-
-#registration_form p#locationMsg{ margin-bottom: 1em; }
-
-#registration_form input, select{
-	display: block;
-	margin:0 auto;
-	border:none;
-	width:65%;
-	padding:12px 15px;
-	font-size: 1.3em;
-	-ms-box-sizing:content-box;
-	-moz-box-sizing:content-box;
-	-webkit-box-sizing:content-box;
-	box-sizing:content-box;
+#registration_form p{ font-weight: bold; padding: 1.25em 0;	line-height: 1.5; }
+#registration_form div#details > p{	padding-left: 6px; padding-bottom: 6px; font-size: 1.25em; }
+#registration_form div#details label{
 	position: relative;
+	display: block;
+	border: 1px solid rgba(0,0,0,0);
+}
+#registration_form div#loc{
+	text-align: center;
+	margin-top: 2em;
+	border-top: 1px solid #ffffff;
+}
+#registration_form p#locationMsg{ font-weight: normal; padding-bottom: 0; }
+
+/* 'not right?' text */
+span#trigger-location{
+	color: #3FA8F4; font-weight: bold; font-size: 0.8em;
+}
+#registration_form input, select, .input_error{
+	display: block;
+	margin:1em auto 0.5em;
+	width:99%;
+	padding:10px 12px;
+	font-size: inherit;
+	position: relative;
+	box-sizing:border-box;
+	-ms-box-sizing:border-box;
+	-moz-box-sizing:border-box;
+	-webkit-box-sizing:border-box;
+	border: 4px solid rgba(0,0,0,0);
+	outline: none;
+	border-radius: 15px 15px 15px 15px;
+	-moz-border-radius: 15px 15px 15px 15px;
+	-webkit-border-radius: 15px 15px 15px 15px;
+	box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.65);
+	-moz-box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.65);
+	-webkit-box-shadow: 1px 1px 1px 0px rgba(0,0,0,.65);
+}
+#registration_form select{
+	color: #666;
+	margin:0 auto; padding-right: 2.6em;
+	appearance: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background: #ffffff url("../images/songcircle_form/select_box_arrow.png") no-repeat right center;
+	background-size: 46px 46px;
 	outline: none;
 }
+#registration_form select#country_select{ margin-top: 1em; }
+#registration_form select:focus, input:focus{ border: 4px solid rgba(0,0,0,0); }
 
-#registration_form input{ margin-top: 2em; }
-#registration_form input#user_city{ margin-top: 0;}
-#registration_form input:last-child{ margin-top: 0.8em; }
-
-#registration_form #loc p{
-	font-size:1.3em;
+#registration_form div#codeOfConduct{
+	text-align: center;
+	position: relative;
+	 margin:0 auto;
 }
-
-#registration_form div#codeOfConduct{ text-align: center; position: relative; width: 70%; margin:0 auto; font-size: 1.1em; }
-#registration_form div#codeOfConduct div#cOcAlertBox p{ font-size: 1em; }
-#registration_form input[name="codeOfConduct"]{
-	display: inline-block; width:auto; margin-top: 0.5em;
+#registration_form div#codeOfConduct p{
+	padding:0 25px;
+	text-align: justify;
 }
-#registration_form input[name="codeOfConduct"]:focus{ outline:1px dotted blue; }
-
-#registration_form div#cOcAlertBox{
-	position: absolute; top:30%; left:-65%;
-	z-index:3; width:62%; font-size: inherit;
-	background: #cfc;	border:1px solid #111;
-	box-shadow: 2px 2px 15px 0px;
-}
-#registration_form div#cOcAlertBox p{ margin: 0; padding: 9px; }
-#registration_form div#cOcAlertBox a{ text-decoration: underline; }
-
-#registration_form input:focus, select:focus{	border:2px solid blue; }
 
 #registration_form input[type="submit"]{
-	cursor: pointer; margin:1.4em auto 1.8em;
-	width:40%;
-	background-color: green;
+	width:40%; min-width: 220px;
+	cursor: pointer;
+	margin:1em auto;
+	color: white;
+	font-size:1.75em;
+	border-radius: 100px 100px 100px 100px;
+	-moz-border-radius: 100px 100px 100px 100px;
+	-webkit-border-radius: 100px 100px 100px 100px;
+	border: 0px solid #000000;
+	-webkit-box-shadow: 0px 0px 2px 4px rgba(255,255,255,1);
+	-moz-box-shadow: 0px 0px 2px 4px rgba(255,255,255,1);
+	box-shadow: 0px 0px 2px 4px rgba(255,255,255,1);
 }
-#registration_form input[type="submit"]:hover{ background-color: blue; }
 
-#registration_form .form_error{
-	margin:6px auto -9px;
-	display: block;
-	width:65%;
-	box-sizing: content-box;
-	padding:6px;
-	border: 2px dotted red;
-	background:#ddd;
-	display:none;
+/* registration form checkbox */
+/* http://blog.karenmenezes.com/2014/nov/1/another-pure-css-checkbox-article/ */
+#registration_form .checkbox-custom{ opacity: 0; position: absolute; display: none;}
+.checkbox-custom, .checkbox-custom-label{
+	display: inline-block;
+  margin: 5px;
+  cursor: pointer;
 }
+.checkbox-custom-label, #codeOfConduct a{
+	color: #666666;
+	font-weight: bold;
+	margin-top: 1.25em;
+	line-height: 28px;
+	transition-duration: 0ms;
+}
+#codeOfConduct a, #cOcAlertBox a{ text-decoration: underline; }
+.checkbox-custom-label a:hover, #cOcAlertBox a:hover{ color: #FFFFFF;}
+.checkbox-custom + .checkbox-custom-label:before{
+	content: '';
+  background: #fff;
+  border: 4px solid rgba(0,0,0,0);
+  display: inline-block;
+  vertical-align: bottom;
+  width: 24px;
+  height: 24px;
+  /*padding: 2px;*/
+  margin-right: 6px;
+  text-align: center;
+	border-radius: 6px 6px;
+}
+input.checkbox-custom + .checkbox-custom-label.error:before{
+	border: 4px solid #3FA8F4;
+}
+.checkbox-custom:checked + .checkbox-custom-label:before{
+	content: "\2714";
+	font-size: 1.5em;
+	/*border: 1px solid #666666;*/
+  background: #FFFFFF;
+  /*color: #7ec919;*/
+	color: #777;
+}
+.checkbox-custom:focus + .checkbox-custom-label{ outline: 1px solid #ddd; /* focus style */ }
+
+
+/* blue outline when input error */
+#registration_form .input_error{
+	border: 4px solid #3FA8F4;
+	-webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
+	-moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
+	box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
+}
+
+/* blue error pop-ups */
+#registration_form .form_error{
+	display: none;
+	position: absolute;
+	top: 16px; right: -250px;
+	z-index: 3;
+	width:62%;
+	font-size: 0.9em;
+	color: white;
+	padding:8px;
+	background: #3FA8F4;
+	border:6px solid #FFFFFF;
+	border-radius: 35px;
+	box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.65);
+	-moz-box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.65);
+	-webkit-box-shadow: 1px 1px 1px 0px rgba(0,0,0,.65); /* COMBINE THIS WITH INPUTS */
+	/*display:table;*/
+	text-align: left;
+}
+#registration_form .form_error p{ padding: 0;	display: table-cell; vertical-align: middle; }
+
+/* exclamation mark */
+.form_error::before{
+	content: '';
+	background: url('../images/songcircle_form/exclamation_point.png');
+	background-size: cover;
+	height:50px;
+	width:50px;
+	float: left;
+	margin-left: 3px; margin-right: 5px;
+}
+
+/* alert box for code of conduct */
+#registration_form div#cOcAlertBox{	padding: 25px 35px;	display: block; top: 80px; right: -275px; }
+#cOcAlertBox.form_error::before{
+	position: absolute;
+	top: 0; left: 0;
+	/*content: '';
+	background: url('../images/songcircle_form/exclamation_point.png');
+	background-size: cover;
+	height:50px;
+	width:50px;*/
+	margin-left: 5px; margin-top: 5px;
+}
+
+
+
+/*#cOcAlertBox a{ color: #666666; text-decoration: underline; }
+#cOcAlertBox a:hover{ color: #FFFFFF; }*/
+
+
+
+
+
+
+/*#registration_form div#cOcAlertBox p{ margin: 0; padding: 9px; }
+#registration_form div#cOcAlertBox a{ text-decoration: underline; }*/
 
 /* form error div */
 #registration_form div#output{
@@ -312,19 +314,3 @@ td input[type="submit"].cannot_register:hover{
   text-decoration: underline;
 }
 span.permission{ font-size: 0.85em; color: #DA7C7C; }
-
-/* special class for songcircle.php checkbox 'look' */
-.double {
-  zoom:1.5;
-  transform:scale(1.5);
-  -ms-transform:scale(1.1);
-  -webkit-transform:scale(1.1);
-  -o-transform:scale(1.1);
-  -moz-transform:scale(1.1);
-  transform-origin:0 0;
-  -ms-transform-origin:0 0;
-  -webkit-transform-origin:0 0;
-  -o-transform-origin:0 0;
-  -moz-transform-origin:0 0;
-  -webkit-transform-origin:0 0;
-}

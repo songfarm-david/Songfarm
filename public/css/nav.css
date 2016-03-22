@@ -12,10 +12,7 @@ nav{
   padding:0 15px 0 45px;
   font-size: 1.05em;
 }
-nav h1{
-	display:none;
-}
-
+nav h1{ display:none; }
 nav span.logo{
 	line-height: 45px;
   font-weight: bold;
@@ -33,12 +30,8 @@ nav ul#settings-trigger li{
 	line-height: 45px;
   color:#416F48;
 }
-nav ul#settings-trigger > li{
-  cursor: pointer;
-}
-nav ul#settings-trigger li a{
-	padding: 10px 6px;
-}
+nav ul#settings-trigger > li{ cursor: pointer; }
+nav ul#settings-trigger li a{	padding: 10px 6px; }
 nav ul#settings-trigger > li:first-child:before{
   content:url('../images/arrows_and_lines/workshop-arrow-down.png');
   position: relative;
@@ -70,9 +63,5 @@ nav li ul#settings-drop-down li a{
   background: #DDFDDC;
   padding-left: 15px;
 }
-nav li ul#settings-drop-down li a:hover{
-  background: #AEE2B3;
-}
-nav li ul#settings-drop-down li a:active{
-  color:#45D845;
-}
+nav li ul#settings-drop-down li a:hover{ background: #AEE2B3; }
+nav li ul#settings-drop-down li a:active{ color:#45D845; }

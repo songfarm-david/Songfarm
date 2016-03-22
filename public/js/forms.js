@@ -1,8 +1,13 @@
+/**
+* This page contains scripting for
+* Registration Processing && Contact Form
+*
+* Used in public/index.php
+*
+* NOTE: requires validate.min.js
+*/
 
-// This page contains scripting for both
-// the REGISTRATION, LOG IN, & CONTACT FORM
-
-// on click 'REGISTER TODAY'
+// on click: 'REGISTER TODAY'
 $(".register").on('click',function(){
 	// show overlay and registration form part 1
 	$('div#overlay, form#register-form').fadeIn('fast').removeClass('hide');
@@ -110,59 +115,7 @@ function resetForm($form) {
 // 	return this.optional(element) || /^[a-z0-9\s]+$/i.test(value); ///^[a-z0-9\-\s]
 // }, "Only letters and whitespace allowed");
 
-
-// Log In drop-down
-$('#login').on('click', function(){
-	$('#login-form').toggle(500, function(){
-		$('#login-form input[type=text]').focus();
-	});
-})
-
-$('#login-form').validate({
-	errorElement : 'span',
-	rules : {
-		username : 'required',
-		password : 'required'
-	},
-	messages : {
-		username : 'Please enter your Name or Email',
-		password : 'Please enter your Password'
-	},
-	submitHandler: function(form){
-		// $('#submitLogIn').submit(function(e){
-		// 	e.preventDefault();
-		// })
-		console.log('submitHandler');
-		var form 			= $('#login-form');
-		var formData 	= form.serialize();
-			$.ajax({
-				url 	: '../includes/login.php',
-				type 	: 'POST',
-				data 	: formData,
-				success:function(data, textStatus, jqXHR){
-					// successful login returns false
-					if(data == false){
-						window.location.href = 'workshop.php'
-					} else {
-						$('span#login-error').html(data);
-					}
-					// console.log(data);
-					// console.log(jqXHR);
-					// if($.inArray(true, data) != -1){
-					// 	console.log('ready to redirect');
-					// 	// window.location.href = 'workshop.php';
-					// } else {
-					// 	console.log('display error');
-					// 	console.log(data);
-					// 	//
-					// }
-				} // success
-			}) // ajax
-	} // submit handler
-}); // validate
-
-
-// CONTACT FORM
+// on click: CONTACT FORM
 $("form#contact-form div.button").on('click', function(){
 	$(this).trigger("submit");
 	$("form#contact-form").validate({

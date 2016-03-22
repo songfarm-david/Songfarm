@@ -1,5 +1,5 @@
 <?php	require_once("../includes/initialize.php");
-//if(!$session->is_logged_in()) { redirectTo('index.php'); }
+//if(!$session->isLoggedIn()) { redirectTo('index.php'); }
 ?>
 <html lang="en">
   <head>

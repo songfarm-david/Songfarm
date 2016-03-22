@@ -26,7 +26,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 			// required data from user
 			$required_data = [
 				'username', 'user_email',
-				'timezone','fullTimezone',
+				'timezone','full_timezone',
 				'country_name','country_code',
 				'codeOfConduct','songcircle_id',
 				'date_of_songcircle','songcircle_name',
@@ -65,7 +65,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 			 	$username				=	explode('=',$clean_data[0])[1];
 			 	$email					=	explode('=',$clean_data[1])[1];
 				$timezone 			= explode('=',$clean_data[2])[1];
-				$fullTimezone		=	explode('=',$clean_data[3])[1];
+				$full_timezone	=	explode('=',$clean_data[3])[1];
 			 	$country_name		= explode('=',$clean_data[4])[1];
 				$country_code		=	explode('=',$clean_data[5])[1];
 				$codeOfConduct 	= explode('=',$clean_data[6])[1];
@@ -155,7 +155,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 							$user_id = $db->lastInsertedID($result);
 							// construct second query
 							$sql = "INSERT INTO user_timezone (user_id, timezone, full_timezone, country_name, country_code) ";
-							$sql.= "VALUES ($user_id, '$timezone', '$fullTimezone', '$country_name', '$country_code')";
+							$sql.= "VALUES ($user_id, '$timezone', '$full_timezone', '$country_name', '$country_code')";
 							// check for successful
 							if(!$result = $db->query($sql)){
 								// if no result, throw error
@@ -189,9 +189,9 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 
 				// make $songcircle_user_data array for emails
 				$songcircle_user_data = [
-					"username" 		=> $username,
-					"event_name" 	=> $songcircle_name,
-					"date_time" 	=> $songcircle_date,
+					"username" 						=> $username,
+					"songcircle_name" 		=> $songcircle_name,
+					"date_of_songcircle" 	=> $songcircle_date,
 					"link_params" 	=> [
 						"songcircle_id" 		=> $songcircle_id,
 						"user_email" 				=> $email,
@@ -201,8 +201,8 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 
 				$confirmation_data['flag'] = true;
 				$confirmation_data['username'] = $username;
-				$confirmation_data['event_name'] = $songcircle_name;
-				$confirmation_data['date_time'] = $songcircle_date;
+				$confirmation_data['songcircle_name'] = $songcircle_name;
+				$confirmation_data['date_of_songcircle'] = $songcircle_date;
 
 				// if NO waiting list
 				if( $waiting_list == 'false' ){
@@ -231,8 +231,8 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 						// email failed to send
 							// construct error message
 							$output = '<span>Oops!</span><br /><br />';
-							$output.= 'We\'re sorry but registration for '.$songcircle_name.' on '.$songcircle_date.' could not be completed';
-							$output.= '<br /><br />Please try again in a few minutes. <br>If you\'re still having trouble, please contact support at <a href="mailto:support@songfarm.ca">support@songfarm.ca</a>.';
+							$output.= 'We\'re sorry but registration for <b>'.$songcircle_name.'</b> on <b>'.$songcircle_date.'</b> could not be completed';
+							$output.= '<br /><br />Please try again in a few minutes. <br>If you\'re still having trouble, please contact support at <a href="mailto:support@songfarm.ca"><b>support@songfarm.ca</b></a>.';
 							print $output;
 						}
 					} // end of: if($message = constructHTMLEmail())
@@ -326,7 +326,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					$songcircle_data = $db->fetchArray($result);
 					// get variables from array
 					$songcircle_name = $songcircle_data['songcircle_name'];
-					$date_time = $songcircle_data['date_of_songcircle'];
+					$date_of_songcircle = $songcircle_data['date_of_songcircle'];
 					// capture unix formatted start time in variable
 					$start_time = $songcircle_data['UNIX_TIMESTAMP(date_of_songcircle)'];
 					if(empty($start_time)){
@@ -370,22 +370,23 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 												$error_msg[] = 'Invalid confirmation key provided.';
 											} else {
 												// keys do match
+												// create unique verification_key
 												$verification_key = getToken(40);
 												// attempt to update user status for songcircle
 												if($songcircle->confirmUserRegistration($songcircle_id, $user_id, $verification_key)){
 													// retrieve user's timezone
 													if($user->hasLocation($user_id)){
-														// convert songcircle date_time to user timezone
-														$user_date_time = $songcircle->callUserTimezone($date_time,$user->timezone);
+														// convert songcircle date_of_songcircle to user timezone
+														$user_date_of_songcircle = $songcircle->callUserTimezone($date_of_songcircle,$user->timezone);
 														// create user_data array
 														$songcircle_user_data = [
-															"username" => $username,
-															"user_email" => $user_email,
-															"event_name" => $songcircle_name,
-															"date_time" => $user_date_time,
+															"username" 						=> $username,
+															"user_email" 					=> $user_email,
+															"songcircle_name" 		=> $songcircle_name,
+															"date_of_songcircle"	=> $user_date_of_songcircle,
 															"link_params" => [
 																"songcircle_id" => $songcircle_id,
-																"user_id" => $user_id
+																"user_id" 			=> $user_id
 															]
 														];
 														// craft email

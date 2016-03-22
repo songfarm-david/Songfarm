@@ -102,8 +102,8 @@ class Image extends MySQLDatabase{
 		$sql = "SELECT filename, type FROM ".self::$table_name." WHERE ";
 		$sql.= "user_id = $id";
 		if($result = $db->query($sql)){
-			if($db->has_rows($result) > 0){
-				$image_array = $db->fetch_array($result);
+			if($db->hasRows($result) > 0){
+				$image_array = $db->fetchArray($result);
 				$image_name = $image_array['filename'].$image_array['type'];
 				$image_path = SITE_ROOT.DS.self::$photo_dir.DS.$image_name;
 				if(file_exists($image_path)){
@@ -195,8 +195,8 @@ class Image extends MySQLDatabase{
 		global $db;
 		$sql = "SELECT * FROM user_photo WHERE user_id = $id";
 		if($result = $db->query($sql)){
-			if($db->has_rows($result)){
-				$res_array = $db->fetch_array($result);
+			if($db->hasRows($result)){
+				$res_array = $db->fetchArray($result);
 				$this->existing_filename = $res_array['filename'];
 				$this->existing_filetype = $res_array['type'];
 				return true;

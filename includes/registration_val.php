@@ -8,7 +8,7 @@ if(isset($_POST['submit'])){
 	// assign user_type to user_data array..
 	$user_data['user_type'] = $user_type;
 	// check for the presence of a user_name
-	if($db->has_presence($_POST["user_name"])) {
+	if($db->hasPresence($_POST["user_name"])) {
 		$user_name = htmlspecialchars($_POST["user_name"]);
 		$user_data['user_name'] = $user_name;
 	} else {
@@ -16,9 +16,9 @@ if(isset($_POST['submit'])){
 		$errors[] = "Please enter your Artist name or real name.";
 	}
 	// check for the presence of an email
-	if($db->has_presence($_POST['user_email'])) {
+	if($db->hasPresence($_POST['user_email'])) {
     // make sure email is valid
-    if($db->is_valid_email($_POST['user_email'])) {
+    if($db->isValidEmail($_POST['user_email'])) {
       // assign clean, valid 'email' variable
       $user_email = htmlspecialchars($_POST['user_email']);
 			$user_data['user_email'] = $user_email;
@@ -31,13 +31,13 @@ if(isset($_POST['submit'])){
     $errors[] = "Please enter an email address";
   }
 	// check for presence of a password
-	if($db->has_presence($_POST['user_password'])) {
+	if($db->hasPresence($_POST['user_password'])) {
 		// make sure its at least 7 characters long
-		if($db->has_min_length($_POST['user_password'],7)) {
+		if($db->hasMinLength($_POST['user_password'],7)) {
 			// check for presence of a conf_password
-			if($db->has_presence($_POST['conf_password'])) {
+			if($db->hasPresence($_POST['conf_password'])) {
 				// compare the two password for exactness
-				if($db->string_is_exact($_POST['user_password'], $_POST['conf_password'])) {
+				if($db->strIsExact($_POST['user_password'], $_POST['conf_password'])) {
 					// passwords match
 					$user_password = htmlspecialchars($_POST['conf_password']);
 					$conf_password = htmlspecialchars($_POST['conf_password']);
@@ -67,14 +67,14 @@ if(isset($_POST['submit'])){
 	// if no errors, proceed to database
 	if(empty($errors)){
 		// check if email is unique
-		if($db->has_rows($db->unique_email($user_email))) {
+		if($db->hasRows($db->uniqueEmail($user_email))) {
 			$messages[] = "That email address has already been registered.";
 			echo json_encode($messages);
 		} else {
 			// insert user into the database
-			if($db->insert_user($user_data)) {
+			if($db->insertUser($user_data)) {
 				// success
-				$_SESSION['user_id'] = $db->last_inserted_id();
+				$_SESSION['user_id'] = $db->lastInsertedID();
 				$_SESSION['username'] = $user_data['user_name'];
 				$_SESSION['permission'] = 0;
 				$_SESSION['logged_in'] = true;

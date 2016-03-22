@@ -1,5 +1,5 @@
 <?php require_once('../includes/initialize.php'); include_once('../includes/countries_array.php');
-if(!$session->is_logged_in()) { redirectTo('index.php'); }
+if(!$session->isLoggedIn()) { redirectTo('index.php'); }
 /**
 * NOTE: update_timezone() is missing parameters. See User class..
 */
