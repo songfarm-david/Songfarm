@@ -11,18 +11,22 @@ $(document).ready(function(){
 	/* live site */
 	// var redirectURL = 'http://songfarm.ca';
 
+	// span to trigger registration form
+	var triggerForm = $('span[data-id="triggerRegForm"]');
 	// Register button from Songcircle Table
-	var btnRegister = $('input[data-id="triggerRegForm"]');
+	var btnRegister = $('#schedule_container input[type="submit"]');
 	// Waiting list button from Songcircle Table
 	var btnWaitList = $('input[data-id="triggerWaitList"]');
-	// Registration Form
-	var registrationForm = $('#registration_form');
-	// Registration Form Submit Button
-	var formSubmit = $('#registration_form input[type="submit"]');
-	// registration form submit button
-	var formSubmit = $('form#registration_form input[type="submit"]');
+
 	// Overlay for Registration Form
 	var overlay = $('#overlay');
+	// Registration Form
+	var registrationForm = $('#registration_form');
+
+	// Registration Form Submit Button
+	var formSubmit = $('#registration_form input[type="submit"]');
+	// 'Faux' submit button span
+	var formSubmitSpan = $('#registration_form span#submit_registration');
 
 	/* IP Generated Data (functions.php) */
 	// city name hidden input value on load
@@ -56,10 +60,7 @@ $(document).ready(function(){
 
 	// error output div
 	var outputDiv = $('#registration_form div#output');
-
-	/* Confirmation notification container (after submission of registration form) */
-	// var confirmContainer = $(document.createElement('div')).attr('id','modal').addClass('modalClass');
-	// $('body').prepend(confirmContainer);
+	// Confirmation notification container (after submission of registration form)
 	var confirmContainer = $('div#modal');
 
 	// create array
@@ -75,6 +76,7 @@ $(document).ready(function(){
 	/* Code of Conduct */
 	var codeOfConductDiv = $('#registration_form div#codeOfConduct');
 	var codeOfConductCheckbox = $('#registration_form div#codeOfConduct input[name="codeOfConduct"]');
+	var codeOfConductError = $('#registration_form #codeOfConduct div#cOcAlertBox');
 
 	// error spans
 	var usernameError		= $('div.form_error[name="username"]');
@@ -91,6 +93,14 @@ $(document).ready(function(){
 	var myRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
 	var emailRegEx = new RegExp(myRegex);
 
+
+	/**
+	* Trigger Songcircle Registration form + pass values from songcircle table
+	*/
+	$(triggerForm).click(function(e){
+		$(btnRegister).click();
+	});
+
 	/**
 	* When user clicks on the 'Register' button on songcircle.php
 	* open the registration form
@@ -100,7 +110,7 @@ $(document).ready(function(){
 		overlay.show();
 		registrationForm.show();
 		// call function to retrieve songcircle data by ROW number
-		getAndSetSongcircleDataByRow($(this).data('row'));
+		getAndSetSongcircleDataByRow( $(this).parents('tr').data('row-count') );
 		usernameInput.focus();
 	});
 
@@ -115,12 +125,13 @@ $(document).ready(function(){
 	function getAndSetSongcircleDataByRow(rowNumber){
 
 		// child inputs of songcircle data row
-		var childInputs = $('#songcircleTable tr[data-row="'+rowNumber+'"]').find('td.form').children('[type="hidden"]');
+		var childInputs = $('#schedule_container table tr[data-row-count="'+rowNumber+'"]').find('td:last-child').children('input[type="hidden"]');
 
 		// loop through the child elements and extract key/value pairs
 		$(childInputs).each(function(index, element){
 			var name 	= $(element).attr('name');
 			var str = '<input type="hidden" name="'+name+'" value="'+$(element).val()+'">';
+			// insert elements into form
 			$(formSubmit).before(str);
 		});
 
@@ -228,6 +239,19 @@ $(document).ready(function(){
 	});
 
 	/**
+	* Trigger Form w/ hidden values
+	*/
+$('span')
+
+
+	/**
+	* Trigger Registration Form Submission
+	*/
+	$(formSubmitSpan).click(function(){
+		$(formSubmit).click();
+	})
+
+	/**
 	* On Songcircle Registration form submission
 	*/
 	formSubmit.on('click', function(evt){
@@ -301,14 +325,17 @@ $(document).ready(function(){
 			// if code of conduct button is not checked
 			if( !codeOfConductCheckbox.prop('checked') ){
 				cOcErrorCounter++;
-				//console.log('error counter: '+cOcErrorCounter);
+				// console.log('error counter: '+cOcErrorCounter);
+
+				console.log('not checked');
 
 				// construct error message
-				var alertMsg = '<div id="cOcAlertBox" class="form_error">';
-						alertMsg += '<p>Please acknowledge that you have read and understand the <a href="#">Songfarm Code of Conduct</a></p>'
-						alertMsg += '</div>';
+				// var alertMsg = '<div id="cOcAlertBox" class="form_error">';
+				var	alertMsg = '<p>Please acknowledge that you have read and understand the <a href="#">Songfarm Code of Conduct</a></p>'
+						// alertMsg += '</div>';
 				// append message to div
-				codeOfConductDiv.append(alertMsg).show();
+				// codeOfConductDiv.append(alertMsg).show();
+				codeOfConductError.html(alertMsg).show();
 
 				$('.checkbox-custom-label, .checkbox-custom-label a').css('color','#3FA8F4');
 				$('.checkbox-custom + .checkbox-custom-label').addClass('error');
@@ -434,6 +461,8 @@ $(document).ready(function(){
 		}
 		return false;
 	}); // end of on formSubmit
+
+
 
 	/**
 	* Toggles checked property on codeOfConduct

@@ -211,10 +211,10 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					$to = "{$username} <{$email}>"; // this may cause a bug on Windows systems
 					$subject = "Confirm your registration!";
 					$from = "Songfarm <noreply@songfarm.ca>";
-					if($message = constructHTMLEmail($email_data['confirm_registration'],$songcircle_user_data)){
+					if( $message = constructHTMLEmail($email_data['confirm_registration'],$songcircle_user_data) ){
 						$headers = "From: {$from}\r\n";
 						$headers.= "Content-Type: text/html; charset=utf-8";
-						if( $result = mail($to,$subject,$message,$headers,'-fsongfarm') ){
+						// if( $result = mail($to,$subject,$message,$headers,'-fsongfarm') ){
 							// enter user into songcircle_register
 							$sql = "INSERT INTO songcircle_register (songcircle_id, user_id, confirmation_key) ";
 							$sql.= "VALUES ('$songcircle_id', $user_id, '$confirmation_key')";
@@ -227,14 +227,14 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 								// json encode and send confirmation data
 								echo json_encode($confirmation_data);
 							}
-						} else {
+						// } else {
 						// email failed to send
 							// construct error message
 							$output = '<span>Oops!</span><br /><br />';
 							$output.= 'We\'re sorry but registration for <b>'.$songcircle_name.'</b> on <b>'.$songcircle_date.'</b> could not be completed';
 							$output.= '<br /><br />Please try again in a few minutes. <br>If you\'re still having trouble, please contact support at <a href="mailto:support@songfarm.ca"><b>support@songfarm.ca</b></a>.';
 							print $output;
-						}
+						// }
 					} // end of: if($message = constructHTMLEmail())
 					else
 					{
@@ -247,7 +247,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					// enter user into songcircle_wait_register
 					$sql = "INSERT INTO songcircle_wait_register (songcircle_id, user_id, confirmation_key) ";
 					$sql.= "VALUES ('$songcircle_id', $user_id, '$confirmation_key')";
-					if($result = $db->query($sql)){
+					if( $result = $db->query($sql) ){
 						// insert successful:
 						/**
 						* NOTE: can send waitlist registration email notice here
@@ -271,6 +271,10 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 		}
 		else // end of: if(isset($_POST['formData']) && isset($_POST['songcircleId']))
 		{
+			// write error notice
+			$err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") case 'register' - ";
+			file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.PHP_EOL,FILE_APPEND);
+
 			// if there is an error in the $_POST data sent from songcircle.php
 			$output = '<p>Our system has experienced a problem processing your request. Please <a href="mailto:support@songfarm.ca">contact support</a> at support@songfarm.ca.</p><br>';
 			$output.= '<p>We are sorry for the inconvenience</p>.';
