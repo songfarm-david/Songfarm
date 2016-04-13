@@ -46,6 +46,17 @@
 		//$sessionUserId = $_GET['username '] ;
 	}
 
+	
+	//get duration of the songcircle
+	$songcircle_details = [];
+	$songcircle_details = $songcircle->songcircleDataByID($songcircle_id);
+	//print_r($songcircle_details);
+	$songcircle_duration = $songcircle_details['duration'];
+	$songcircle_date_UTC = $songcircle_details['date_of_songcircle'];
+	
+	//file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')). $songcircle_duration.PHP_EOL,FILE_APPEND);
+	
+
 ?>
 
   <script type="text/javascript" src="js/songfarm.VideoHelper-0.0.5.js"></script>
@@ -59,6 +70,7 @@
 
 	var sessionToken = getQSParam("t");
 	var user_token = sessionToken;
+	var localTimeOffset	= null;
 
 	var participantId = getQSParam("pid");
 	log("calling: ooVoo.API.init");
@@ -66,8 +78,10 @@
 	var resolution = "NORMAL";		//"HIGH";
 	var isResolutionSupported = true;
 	var enableLogs = true;
-	//var username = "<?php echo $session->username ?>";
+	//var username = "<?php //echo $session->username ?>";
 	var username = "<?php echo $sessionUserName ?>";
+	var songcircle_duration =  "<?php echo $songcircle_duration ?>";
+	var songcircle_date_UTC = "<?php echo $songcircle_date_UTC ?>";
 
 	try {
 	    document.addEventListener("fullscreenchange", onFullScreenStateChanged, false);
@@ -79,6 +93,7 @@
 	var callParticipants = new Array();
 
 	if (!sessionToken) {
+		
     //login to get session token
     participantId = "123" + <?php  echo $sessionUserId ?>;
 
@@ -89,13 +104,86 @@
         userId: participantId,
         callbackUrl: redirectUrl
     });
+    
+    
 	}
 	else {
 		ooVoo.API.init({
 	    userToken: sessionToken
     }, onAPI_init);
+
+		InitializeTimer();
 	}
 
+	
+	function InitializeTimer(){
+		var songcircle_duration_seconds = songcircle_duration *60;
+		var songcircle_duration_milliseconds = songcircle_duration_seconds *1000;
+		
+		var firstReminder_milliseconds = 15*60*1000;
+		var SecondReminder_milliseconds = 5*60*1000;
+		
+		
+		// get the timeoffset of the user
+		d = new Date();
+		localTimeOffset = d.getTimezoneOffset();; // timezone, returns timezone offset in minutes
+
+		var current_utcDateString = d.toUTCString();
+
+		var current_utcDate = new Date(current_utcDateString);
+		//alert(current_utcDate);
+
+		var current_utcDateMill = Date.UTC(current_utcDate.getUTCFullYear(), current_utcDate.getUTCMonth(), current_utcDate.getUTCDate(), current_utcDate.getUTCHours()
+				, current_utcDate.getUTCMinutes(), current_utcDate.getUTCSeconds(), current_utcDate.getUTCMilliseconds());
+		//alert(current_utcDateMill);
+		
+
+		//songcircle date
+		//alert(songcircle_date_UTC);
+		var songcircle_utcDate = new Date(songcircle_date_UTC);
+		
+		var songcircle_utcDateMill = Date.UTC(songcircle_utcDate.getUTCFullYear(), songcircle_utcDate.getUTCMonth(), songcircle_utcDate.getUTCDate(), 
+				songcircle_utcDate.getUTCHours(), songcircle_utcDate.getUTCMinutes(), songcircle_utcDate.getUTCSeconds(), songcircle_utcDate.getUTCMilliseconds());
+		//alert(songcircle_utcDateMill);
+		
+
+
+		var diffMilli = current_utcDateMill - songcircle_utcDateMill;
+		//alert(diffMilli);
+
+// 		var diffSeconds = diffMilli/1000;
+// 		alert(diffSeconds);
+		
+// 		var diffMinutes = diffSeconds/60;
+// 		alert(diffMinutes);
+// 		diffMinutes = diffMinutes + localTimeOffset;
+
+		
+	
+
+		var firstReminder_duration_milliseconds = songcircle_duration_milliseconds - firstReminder_milliseconds - diffMilli;
+		//set timeout for 1st Reminder
+		setTimeout(dispalyFirstReminder, firstReminder_duration_milliseconds);
+		//setTimeout(dispalyFirstReminder, 20000);
+
+		var secondReminder_duration_milliseconds = songcircle_duration_milliseconds - SecondReminder_milliseconds - diffMilli;
+		//set timeout for 1st Reminder
+		setTimeout(displaySecondReminder, secondReminder_duration_milliseconds);
+
+		//setTimeout(dispalyFirstReminder, 30000);
+		
+	}
+	
+	function dispalyFirstReminder()
+	{
+		 showPopup('dvfirstReminderMessage');
+	}
+	function displaySecondReminder()
+	{
+		showPopup('dvsecondReminderMessage');
+	}
+
+	
 	function onAPI_init(res) {
     if (res && res.error) {
 		//alert(res.error);
@@ -710,6 +798,19 @@
                   We will start once at least 2 participant join the Songcircle. Please wait.
                 </div>
             </div>
+            <div id="dvfirstReminderMessage" class="popup_form" style="display: none; height: 165px; top: 163px;">
+                <h2>Gentle Reminder</h2>
+                <div style="text-align:center;font-size:16px;margin-left:20px;margin-right:20px;">
+                  The songcircle is in its ending session. This songcircle will be completing in next 15 minutes. 
+                </div>
+            </div>
+            <div id="dvSecondReminderMessage" class="popup_form" style="display: none; height: 165px; top: 163px;">
+                <h2>Gentle Reminder</h2>
+                <div style="text-align:center;font-size:16px;margin-left:20px;margin-right:20px;">
+                 This songcircle will be completing in next 5 minutes. Hope you all enjoyed the songcircle
+                </div>
+            </div>
+            
             <div id="dvName" class="popup_form" style="height: 135px; top: 178px;">
                 <div class="popup_close" onclick="closeDisplayNameWin();"></div>
                 <br />

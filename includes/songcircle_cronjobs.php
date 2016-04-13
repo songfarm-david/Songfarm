@@ -90,15 +90,32 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 				file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' CALL: reminder_songcircle'.PHP_EOL,FILE_APPEND);
 
 				// query database
-				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, sr.user_id, ur.user_name, user_email, SUBSTR(ut.full_timezone,5,6) AS user_timezone ";
-				$sql.= "FROM songcircle_create AS sc, songcircle_register AS sr ";
-				$sql.= "INNER JOIN user_register AS ur ON sr.user_id = ur.user_id ";
-				$sql.= "INNER JOIN user_timezone AS ut ON ur.user_id = ut.user_id ";
-				$sql.= "WHERE sc.songcircle_id = sr.songcircle_id ";
-				$sql.= "AND sc.songcircle_status = 0 ";
-				$sql.= "AND sr.confirm_status = 1";
-				/* NOTE: need to input user timezone variable below somewhere */
-				$sql.= "AND DATE(date_of_songcircle) = DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 3 DAY))";
+// 				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, sr.user_id, ur.user_name, user_email, SUBSTR(ut.full_timezone,5,6) AS user_timezone ";
+// 				$sql.= "FROM songcircle_create AS sc, songcircle_register AS sr ";
+// 				$sql.= "INNER JOIN user_register AS ur ON sr.user_id = ur.user_id ";
+// 				$sql.= "INNER JOIN user_timezone AS ut ON ur.user_id = ut.user_id ";
+// 				$sql.= "WHERE sc.songcircle_id = sr.songcircle_id ";
+// 				$sql.= "AND sc.songcircle_status = 0 ";
+// 				$sql.= "AND sr.confirm_status = 1";
+
+				
+				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, sr.user_id, ur.user_name, user_email, 
+						SUBSTR(ut.full_timezone,5,6) AS user_timezone,
+						convert_tz(date_of_songcircle, @@global.time_zone, '+0:00') as date_of_songcircle_UTC,
+						convert_tz(now(), @@global.time_zone, '+0:00') as today_time_UTC,
+						convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00') as user_time_UTC
+						/*,TIMESTAMPDIFF( MINUTE, convert_tz(date_of_songcircle, @@global.time_zone, '+0:00'), convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00') ) */
+
+						FROM songcircle_create AS sc, 
+						songcircle_register AS sr 
+						INNER JOIN user_register AS ur 
+						ON sr.user_id = ur.user_id 
+						INNER JOIN user_timezone AS ut 
+						ON ur.user_id = ut.user_id 
+						
+						WHERE sc.songcircle_id = sr.songcircle_id AND sc.songcircle_status = 0 AND sr.confirm_status =1
+						and TIMESTAMPDIFF( MINUTE, convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00')  , convert_tz(date_of_songcircle, @@global.time_zone, '+0:00')) > 4305 and
+						TIMESTAMPDIFF( MINUTE, convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00')  , convert_tz(date_of_songcircle, @@global.time_zone, '+0:00')) < 4320"; 
 
 				if($result = $db->getRows($sql)){
 
@@ -163,16 +180,34 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 				file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' CALL: join_songcircle'.PHP_EOL,FILE_APPEND);
 
 				// query database
-				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, ";
-				$sql.= "sr.user_id, verification_key, confirm_status, ur.user_name, user_email, SUBSTR(ut.full_timezone,5,6) AS user_timezone ";
-				$sql.= "FROM songcircle_create AS sc, songcircle_register AS sr	";
-				$sql.= "INNER JOIN user_register AS ur ON sr.user_id = ur.user_id ";
-				$sql.= "INNER JOIN user_timezone AS ut ON ur.user_id = ut.user_id ";
-				$sql.= "WHERE sc.songcircle_id = sr.songcircle_id ";
-				$sql.= "AND sc.songcircle_status = 0 AND sr.confirm_status = 1 ";
-				/* NOTE: need to input user timezone variable below somewhere */
-				$sql.= "AND DATE(date_of_songcircle) = DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 15 MINUTES))";
+// 				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, ";
+// 				$sql.= "sr.user_id, verification_key, confirm_status, ur.user_name, user_email, SUBSTR(ut.full_timezone,5,6) AS user_timezone ";
+// 				$sql.= "FROM songcircle_create AS sc, songcircle_register AS sr	";
+// 				$sql.= "INNER JOIN user_register AS ur ON sr.user_id = ur.user_id ";
+// 				$sql.= "INNER JOIN user_timezone AS ut ON ur.user_id = ut.user_id ";
+// 				$sql.= "WHERE sc.songcircle_id = sr.songcircle_id ";
+// 				$sql.= "AND sc.songcircle_status = 0 AND sr.confirm_status = 1 ";
+// 				/* NOTE: need to input user timezone variable below somewhere */
+// 				$sql.= "AND DATE(date_of_songcircle) = DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 15 MINUTES))";
 
+				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, sr.user_id, verification_key, confirm_status,ur.user_name, user_email,
+				SUBSTR(ut.full_timezone,5,6) AS user_timezone,
+				convert_tz(date_of_songcircle, @@global.time_zone, '+0:00') as date_of_songcircle_UTC,
+				convert_tz(now(), @@global.time_zone, '+0:00') as today_time_UTC,
+				convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00') as user_time_UTC
+				/*,TIMESTAMPDIFF( MINUTE, convert_tz(date_of_songcircle, @@global.time_zone, '+0:00'), convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00') ) */
+				
+				FROM songcircle_create AS sc, songcircle_register AS sr
+				INNER JOIN user_register AS ur ON sr.user_id = ur.user_id
+				INNER JOIN user_timezone AS ut ON ur.user_id = ut.user_id
+				WHERE sc.songcircle_id = sr.songcircle_id AND sc.songcircle_status = 0 AND sr.confirm_status =1
+				
+				and TIMESTAMPDIFF( MINUTE, convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00')  , convert_tz(date_of_songcircle, @@global.time_zone, '+0:00')) > -1 and
+				TIMESTAMPDIFF( MINUTE, convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00')  , convert_tz(date_of_songcircle, @@global.time_zone, '+0:00')) < 16 ";
+				
+				
+				
+				
 				if($result = $db->getRows($sql)){
 
 					foreach($result as $songcircle_user_data){
@@ -218,9 +253,9 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 				file_put_contents(SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' CALL: clear_expired_songcircle'.PHP_EOL,FILE_APPEND);
 
 				// if songcircle start time + duration of songcircle is less than current time (in UTC)
-				$sql = "SELECT id, songcircle_id, date_of_songcircle "
-				$sql.= "FROM songcircle_create ";
-				$sql.= "WHERE DATE_ADD(date_of_songcircle, INTERVAL duration HOUR_SECOND) < DATE_ADD(NOW(), INTERVAL '5' HOUR)";
+				$sql = "SELECT id, songcircle_id, date_of_songcircle " .
+					"FROM songcircle_create " .
+					"WHERE DATE_ADD(date_of_songcircle, INTERVAL duration HOUR_SECOND) < DATE_ADD(NOW(), INTERVAL '5' HOUR)";
 
 				if($result = $db->getRows($sql)){
 

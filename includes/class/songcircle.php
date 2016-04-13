@@ -177,7 +177,7 @@ class Songcircle extends MySQLDatabase{
 
 						// display join button
 						$output.= "<button id=\"divJoin".$row['songcircle_id']."\" class=\"join\" style=\"display: block\">";
-						$output.= "<a href=\"start_call.php?songcircleid=".$row['songcircle_id']."\" target=\"new\">Join Now</a>";
+						$output.= "<a href=\"start_call.php?songcircle_id=".$row['songcircle_id']."\" target=\"new\">Join Now</a>";
 						$output.= "</button>";
 
 					} else {
@@ -700,7 +700,7 @@ class Songcircle extends MySQLDatabase{
 	*
 	* @param (string) songcircle_id
 	*/
-	private function songcircleDataByID($songcircle_id){
+	public function songcircleDataByID($songcircle_id){
 		global $db;
 		$sql = "SELECT * FROM songcircle_create WHERE songcircle_id = '$songcircle_id'";
 		if($result = $db->query($sql)){

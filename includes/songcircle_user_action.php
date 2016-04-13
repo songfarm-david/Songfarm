@@ -214,7 +214,8 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					if($message = constructHTMLEmail($email_data['confirm_registration'],$songcircle_user_data)){
 						$headers = "From: {$from}\r\n";
 						$headers.= "Content-Type: text/html; charset=utf-8";
-						if( $result = mail($to,$subject,$message,$headers,'-fsongfarm') ){
+						//if( $result = mail($to,$subject,$message,$headers,'-fsongfarm') )
+						{
 							// enter user into songcircle_register
 							$sql = "INSERT INTO songcircle_register (songcircle_id, user_id, confirmation_key) ";
 							$sql.= "VALUES ('$songcircle_id', $user_id, '$confirmation_key')";
@@ -227,7 +228,9 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 								// json encode and send confirmation data
 								echo json_encode($confirmation_data);
 							}
-						} else {
+						} 
+						//else 
+						{
 						// email failed to send
 							// construct error message
 							$output = '<span>Oops!</span><br /><br />';
