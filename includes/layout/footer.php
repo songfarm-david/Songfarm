@@ -1,7 +1,4 @@
 <footer>
-	<p>
-		<small>&copy; <?php echo date("Y")?> Songfarm. All rights reserved.</small>
-	</p>
 	<div class="share-links">
 		<p>Share this page:</p>
 		<ul>
@@ -16,4 +13,10 @@
 			</li>
 		</ul>
 	</div>
+	<div class="legal">
+		<p>
+			<small>&copy; <?php echo date("Y")?> Songfarm. All rights reserved.</small>
+		</p>
+	</div>
+
 </footer>

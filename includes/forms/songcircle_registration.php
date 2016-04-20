@@ -93,11 +93,16 @@
 	<div>
 		<div id="codeOfConduct">
 			<input type="checkbox" name="codeOfConduct" tabindex="6" class="checkbox-custom"><label for="codeOfConduct" class="checkbox-custom-label">I agree to the </label><a href="#" tabindex="7">Code&nbsp;of&nbsp;Conduct</a>
+			<div id="cOcAlertBox" class="form_error"></div>
 		</div>
-		<!-- Form submit -->
-		<input type="submit" name="register" value="Register" tabindex="8">
+		<!-- Submit button -->
+		<span id="submit_registration" name="register" tabindex="8">Register
+			<input type="submit" name="register">
+		</span>
+		<!-- end of Submit button -->
 	</div>
 	<!-- error output -->
 	<div id="output"></div>
+	<span id="close-form">[X Close]</span>
 </form>
 <!-- end of Registration Form -->

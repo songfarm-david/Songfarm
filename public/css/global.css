@@ -46,6 +46,7 @@
 @charset "UTF-8";
 
 /*	Global styles		*/
+html{ max-width: 2400px; }
 html, body, div, p, ul, h1, h2, h3, img, em, small, li, span, time, section, article, header, nav, footer, table, th, td, tr{
 	margin:0;
 	padding:0;
@@ -67,8 +68,10 @@ body{
 	line-height: 1;
   height: 100%;
 }
+
 img{ outline: 0; border: none; }
-ul{list-style: none; }
+ul{ list-style: none; }
+
 a{
   text-decoration: none;
   border: none;
@@ -90,34 +93,220 @@ button.inactive:hover{ cursor: default;}
 button.inactive a{ cursor: default;}
 button:focus {outline:0;}
 
-/* Custom Rules */
+/**
+* Custom Classes
+*/
 .hide	{ display: none; }
-.bold{
-	text-shadow: 1px 1px rgba(0,0,0,.3); font-weight: bold;
-	font-family: 'museo_sans900', Arial, Helvetica, sans-serif;
+.bold{ font-family: 'museo_sans900', Arial, Helvetica, sans-serif; }
+
+/**
+* Header
+*/
+header{
+	width:100%;
+	position: relative;
+  font-family: 'museo_sans300', Arial, Helvetica, sans-serif;
+  border: 1px solid #fff;
+  height: 168px;
+  margin-top:-12px;
+}
+header > img{ position: absolute; top:-16px; left:0; width: 1600px; }
+
+/* Songfarm Logo */
+header .logo{
+  height: 84px; width: 31.5%;
+  max-width: 370px;
+  min-width: 200px;
+  background: url("../images/songfarm_logo.png") center center no-repeat;
+  background-size: 100% auto;
+  position: absolute;
+  top:44px; left:13.3%;
+  z-index: 1000;
+}
+header div.logo:after{
+  content: 'BETA';
+  position: absolute;
+  right:-30px; top:30px;
+  font-size: 0.75em;
+  cursor: default;
+  color:#666666;
+}
+header div.logo:hover:after{ color: #000; transition-duration: 0; cursor: default; }
+
+
+/**
+* Navigation
+*/
+nav{
+  font-size: 1.2em;
+  height: 168px;
+  position: relative;
+   z-index: 10;
+ }
+nav ul{
+  line-height: 76px;
+  position: absolute;
+  top: 44px;
+  right: 4%;
+  width: 44%;
+  /*min-width: 550px; */
+  min-width: 700px; /* w/ log in */
+}
+ul#links{ height:76px; text-align: right; }
+ul#links li { margin-left: 5%; }
+ul#links li{
+	display: inline-block;
+	text-transform: uppercase;
+  position: relative;
+}
+ul#links li:last-child{ position: relative; }
+ul#links li:nth-child(5):after{
+  content: '|';
+  position: relative;
+  right:-20px;
+}
+ul#links li a{ padding: .3em .1em; }
+ul#links li a:hover:before{
+  content:url('../images/arrows_and_lines/navActive_arrow.png');
+  position:absolute; left:-15px; top:3px;
+}
+ul#links li a[title="Log In"]:hover:before{ content:''; position: relative; } /* remove arrow from this link */
+ul#links span#style, span.menu{ visibility: hidden; }
+
+
+
+/* Gradient background */
+#modal, button.register{
+	background: #e5fcca;
+	background: -moz-linear-gradient(top,  #e5fcca 0%, #99ee20 45%, #89dc3d 70%, #7ec919 90%, #92ea41 100%);
+	background: -webkit-linear-gradient(top,  #e5fcca 0%,#99ee20 45%,#89dc3d 70%,#7ec919 90%,#92ea41 100%);
+	background: linear-gradient(to bottom,  #e5fcca 0%,#99ee20 45%,#89dc3d 70%,#7ec919 90%,#92ea41 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5fcca', endColorstr='#92ea41',GradientType=0 );
+}
+/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e5fcca+0,99ee20+45,89dc3d+70,7ec919+90,92ea41+100 */
+
+ul#links span.menu:hover{ color: #7CC919; }
+ul#links div.active{ display: block; }
+ul#links span.menu.active-color{ color: #7CC919;}
+
+
+/* Register Button */
+button.register{
+  position:absolute;
+  bottom:-36px; right: 12.5%;
+  z-index:15;
+  display: inline-block;
+  /*height:70px; */
+  padding: 0.5em 0.5em;
+  width: 50%;
+  max-width: 294px;  min-width: 206px;
+  font-size: 2em; color: #2A5C03;
+  /*font-weight: bold;*/
+  border-radius: 50px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.65);
+	-moz-box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.65);
+	-webkit-box-shadow: 2px 2px 2px 0px rgba(0,0,0,.65);
+}
+button.register:hover{
+  background: blue;
 }
 
+
+/**
+* Footer
+*/
+footer{
+	height: 120px;
+	position: relative;
+	/*bottom: -20px;*/
+  width:100%;
+	background-color: #343238;
+	text-align: center;
+  font-family: 'museo_sans300', Arial, Helvetica, sans-serif;
+  color: #9A999C;
+}
+footer div.legal{
+  height:120px; width: 30%; min-width: 320px;
+  text-align: center; margin: 0 auto;
+  line-height: 120px;
+}
+footer div.share-links{
+  position: absolute; z-index: 10;
+  top:34px; left:18.2%;
+  height:40px; width: 200px;
+  text-align: left;
+}
+footer div.share-links p { margin-bottom: 10px; }
+footer div.share-links ul{ margin:0; padding:0; }
+footer div.share-links ul li{ display: inline-block; margin: 0 6% 0 0; cursor: pointer; transition: opacity 250ms; }
+footer div.share-links ul li:hover{ opacity: 0.75; }
+footer div.share-links ul li img{ height:40px; width:40px; }
+
+
+/**
+* Login In form
+*/
+form#login-form{
+  position:absolute;
+  right:-20px;
+  top:64px;
+  z-index:11111;
+  background:#fff;
+  border:1px solid #ccc;
+  width:320px;
+  padding-bottom: 6px;
+}
+form#login-form input{
+  display: block;
+  margin:16px 16px;
+  width:90%;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+  padding: 6px;
+}
+form#login-form span#login-error,
+form#login-form span#username-error,
+form#login-form span#password-error{
+  text-align: center;
+  line-height: 30px;
+  position: relative;
+  margin:-10px 0 0;
+  display: block;
+  font-weight: bold;
+  color: #DD3131;
+  text-transform: none;
+}
+form#login-form span#login-error{ padding: 0 12px; }
+form#login-form span#username-error,
+form#login-form span#password-error{
+  line-height: 1;
+  margin:-10px 0;
+  font-size: 0.8em;
+  text-transform: none;
+}
+
+/**
+* Styles for Confirmation modal
+*/
 #modal{
 	font-family: 'museo_sans300', Arial, helvetica, sans-serif;
-	font-size: 1.2em;	color: #666666; padding: 2em 3em;
-	border: 1px solid #7ec919;
-	width:25%; min-width: 320px;
+	font-size: 1.6em;	color: #666666; padding: 2.5em 2em 3em;
+	margin: 0 auto; border: 1px solid #7ec919;
+	width: 30%; min-width: 320px;
 	position: fixed; z-index:3000;
 	top:50%; left:50%;
+  text-align: center;
 	transform: translateY(-50%) translateX(-50%);
 	/* transform centers elements vertically and horizontally.. Guau! */
 	border-radius: 30px 30px 30px 30px;
 	-moz-border-radius: 30px 30px 30px 30px;
 	-webkit-border-radius: 30px 30px 30px 30px;
 	display: none;
-}
-#modal{
-	width: 30%;
-	margin: 0 auto;
-	padding: 2.5em 2em 3em;
-	font-size:1.6em;
-	text-align: center;
-	overflow: hidden;
+  overflow: hidden;
 }
 #modal span{
 	color: #3FA8F4;
@@ -139,133 +328,45 @@ button:focus {outline:0;}
 	opacity: 0.75;
 }
 
-
-/*  Header  */
-header{
-	width:100%;
-	position: relative;
-  font-family: 'museo_sans300', Arial, Helvetica, sans-serif;
-  border: 1px solid #fff;
-  height: 168px;
-  margin-top:-12px;
+/* Overlays */
+#overlay{
+		position:fixed;
+		z-index: 1000;
+		top:0;
+		right:0;
+		bottom:0;
+		left:0;
+		background-color: rgba(0,0,0,0.5);
+    display: none;
 }
-header > img{ position: absolute; top:-16px; left:0; width: 1600px; }
 
-/*header#header ul#social_head{
-  position:absolute;
-  top:-4px; right: 12.75%;
-  width:250px;
-  margin:0;
-  height:60px;
+/* Global Message styles */
+div.global_msg{
+  position: absolute;
+  top:5px;
+  left:50%;
+  margin-left: -30%;
+  width:60%;
+  padding:15px 60px;
+  background: #FC3A3A;
+  color: #fff;
   text-align: center;
-}
-#header ul#social_head li{
-  transition-duration: .250s;
-  margin:0;
-  height:50px; width:50px;
-}
-#header ul#social_head li:hover{ transition-duration: .250s; }
-header#header ul#social_head li.facebook{
-  background: url('../images/icons/social icons/facebook_s.png');
-  height:50px; width:50px;
-}
-header#header ul#social_head li.facebook:hover{ background: url('../images/icons/social icons/facebook_s_hover.png'); }
-header#header ul#social_head li.twitter{ background: url('../images/icons/social icons/twitter_s.png');
-  height:50px; width:50px; }
-header#header ul#social_head li.twitter:hover{ background: url('../images/icons/social icons/twitter_s_hover.png'); }
-header#header ul#social_head li.linkedIn{
-  background: url('../images/icons/social icons/linkedIn_s.png');
-  height:50px; width:50px;
-}
-header#header ul#social_head li.linkedIn:hover{ background: url('../images/icons/social icons/linkedIn_s_hover.png'); }
-header#header ul#social_head li a{
-  background: url('../images/icons/social icons/message.png') no-repeat;
-  height:50px; width:50px;
-  display: block;
-}
-header#header ul#social_head li a:hover{ background: url('../images/icons/social icons/message_hover.png') no-repeat; }
-header#header ul#social_head a:hover:before{ content: ''; }*/
-
-header nav{ font-size: 1.2em; position: relative; height: 168px; }
-header ul{
-  line-height: 76px;
-  position: absolute;
-  top: 44px;
-  right: 4%;
-  width: 44%;
-  /*min-width: 550px; */
-  min-width: 700px; /* w/ log in */
-  /*border: 1px dotted black;*/
-}
-header ul#links{ height:76px; text-align: right; }
-header ul#links li:last-child{ position: relative; }
-header ul#links li:nth-child(5):after{
-  content: '|';
-  position: relative;
-  right:-22px;
-}
-header ul#links li a:hover::before{
-  content:url('../images/arrows_and_lines/navActive_arrow.png');
-  position:absolute; left:-15px; top:3px;
-}
-header ul#links li a[title="Log In"]:hover:before{ content:''; position: relative; }
-header ul#links li a[href^="songcircle"]{ font-size:1.1em;}
-header ul li { margin-left: 5%; }
-header ul li{
-	display: inline-block;
-	text-transform: uppercase;
-  position: relative;
-}
-header ul li a{ padding: .3em .1em; }
-header ul li a[title="songcircle"]{ font-size: 1.5em; }
-
-ul#links span#style, span.menu{ visibility: hidden; }
-
-header .logo{
-  height: 84px; width: 31.5%;
-  max-width: 370px;
-  min-width: 200px;
-  background: url("../images/songfarm_logo.png") center center no-repeat;
-  background-size: 100% auto;
-  position: absolute;
-  top:44px; left:13.3%;
-  z-index: 1000;
-}
-header div.logo:after{
-  content: 'BETA';
-  position: absolute;
-  right:-30px; top:30px;
-  font-size: 0.75em;
-  cursor: default;
-  color:#666666;
-}
-header div.logo:hover:after{ color: #000; transition-duration: 0; cursor: default; }
-
-/* background gradient */
-/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e5fcca+0,99ee20+45,89dc3d+70,7ec919+90,92ea41+100 */
-#modal, button.register{
-	background: #e5fcca;
-	background: -moz-linear-gradient(top,  #e5fcca 0%, #99ee20 45%, #89dc3d 70%, #7ec919 90%, #92ea41 100%);
-	background: -webkit-linear-gradient(top,  #e5fcca 0%,#99ee20 45%,#89dc3d 70%,#7ec919 90%,#92ea41 100%);
-	background: linear-gradient(to bottom,  #e5fcca 0%,#99ee20 45%,#89dc3d 70%,#7ec919 90%,#92ea41 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5fcca', endColorstr='#92ea41',GradientType=0 );
+  line-height: 1.2;
+  border-radius: 6px;
 }
 
-ul#links span.menu:hover{ color: #7CC919; }
-ul#links div.active{ display: block; }
-ul#links span.menu.active-color{ color: #7CC919;}
 
-/* start media queries */
+/**
+* Media Queries
+*/
 @media screen and (max-width: 1099px) and (min-width:849px){
   header .logo{ left: 9.7%; }
 }
-@media screen and (max-width: 848px){
+@media screen and (max-width: 849px){
   header .logo{ left: 5.25%; width: 35%; }
 }
 
-/**
-* Register button
-*/
+/* Register button */
 @media screen and (max-width: 1024px) and (min-width: 768px){
   button.register, header div.register.medium, header div.register.medium:hover:before{
     right: 10.5%;
@@ -283,9 +384,7 @@ ul#links span.menu.active-color{ color: #7CC919;}
   }
 }
 
-/**
-* Break nav onto two lines
-*/
+/* Break nav onto two lines */
 @media screen and (max-width: 1290px) and (min-width: 840px){ /* max-width: 1024px & min-width: 640px*/
   ul#links span{ display: block; }
   header ul#links{
@@ -295,26 +394,35 @@ ul#links span.menu.active-color{ color: #7CC919;}
     line-height: 40px;
     top: 44px;
   }
+  ul#links li:nth-child(5):after{ right: -15px; }
   button.register.medium{
     font-size: 1.5em;
   }
+
 }
 /* w/ log in */
 @media screen and (max-width: 839px){
+  ul#links li:nth-child(5):after{
+    content: '';
+  }
+  ul#links li a[title="Log In"]:hover:before{
+    content:url('../images/arrows_and_lines/navActive_arrow.png');
+    position:absolute; left:-15px; top:3px;
+  }
   ul#links span.menu{
     visibility: visible;
     color: #666666;
     font-size: 3em;
     cursor: pointer;
     padding: 0 0.25em;
-    position: relative; top: 8px;
+    position: relative; top: 8px; right: -10px;
   }
   ul#links li{ display: block; line-height: 40px; }
   ul#links div{
     position: absolute;
     z-index: 1000;
     top: 70px; right: 0;
-    width: 18%; min-width: 155px;
+    width: 27%; min-width: initial;
     text-align: right;
     padding: 0.5em 1.25em;
     background: #ffffff;
@@ -366,132 +474,67 @@ ul#links span.menu.active-color{ color: #7CC919;}
   }
 }
 
-button.register{
-  position:absolute;
-  bottom:-36px; right: 12.5%;
-  z-index:15;
-  display: inline-block;
-  /*height:70px; */
-  padding: 0.5em 0.5em;
-  width: 50%;
-  max-width: 294px;  min-width: 206px;
-  font-size: 2em; color: #2A5C03;
-  /*font-weight: bold;*/
-  border-radius: 50px;
-  border: none;
-  cursor: pointer;
-  box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.65);
-	-moz-box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.65);
-	-webkit-box-shadow: 2px 2px 2px 0px rgba(0,0,0,.65);
-}
-button.register:hover{
-  background: blue;
+@media screen and (max-width: 1024px){
+  footer div.share-links{
+    top: 26px; left: 8.2%;
+  }
 }
 
-
-
-/* Login In form */
-form#login-form{
-  position:absolute;
-  right:-20px;
-  top:64px;
-  z-index:11111;
-  background:#fff;
-  border:1px solid #ccc;
-  width:320px;
-  padding-bottom: 6px;
-}
-form#login-form input{
-  display: block;
-  margin:16px 16px;
-  width:90%;
-  -webkit-box-sizing: border-box;
-  -moz-box-sizing: border-box;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
-  padding: 6px;
-}
-
-form#login-form span#login-error,
-form#login-form span#username-error,
-form#login-form span#password-error{
-  text-align: center;
-  line-height: 30px;
-  position: relative;
-  margin:-10px 0 0;
-  display: block;
-  font-weight: bold;
-  color: #DD3131;
-  text-transform: none;
-}
-form#login-form span#login-error{ padding: 0 12px; }
-
-form#login-form span#username-error,
-form#login-form span#password-error{
-  line-height: 1;
-  margin:-10px 0;
-  font-size: 0.8em;
-  text-transform: none;
+@media screen and (max-width: 769px){
+  footer{ height: 160px; }
+  footer div.share-links{
+    position: inherit; left: 0 !important; top: 9px;
+    display: block;
+    margin: 0 auto;
+    text-align: center;
+    height: auto;
+    padding: 1em 0 1em;
+  }
+  footer div.legal{
+    height: auto; line-height: 1;
+    display: block;
+    padding: 1em 0;
+  }
 }
 
 
-/* Overlays */
-#overlay{
-		position:fixed;
-		z-index: 1000;
-		top:0;
-		right:0;
-		bottom:0;
-		left:0;
-		background-color: rgba(0,0,0,0.5);
-    display: none;
-}
+/*** Styles not in use ***/
 
-/* Global Message styles */
-div.global_msg{
-  position: absolute;
-  top:5px;
-  left:50%;
-  margin-left: -30%;
-  width:60%;
-  padding:15px 60px;
-  background: #FC3A3A;
-  color: #fff;
-  text-align: center;
-  line-height: 1.2;
-  border-radius: 6px;
-}
-
-/*
-* Footer
+/**
+* Styles for social links at top of page
 */
-/*footer{
-	width:1600px;
-	bottom:0;
-	position: relative;
-}*/
-/*	Footer	*/
-footer{
-	height:120px;
-	position: relative;
-	/*bottom: -20px;*/
+/*
+header#header ul#social_head{
+  position:absolute;
+  top:-4px; right: 12.75%;
+  width:250px;
+  margin:0;
+  height:60px;
+  text-align: center;
 }
-footer > p{ line-height: 120px; }
-footer div.share-links{
-  position: absolute; z-index: 10;
-  top:34px; left:18.2%;
-  height:40px; width: 200px;
-  text-align: left;
+#header ul#social_head li{
+  transition-duration: .250s;
+  margin:0;
+  height:50px; width:50px;
 }
-footer div.share-links p { margin-bottom: 10px; }
-footer div.share-links ul{ margin:0; padding:0; }
-footer div.share-links ul li{ display: inline-block; margin: 0 6% 0 0; }
-footer div.share-links ul li img{ height:40px; width:40px; }
-
-footer{
-	width:100%;
-	background-color: #343238;
-	text-align: center;
-  font-family: 'museo_sans300', Arial, Helvetica, sans-serif;
-  color: #9A999C;
+#header ul#social_head li:hover{ transition-duration: .250s; }
+header#header ul#social_head li.facebook{
+  background: url('../images/icons/social icons/facebook_s.png');
+  height:50px; width:50px;
 }
+header#header ul#social_head li.facebook:hover{ background: url('../images/icons/social icons/facebook_s_hover.png'); }
+header#header ul#social_head li.twitter{ background: url('../images/icons/social icons/twitter_s.png');
+  height:50px; width:50px; }
+header#header ul#social_head li.twitter:hover{ background: url('../images/icons/social icons/twitter_s_hover.png'); }
+header#header ul#social_head li.linkedIn{
+  background: url('../images/icons/social icons/linkedIn_s.png');
+  height:50px; width:50px;
+}
+header#header ul#social_head li.linkedIn:hover{ background: url('../images/icons/social icons/linkedIn_s_hover.png'); }
+header#header ul#social_head li a{
+  background: url('../images/icons/social icons/message.png') no-repeat;
+  height:50px; width:50px;
+  display: block;
+}
+header#header ul#social_head li a:hover{ background: url('../images/icons/social icons/message_hover.png') no-repeat; }
+header#header ul#social_head a:hover:before{ content: ''; }*/

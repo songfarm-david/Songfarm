@@ -65,152 +65,298 @@ class Songcircle extends MySQLDatabase{
 	public function displaySongcircles(){
 		global $db;
 
-		// init row counter
-		$row_counter=0;
-
-		// select all from songcircle_create table
+		// get all the data from table songcircle_create
 		$sql = "SELECT * FROM songcircle_create WHERE created_by_id = $this->global_user_id";
-		// if result
-		if($result = $db->query($sql)){
 
-			// begin display output:
-			$output = "<table id=\"songcircleTable\">";
+		if( $result = $db->query($sql) ){
 
-			// while array rows..
-			while($row = $db->fetchArray($result)){
-				// begin table row
-				$output.= "<tr data-row=\"".$row_counter."\">";
+			// init count
+			$count = 0;
+			// begin output
+			$output = '<table>';
+
+			while( $row = $db->fetchArray($result) ){
+
+				/*** collect dateList information here ***/
+
+				$output.= '<tr data-row-count="'.$count.'">';
 
 				// if no $_SESSION data
 					if( empty($_SESSION['user_id']) || !isset($_SESSION['user_id']) || !isset($user->timezone) ){
-						// format scheduled times in UTC
-						$output.= "<td class=\"date\">".$this->formatUTC($row['date_of_songcircle'])."</td>";
-					} else {
-						// format scheduled times in user timezone
-						$output.= "<td class=\"date\">".$this->userTimezone($row['date_of_songcircle'], $user->timezone)."</td>";
-						/*
-						Needs coding...
-						*/
-					}
-
-			// table data: SONGCIRCLE NAME
-				$output.= "<td class=\"name\">".$row['songcircle_name']."<br>";
-
-				// registered participants display & jQuery Trigger
-					$output.= "<span class=\"triggerParticipantsTable\">";
-					$output.= "(".$this->getParticipantCount($row['songcircle_id'])." of ".$row['max_participants']." participants registered)";
-					$output.= "</span>";
-				// end of display
-
-				// Hidden participants TABLE
-					$output.= "<table class=\"participantsTable hide\">";
-					// if partipants
-					if($participants = $this->fetchParticipantData($row['songcircle_id'])){
-
-						foreach ($participants as $participant) {
-							$output.= "<tr><td><a href=\"profile.php?id=".$participant['user_id']."\">".$participant['user_name']."</a></td>";
-							$output.= "<td>".$this->formatTimezone($participant['timezone']).", ".$participant['country_name']."</td></tr>";
-						}
-
-					}	else {
-						// if no participants
-						$output.= '<td>No one has yet to register for this Songcircle</td>';
-					}
-					$output.= "</table>";
-				// end of hidden participants table
-
-				$output.= "</td>";
-			// end of name of songcircle td
-
-			// optional: "created by" display:
-				// $output.= "<td class=\"created\">Created by: <br><a href=\"profile.php?id=user_id_here\">User name here</a></td>";
-
-			// FORM td
-			$output.= "<td class=\"form\">";
-				// if songcircle not started
-				if( $row['songcircle_status'] == 0 ){
-
-					$output.= "<input type=\"hidden\" name=\"songcircle_id\" value=\"".$row['songcircle_id']."\">";
-					$output.= "<input type=\"hidden\" name=\"date_of_songcircle\" value=\"".$row['date_of_songcircle']."\">";
-					$output.= "<input type=\"hidden\" name=\"songcircle_name\" value=\"".$row['songcircle_name']."\">";
-
-					// if $_SESSION data is provided
-					if( isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) ){
-						// display register button
-						// $output.= "<input type=\"submit\" value=\"Register\" data-id=\"triggerRegForm\" data-row=\"".$row_counter."\">";
-						// if user is registered
-						if( $this->isRegisteredUser($row['songcircle_id'], $_SESSION['user_id']) ){
-							// display unregister button
-							$output.= "<input type=\"submit\" value=\"Unregister\" name=\"unregister\">";
-						} // end of: if( $this->isRegisteredUser($row['songcircle_id']) )
-					}
-					// else // end of: isset($_SESSION['user_id']) && !empty($_SESSION['user_id'])
-					// {
-					if( $this->isFullSongcircle($row['songcircle_id'], $row['max_participants'], $row['songcircle_permission']) ){
-						// songcircle is full, display wait list option
-						$output.= "<input type=\"hidden\" name=\"waiting_list\" value=\"true\">";
-
-						// if waiting list is full
-						if( $this->isFullWaitingList($row['songcircle_id'],$this->max_wait_participants) ) {
-							// disable register button
-							$output.= "<input type=\"submit\" class=\"cannot_register\" value=\"Register\">";
-						} else {
-							// show waiting list button
-							$output.= "<input type=\"submit\" value=\"Join Waiting List Now\" data-id=\"triggerWaitList\" data-row=\"".$row_counter."\">";
-						}
-
+						// format times in UTC
+						$output.= '<td>'.$this->formatUTC($row['date_of_songcircle']).'</td>';
 					}
 					else
 					{
-						// waitlist is not full, do no show waitlist option
-						$output.= "<input type=\"hidden\" name=\"waiting_list\" value=\"false\">";
-						// display register button
-						$output.= "<input type=\"submit\" value=\"Register\" data-id=\"triggerRegForm\" data-row=\"".$row_counter."\">";
-					}
-					// }
+						// format times according to user timezone
+						$output.= '<td>'.$this->userTimezone($row['date_of_songcircle'], $user->timezone).'</td>';
 
-				}
-				// if songcircle started
-				elseif ( $row['songcircle_status'] == 1 )
-				{
-					if( !isset($_SESSION['user_id']) || empty($_SESSION['user_id']) ){
+						/*** Can I add the span here through PHP ***/
+
+					}
+
+					$output.= '<td>'.$row['songcircle_name'];
+					$output.= '<span class="triggerParticipantsTable">('.$this->getParticipantCount($row['songcircle_id']).' of '.$row['max_participants'].' participants registered)</span>';
+					// participants table -- hidden
+					$output.= '<table class="participantsTable hide">';
+					if($participants = $this->fetchParticipantData($row['songcircle_id'])){
+						foreach ($participants as $participant) {
+							$output.= '<tr>';
+							$output.= '<td><a href="profile.php?id='.$participant['user_id'].'">'.$participant['user_name'].'</a></td>';
+							$output.= '<td>'.$this->formatTimezone($participant['timezone']).'</td>';
+							$output.= '</tr>';
+						}
+					} else {
+					// no participants
+						$output.= '<td>No one has yet to register for this Songcircle</td>';
+					}
+					$output.= '</table>';
+					$output.= '</td>';
+
+					$output.= '<td>';
+
+					// if songcircle not started
+					if( $row['songcircle_status'] == 0 ){
+
+						// write hidden inputs for songcircle values
+						$output.= '<input type="hidden" name="songcircle_id" value="'.$row['songcircle_id'].'">';
+						$output.= '<input type="hidden" name="date_of_songcircle" value="'.$row['date_of_songcircle'].'">';
+						$output.= '<input type="hidden" name="songcircle_name" value="'.$row['songcircle_name'].'">';
+
+						// is songcircle full
+						if( $this->isFullSongcircle( $row['songcircle_id'], $row['max_participants'], $row['songcircle_permission']) ){
+
+							// songcircle full, waiting list true
+							$output.= '<input type="hidden" name="waiting_list" value="true">';
+
+							// is waiting list full
+							if( $this->isFullWaitingList($row['songcircle_id'], $this->max_wait_participants) ) {
+								// waiting list full, display inactive button
+								$output.= '<span class="button_container cannot_register">Songcircle Full</span>';
+							} else {
+								// not full waiting list, display join button
+								$output.= '<span class="button_container" data-id="triggerWaitList">Join Waitlist</span>';
+							}
+
+						} else {
+
+							// songcircle not full, waiting list false
+							$output.= '<input type="hidden" name="waiting_list" value="false">';
+
+							// if $_SESSION data
+							if( isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) ){
+								// check if user is already registered
+								if( $this->isRegisteredUser($row['songcircle_id'], $_SESSION['user_id']) ){
+									// allow user to unregister
+									$output.= '<span class="button_container">Unregister</span>';
+									/**
+									* Code unregister sequence
+									**/
+								}
+
+							}	// end of: is $_SESSION data
+
+							// allow user to register
+							$output.= '<span class="button_container" data-id="triggerRegForm">Register</span>';
+
+						}
+
+						$output.= '<input type="submit" class="hide">';
+
+					}
+					// if songcircle started
+					elseif ( $row['songcircle_status'] == 1 ) {
+
+						if( !isset($_SESSION['user_id']) || empty($_SESSION['user_id']) ){
 
 						// display join button
 						$output.= "<button id=\"divJoin".$row['songcircle_id']."\" class=\"join\" style=\"display: block\">";
 						$output.= "<a href=\"start_call.php?songcircle_id=".$row['songcircle_id']."\" target=\"new\">Join Now</a>";
 						$output.= "</button>";
 
-					} else {
+						} else {
 
-						// display "Songcircle In Progress" button
-						$output.= "<div><p>".$row['songcircle_name']." is in progress</p></div>";
+							// display "Songcircle In Progress" button
+							$output.= "<div><p>".$row['songcircle_name']." is in progress</p></div>";
+
+						}
 
 					}
-				}
-				// if songcircle completed
-				else
-				{
-					// display "Songcircle has Completed" button
-					$output.= "<div><p>".$row['songcircle_name']." has completed</p></div>";
-				}
+					// if songcircle complete
+					else
+					{
+						// show message here that songcircle has completed
+						// display "Songcircle has Completed" button
+						$output.= "<div><p>".$row['songcircle_name']." has completed</p></div>";
+					}
 
-				// end of FORM td
-				$output.= "</td>";
+					$output.= '</td>';
 
-			// end of table row
-			$output.= "</tr>";
+				$output.= '</tr>';
 
-			// increment row count
-			$row_counter++;
+				// increment counter +1
+				$count++;
 
-			} // end of: while($row = $db->fetchArray($result))
+			} // end of: while( $row = $db->fetchArray($result) )
 
-			$output.= "</table>";
+			$output.= '</table>';
+
 			return $output;
 
-		} // end of: if($result = $db->query($sql))
+		} // end of: if( $result = $db->query($sql) )
+	}
 
-	} // end of: function displaySongcircles()
+
+	/* first written function */
+	// public function displaySongcircles(){
+	// 	global $db;
+	//
+	// 	// init row counter
+	// 	$row_counter=0;
+	//
+	// 	// select all from songcircle_create table
+	// 	$sql = "SELECT * FROM songcircle_create WHERE created_by_id = $this->global_user_id";
+	// 	// if result
+	// 	if($result = $db->query($sql)){
+	//
+	// 		// begin display output:
+	// 		$output = "<table id=\"songcircleTable\">";
+	//
+	// 		// while array rows..
+	// 		while($row = $db->fetchArray($result)){
+	// 			// begin table row
+	// 			$output.= "<tr data-row=\"".$row_counter."\">";
+	//
+	// 			// if no $_SESSION data
+	// 				if( empty($_SESSION['user_id']) || !isset($_SESSION['user_id']) || !isset($user->timezone) ){
+	// 					// format scheduled times in UTC
+	// 					$output.= "<td class=\"date\">".$this->formatUTC($row['date_of_songcircle'])."</td>";
+	// 				} else {
+	// 					// format scheduled times in user timezone
+	// 					$output.= "<td class=\"date\">".$this->userTimezone($row['date_of_songcircle'], $user->timezone)."</td>";
+	// 					/*
+	// 					Needs coding...
+	// 					*/
+	// 				}
+	//
+	// 		// table data: SONGCIRCLE NAME
+	// 			$output.= "<td class=\"name\">".$row['songcircle_name']."<br>";
+	//
+	// 			// registered participants display & jQuery Trigger
+	// 				$output.= "<span class=\"triggerParticipantsTable\">";
+	// 				$output.= "(".$this->getParticipantCount($row['songcircle_id'])." of ".$row['max_participants']." participants registered)";
+	// 				$output.= "</span>";
+	// 			// end of display
+	//
+	// 			// Hidden participants TABLE
+	// 				$output.= "<table class=\"participantsTable hide\">";
+	// 				// if partipants
+	// 				if($participants = $this->fetchParticipantData($row['songcircle_id'])){
+	//
+	// 					foreach ($participants as $participant) {
+	// 						$output.= "<tr><td><a href=\"profile.php?id=".$participant['user_id']."\">".$participant['user_name']."</a></td>";
+	// 						$output.= "<td>".$this->formatTimezone($participant['timezone']).", ".$participant['country_name']."</td></tr>";
+	// 					}
+	//
+	// 				}	else {
+	// 					// if no participants
+	// 					$output.= '<td>No one has yet to register for this Songcircle</td>';
+	// 				}
+	// 				$output.= "</table>";
+	// 			// end of hidden participants table
+	//
+	// 			$output.= "</td>";
+	// 		// end of name of songcircle td
+	//
+	// 		// optional: "created by" display:
+	// 			// $output.= "<td class=\"created\">Created by: <br><a href=\"profile.php?id=user_id_here\">User name here</a></td>";
+	//
+	// 		// FORM td
+	// 		$output.= "<td class=\"form\">";
+	// 			// if songcircle not started
+	// 			if( $row['songcircle_status'] == 0 ){
+	//
+	// 				$output.= "<input type=\"hidden\" name=\"songcircle_id\" value=\"".$row['songcircle_id']."\">";
+	// 				$output.= "<input type=\"hidden\" name=\"date_of_songcircle\" value=\"".$row['date_of_songcircle']."\">";
+	// 				$output.= "<input type=\"hidden\" name=\"songcircle_name\" value=\"".$row['songcircle_name']."\">";
+	//
+	// 				// if $_SESSION data is provided
+	// 				if( isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) ){
+	// 					// display register button
+	// 					// $output.= "<input type=\"submit\" value=\"Register\" data-id=\"triggerRegForm\" data-row=\"".$row_counter."\">";
+	// 					// if user is registered
+	// 					if( $this->isRegisteredUser($row['songcircle_id'], $_SESSION['user_id']) ){
+	// 						// display unregister button
+	// 						$output.= "<input type=\"submit\" value=\"Unregister\" name=\"unregister\">";
+	// 					} // end of: if( $this->isRegisteredUser($row['songcircle_id']) )
+	// 				}
+	// 				// else // end of: isset($_SESSION['user_id']) && !empty($_SESSION['user_id'])
+	// 				// {
+	// 				if( $this->isFullSongcircle($row['songcircle_id'], $row['max_participants'], $row['songcircle_permission']) ){
+	// 					// songcircle is full, display wait list option
+	// 					$output.= "<input type=\"hidden\" name=\"waiting_list\" value=\"true\">";
+	//
+	// 					// if waiting list is full
+	// 					if( $this->isFullWaitingList($row['songcircle_id'],$this->max_wait_participants) ) {
+	// 						// disable register button
+	// 						$output.= "<input type=\"submit\" class=\"cannot_register\" value=\"Register\">";
+	// 					} else {
+	// 						// show waiting list button
+	// 						$output.= "<input type=\"submit\" value=\"Join Waiting List Now\" data-id=\"triggerWaitList\" data-row=\"".$row_counter."\">";
+	// 					}
+	//
+	// 				}
+	// 				else
+	// 				{
+	// 					// waitlist is not full, do no show waitlist option
+	// 					$output.= "<input type=\"hidden\" name=\"waiting_list\" value=\"false\">";
+	// 					// display register button
+	// 					$output.= "<input type=\"submit\" value=\"Register\" data-id=\"triggerRegForm\" data-row=\"".$row_counter."\">";
+	// 				}
+	// 				// }
+	//
+	// 			}
+	// 			// if songcircle started
+	// 			elseif ( $row['songcircle_status'] == 1 )
+	// 			{
+	// 				if( !isset($_SESSION['user_id']) || empty($_SESSION['user_id']) ){
+	//
+	// 					// display join button
+	// 					$output.= "<button id=\"divJoin".$row['songcircle_id']."\" class=\"join\" style=\"display: block\">";
+	// 					$output.= "<a href=\"start_call.php?songcircleid=".$row['songcircle_id']."\" target=\"new\">Join Now</a>";
+	// 					$output.= "</button>";
+	//
+	// 				} else {
+	//
+	// 					// display "Songcircle In Progress" button
+	// 					$output.= "<div><p>".$row['songcircle_name']." is in progress</p></div>";
+	//
+	// 				}
+	// 			}
+	// 			// if songcircle completed
+	// 			else
+	// 			{
+	// 				// display "Songcircle has Completed" button
+	// 				$output.= "<div><p>".$row['songcircle_name']." has completed</p></div>";
+	// 			}
+	//
+	// 			// end of FORM td
+	// 			$output.= "</td>";
+	//
+	// 		// end of table row
+	// 		$output.= "</tr>";
+	//
+	// 		// increment row count
+	// 		$row_counter++;
+	//
+	// 		} // end of: while($row = $db->fetchArray($result))
+	//
+	// 		$output.= "</table>";
+	// 		return $output;
+	//
+	// 	} // end of: if($result = $db->query($sql))
+	//
+	// } // end of: function displaySongcircles()
 
 	/**
 	* Update user status from unconfirmed to confirmed

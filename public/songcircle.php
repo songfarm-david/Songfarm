@@ -47,39 +47,73 @@ if( $location_by_ip = generateIPData() ){
   </head>
 	<body>
     <?php include("../includes/layout/header.php") ?>
-    <section>
-			<!-- start of Main banner -->
-      <article id="main"><!-- holds background image -->
-        <!-- Introduction to Songcircle -->
-        <h1 id="headline">
-          <span class="bold">Real songs. Real songwriters. Real-time.</span>
-        </h1>
-				<hgroup>
-					<h2 id="byline">
-						Workshop your song live in a virtual Songwriters' Circle. Get real-time feedback, collaborate with musicians, and perfect your craft.
-          </h2>
-					<h2><b>
-					Register for a Songcircle today!
-					</b></h2>
-				</hgroup>
-      </article>
+		<main>
+			<!-- start Main Banner -->
+			<article id="banner">
+				<!-- <img src="images/songcircle/songcircle_logo.png" alt="songcircle logo" width="367" height="82"> -->
+				<h1>
+					Real songs. Real songwriters. <span>Real-time.</span>
+				</h1>
+				<h2>
+					Workshop your song live in a virtual Songwriters' Circle. <br>Get real-time feedback, collaborate with musicians, and perfect your craft. <br>Register for a Songcircle today!
+				</h2>
+			</article>
 			<!-- end of Main Banner -->
-			<!-- start of Schedule -->
-      <article id="schedule">
-        <h3>Upcoming Songcircles:</h3>
-				<!-- Schedule of Songcircles -->
-        <?php
-        // $songcircle->open_songcircle_exists();
-        print $songcircle->displaySongcircles();
-        ?>
-      </article>
+			<!-- start Schedule -->
+			<article id="schedule">
+				<h3 class="hide">Songcircle Schedule</h3>
+				<div id="schedule_container">
+					<div id="datesList_container">
+						<p><i>Upcoming Songcircles in <span class="month">March</span></i></p>
+						<!-- <p>11th / 25th / <span class="selected">29th</span></p> -->
+						<ul>
+							<li>
+								11th
+							</li>
+							<li class="selected">
+								25th
+							</li>
+							<li >
+								29th
+							</li>
+						</ul>
+					</div>
+					<?php print $songcircle->displaySongcircles(); ?>
+					<!-- <table>
+						<tbody> -->
+							<!-- Use RDFa to define songcircle events // schema.org -->
+							<!-- remember to use the '<time></time>' attribute when scheduling songcircles-->
+							<!-- <tr>
+								<td>
+									Monday, <span class="month">March 23rd</span>, 2015 -<br />7:00pm UTC
+								</td>
+								<td>
+									Songfarm <span class="event_name">Open Songcircle</span>
+									<br>
+									<span class="triggerParticipantsTable">(0 of 6 participants registered)</span>
+									<img src="images/songcircle/green_arrow.png" alt="" height="22" width="19">
+								</td>
+								<td> -->
+									<!-- blue register button span -->
+									<!-- <span class="button_container" data-id="triggerRegForm">Register -->
+										<!-- <img src="images/arrows_and_lines/white_arrow_right.svg" alt="" width="100%" height="auto"> -->
+										<!-- <input type="button" value="Register"> -->
+									<!-- </span>
+								</td>
+							</tr>
+						</tbody>
+					</table> -->
+
+				</div>
+			</article>
 			<!-- end of Schedule -->
-			<!-- start of About Songcircle -->
-      <article id="aboutSongcircle">
-        <h3>What is a Songcircle?</h3>
-        <p>
-          A <a href="#linkToBlog" style="color:blue; text-decoration:underline;">Songcircle</a> is an <em>opportunity</em> for Songwriters to gather together, workshop their ideas, collaborate, and get real-time feedback from artists from all over the globe.
-        </p>
+			<!-- start About Songcircle -->
+			<article id="about">
+				<h3>What is a <span>Songcircle?</span></h3>
+				<hr>
+				<p>
+					A <a href="#linkToBlog" style="color:blue; text-decoration:underline;">Songcircle</a> is an <em>opportunity</em> for Songwriters to gather together, workshop their ideas, collaborate, and get real-time feedback from artists from all over the globe.
+				</p>
 				<p>Conducted over the internet in real-time, Songcircles are open to virtually anyone with an internet connection, a webcam, and a song.</p>
 				<p>
 					What traditionally had to be done in brick and mortar establishments is now being made possible by Songfarm as an alternative to songwriter's who may not have access to a songwriter's circle where they live; it's an exciting new way for songwriters to nurture their craft and grow their network - all without having to leave the house.
@@ -87,14 +121,14 @@ if( $location_by_ip = generateIPData() ){
 				<p>
 					Experience one for yourself. <a href="songcircle.php#headline" style="color:blue; text-decoration:underline;">Register for a Songcircle today!</a>
 				</p>
-      </article>
+			</article>
 			<!-- end of About Songcircle -->
-    </section>
+		</main>
 		<?php include(LIB_PATH.'/layout/footer.php') ?>
-		<?php include_once(LIB_PATH.'/layout/modal.php'); ?>
-		<!-- Use RDFa to define songcircle events // schema.org -->
-		<!-- remember to use the '<time></time>' attribute when scheduling songcircles-->
+		<!-- Songcircle Registration form -->
 		<?php include_once(LIB_PATH.'/forms/songcircle_registration.php'); ?>
+		<!-- Modal confirmation -->
+		<?php include_once(LIB_PATH.'/layout/modal.php'); ?>
 	</body>
 	<script type="text/javascript" src="js/login.js"></script>
   <script type="text/javascript" src="js/songcircle.js"></script>

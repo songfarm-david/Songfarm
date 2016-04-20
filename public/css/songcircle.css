@@ -1,316 +1,268 @@
 /**
-* Last update: Jan 5, 2016
+*
+* Styles for Songcircle.php
+*
+* Created: 03/04/2016
+*
+* NOTE: right in fallbacks for border-radius, box-shadow, etc
+*
+* NOTE: confirm browser compatibility for background gradients
 */
 
-/*
-* Header
+/* make body full-width of viewport */
+body{ max-width: 100%; }
+
+header{
+	max-width: 1600px; margin-left: auto; margin-right: auto;
+}
+
+/* hide green register button */
+button.register.medium{ display: none; }
+
+main{
+	position: relative; z-index: 1; width: 100%;
+	margin: 0;	box-sizing: inherit; color: #666;
+	background-size: 100%, 100%; background-position: left top;
+	background: url('../images/songcircle/floating_notes.png') no-repeat 0% 100%, rgb(255,255,255);
+	background: url('../images/songcircle/floating_notes.png') no-repeat 0% 100%, linear-gradient(to bottom, rgb(255,255,255) 0%,rgb(253,255,251) 12%,rgb(237,252,217) 19%,rgb(225,250,189) 27%,rgb(188,244,109) 37%,rgb(154,230,59) 46%,rgb(144,226,43) 49%,rgb(95,184,39) 64%,rgb(31,155,58) 75%,rgb(4,146,67) 81%,rgb(0,145,69) 83%,rgb(0,145,69) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#009145',GradientType=0 );
+	overflow: hidden;
+}
+
+/**
+* Main Banner
 */
-#header nav ul li a[href="songcircle.php"]:before{
-	content:url('../images/arrows_and_lines/navActive_arrow.png');
-	position:absolute; left:-15px; top:3px;
+article#banner{
+	position: relative; z-index: 10;
+	width: 100%; height: 515px;	padding-top: 1em;
+	background: url('../images/songcircle/girlguitarcut.png') no-repeat transparent; /* banner image */
+	background-size: 75%;	background-position: 135% 0;
+	box-shadow: inset 0px 25px 50px -10px rgb(255, 255, 255); /* white blur box shadow over image */
 }
-#header nav ul li a[href="songcircle.php"]{ color: #7CC919; }
-
-/* hides big register button on header */
-button.register, div.register.medium{ display: none; }
-
-/*
-* Main
-*/
-article#main{
-	height:390px;
-	background-image: url('../images/banner/slide_5.jpg');
-	background-color: #8CB5EE;
-	background-position: 150px -75px;
-	font-family: 'museo_sans900', Arial, Helvetica, sans-serif;
+article#banner h1, h2{
+	display: block; width: 65%; min-width: 950px;
+	font-family: 'museo_sans300', Arial, Helvetica, sans-serif;
+	margin: 0 auto; padding-left: 8px; line-height: 1.5;
+	position: relative; top: 20px;
 }
-article#main h1#headline{
-	margin-left: 18.2%; color: white;
-	max-width: 62.5%; font-size:2.6em;
-	font-family: 'museo_sans700', Arial, Helvetica, sans-serif;
-	padding-top: 1.5em; margin-bottom: 1.6em;
-	line-height: 1.4; text-transform: uppercase;
-}
+article#banner h1{ font-size: 2.5em; margin-top: 0.5em; margin-bottom: 1.5em; }
+article#banner h2{ font-size: 1.5em; font-style: italic; padding-right: 0.5em; }
 
-article#main h2{
-	font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
-	font-size:2.1em; line-height: 1.2;
-	padding:0.6em 4em 0 18.2%;
-	color: #fff;
-}
-
-
-/*
-* Schedule
+/**
+* Songcircle Schedule
 */
 article#schedule{
-	background-color: #efefef;
-	/*height:300px;*/
-	padding-bottom: 4em;
+	position: relative; top: -160px; height: 318px;
+	background: url('../images/songcircle/white_notes.png') no-repeat transparent;
 }
-article#schedule h3{
-	padding:2em 0 1em; margin-left: 18.2%; font-size: 2em;
+#schedule div#schedule_container{
+	width: 65%;	min-width: 950px; margin: 0 auto;
+	position: relative; z-index: 100;	top: 110px;
 }
-
-
-
-
-
-
-
-
-/*
-* About Songcircle
-*/
-article#aboutSongcircle{
-	padding: 2em 2em 5em;
-	padding-left: 18.2%;
-	border:1px dotted black;
-}
-article#aboutSongcircle h3{ font-size: 2.1em; padding: 1em 0 1em 0; }
-article#aboutSongcircle p{ font-size: 1.5em; padding: .5em; padding-left: 0; line-height: 1.3; width: 70%;}
-
-
-
-
-
-/*
-* Registration Form
-*/
-#registration_form{
-	font-family: 'museo_sans300', Arial, helvetica, sans-serif;
-	font-size: 1.2em;	color: #666666; padding: 2em 3em;
-	border: 1px solid #7ec919;
-	width:25%; min-width: 320px;
-	position: fixed; z-index:3000;
-	top:50%; left:50%;
-	transform: translateY(-50%) translateX(-50%);
-	/* transform centers elements vertically and horizontally.. Guau! */
-	border-radius: 30px 30px 30px 30px;
-	-moz-border-radius: 30px 30px 30px 30px;
-	-webkit-border-radius: 30px 30px 30px 30px;
-	display: none;
-}
-#registration_form p{ font-weight: bold; padding: 1.25em 0;	line-height: 1.5; }
-#registration_form div#details > p{	padding-left: 6px; padding-bottom: 6px; font-size: 1.25em; }
-#registration_form div#details label{
-	position: relative;
-	display: block;
-	border: 1px solid rgba(0,0,0,0);
-}
-#registration_form div#loc{
-	text-align: center;
-	margin-top: 2em;
-	border-top: 1px solid #ffffff;
-}
-#registration_form p#locationMsg{ font-weight: normal; padding-bottom: 0; }
-
-/* 'not right?' text */
-span#trigger-location{
-	color: #3FA8F4; font-weight: bold; font-size: 0.8em;
-}
-#registration_form input, select, .input_error{
-	display: block;
-	margin:1em auto 0.5em;
-	width:99%;
-	padding:10px 12px;
-	font-size: inherit;
-	position: relative;
-	box-sizing:border-box;
-	-ms-box-sizing:border-box;
-	-moz-box-sizing:border-box;
-	-webkit-box-sizing:border-box;
-	border: 4px solid rgba(0,0,0,0);
-	outline: none;
-	border-radius: 15px 15px 15px 15px;
-	-moz-border-radius: 15px 15px 15px 15px;
-	-webkit-border-radius: 15px 15px 15px 15px;
-	box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.65);
-	-moz-box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.65);
-	-webkit-box-shadow: 1px 1px 1px 0px rgba(0,0,0,.65);
-}
-#registration_form select{
+#schedule .month, #schedule .triggerParticipantsTable{ color: #3F9FEB; /* powder blue */ }
+#schedule span.event_name{ color: #009145; /* forest green */ }
+#schedule div#datesList_container{
+	position: absolute; top: -90px;
+	width:40%; min-width: 440px;
+	font-size: 1.5em;	padding-left: 0.5em;
+	font-family: 'museo_sans900';
 	color: #666;
-	margin:0 auto; padding-right: 2.6em;
-	appearance: none;
-	-webkit-appearance: none;
-	-moz-appearance: none;
-	background: #ffffff url("../images/songcircle_form/select_box_arrow.png") no-repeat right center;
-	background-size: 46px 46px;
-	outline: none;
 }
-#registration_form select#country_select{ margin-top: 1em; }
-#registration_form select:focus, input:focus{ border: 4px solid rgba(0,0,0,0); }
+#datesList_container ul li{ display: inline; font-family: 'museo_sans700'; cursor: pointer; transition: opacity 250ms; }
+#datesList_container ul li:not(:last-child):after{
+	content: '/';
+}
+#datesList_container ul li:hover{ opacity: 0.6; }
+/*#datesList_container ul li:hover:after{ opacity: 1 !important; }*/
+#datesList_container p:first-child, #datesList_container .selected{ color: #3F9FEB; }
+#datesList_container p:last-child{
+	font-family: 'museo_sans700';
+}
+#schedule #datesList_container p, #datesList_container ul{ padding: 0.25em; }
 
-#registration_form div#codeOfConduct{
-	text-align: center;
-	position: relative;
-	 margin:0 auto;
+#schedule #datesList_container .selected, .month, .event_name, #banner h1 span, #about h3 span{
+	font-family: 'museo_sans900';
 }
-#registration_form div#codeOfConduct p{
-	padding:0 25px;
-	text-align: justify;
+#schedule #datesList_container .selected:before{
+	content: url('../images/songcircle/green_arrow.png');
+	position: relative; top: 1px;
+	margin-left: 5px;	margin-right: 1px;
 }
-
-#registration_form input[type="submit"]{
-	width:40%; min-width: 220px;
-	cursor: pointer;
-	margin:1em auto;
-	color: white;
-	font-size:1.75em;
-	border-radius: 100px 100px 100px 100px;
-	-moz-border-radius: 100px 100px 100px 100px;
-	-webkit-border-radius: 100px 100px 100px 100px;
-	border: 0px solid #000000;
-	-webkit-box-shadow: 0px 0px 2px 4px rgba(255,255,255,1);
-	-moz-box-shadow: 0px 0px 2px 4px rgba(255,255,255,1);
-	box-shadow: 0px 0px 2px 4px rgba(255,255,255,1);
+#schedule table{
+	width: 100%; text-align: center;
+	font-weight: 900;	line-height: 1.4;
+	border: 3px solid #fff;
+	border-radius: 30px;
+	box-shadow: 0px 1px 6px 2px rgba(0,0,0,0.45);
+	background: #e5fcca;
+	background: linear-gradient(to bottom,  #e5fcca 0%,#99ee20 45%,#89dc3d 70%,#7ec919 80%,#92ea41 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5fcca', endColorstr='#92ea41',GradientType=0 );
 }
-
-/* registration form checkbox */
-/* http://blog.karenmenezes.com/2014/nov/1/another-pure-css-checkbox-article/ */
-#registration_form .checkbox-custom{ opacity: 0; position: absolute; display: none;}
-.checkbox-custom, .checkbox-custom-label{
-	display: inline-block;
-  margin: 5px;
-  cursor: pointer;
+#schedule table td{
+	width: 33.3%;
+	font-size: 1.25em;
+	vertical-align: middle;
+	padding: 1em 0;
 }
-.checkbox-custom-label, #codeOfConduct a{
-	color: #666666;
-	font-weight: bold;
-	margin-top: 1.25em;
-	line-height: 28px;
-	transition-duration: 0ms;
+/* Middle td */
+#schedule table td:nth-child(2){
+	position: absolute; top: -12px;	height: 134px;
+	font-size: 1.45em; line-height: 1.25; padding: 1.65em 0 0;
+	border-radius: 30px; box-shadow: 0px 0px 10px 5px rgba(0,0,0,0.25);
+	background: rgb(255,255,255);
+	background: linear-gradient(to bottom,  rgb(255,255,255) 0%,rgb(255,255,255) 17%,rgb(252,252,252) 23%,rgb(235,235,235) 52%,rgb(213,213,213) 81%,rgb(242,242,242) 92%,rgb(255,255,255) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=0 );
 }
-#codeOfConduct a, #cOcAlertBox a{ text-decoration: underline; }
-.checkbox-custom-label a:hover, #cOcAlertBox a:hover{ color: #FFFFFF;}
-.checkbox-custom + .checkbox-custom-label:before{
-	content: '';
-  background: #fff;
-  border: 4px solid rgba(0,0,0,0);
-  display: inline-block;
-  vertical-align: bottom;
-  width: 24px;
-  height: 24px;
-  /*padding: 2px;*/
-  margin-right: 6px;
-  text-align: center;
-	border-radius: 6px 6px;
-}
-input.checkbox-custom + .checkbox-custom-label.error:before{
-	border: 4px solid #3FA8F4;
-}
-.checkbox-custom:checked + .checkbox-custom-label:before{
-	content: "\2714";
-	font-size: 1.5em;
-	/*border: 1px solid #666666;*/
-  background: #FFFFFF;
-  /*color: #7ec919;*/
-	color: #777;
-}
-.checkbox-custom:focus + .checkbox-custom-label{ outline: 1px solid #ddd; /* focus style */ }
-
-
-/* blue outline when input error */
-#registration_form .input_error{
-	border: 4px solid #3FA8F4;
-	-webkit-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
-	-moz-box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
-	box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
+/*#schedule table td:nth-child(2) img{
+	position: absolute;	display: block;
+	left: calc( 50% - ( 19px / 2 ) ); /* center green arrow */
+	/*bottom: 10px;*/
+/*}*/
+#schedule table td:nth-child(2):after{
+	content: url('../images/songcircle/green_arrow.png');
+	display: block;
 }
 
-/* blue error pop-ups */
-#registration_form .form_error{
-	display: none;
-	position: absolute;
-	top: 16px; right: -250px;
-	z-index: 3;
-	width:62%;
-	font-size: 0.9em;
-	color: white;
-	padding:8px;
-	background: #3FA8F4;
-	border:6px solid #FFFFFF;
-	border-radius: 35px;
-	box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.65);
-	-moz-box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.65);
-	-webkit-box-shadow: 1px 1px 1px 0px rgba(0,0,0,.65); /* COMBINE THIS WITH INPUTS */
-	/*display:table;*/
-	text-align: left;
-}
-#registration_form .form_error p{ padding: 0;	display: table-cell; vertical-align: middle; }
+#schedule .triggerParticipantsTable{ font-size: 0.75em; text-decoration: underline; display: inline-block; }
 
-/* exclamation mark */
-.form_error::before{
-	content: '';
-	background: url('../images/songcircle_form/exclamation_point.png');
-	background-size: cover;
-	height:50px;
-	width:50px;
-	float: left;
-	margin-left: 3px; margin-right: 5px;
+/* blue register button */
+#schedule table td span.button_container{
+	font-family: 'museo_sans700', Arial, Helvetica, sans-serif;
+	font-size: 1.75em; color: white; width: 75%;
+	margin: 0 auto; padding: 6px 0;
+	display: block; cursor: pointer;
+	border:2px solid white;	border-radius: 24px;
+	box-shadow: 0px 1px 6px 2px rgba(255,255,255,.85);
+	background: rgb(63,216,255);
+	background: linear-gradient(to bottom,  rgb(134,231,255) 0%,rgb(63,216,255) 17%,rgb(18,121,222) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#86e7ff', endColorstr='#1279de',GradientType=0 );
 }
-
-/* alert box for code of conduct */
-#registration_form div#cOcAlertBox{	padding: 25px 35px;	display: block; top: 80px; right: -275px; }
-#cOcAlertBox.form_error::before{
-	position: absolute;
-	top: 0; left: 0;
-	/*content: '';
-	background: url('../images/songcircle_form/exclamation_point.png');
-	background-size: cover;
-	height:50px;
-	width:50px;*/
-	margin-left: 5px; margin-top: 5px;
+#schedule table td span.button_container:before{
+	content: url('../images/arrows_and_lines/white_arrow_right.svg');
+	position: relative; right: 10px;
+}
+#schedule table td span.button_container:hover{
+	background: #89dc3d;
+	background: linear-gradient(to bottom,  #e5fcca 0%,#99ee20 45%,#89dc3d 70%,#7ec919 90%,#92ea41 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5fcca', endColorstr='#92ea41',GradientType=0 );
 }
 
 
-
-/*#cOcAlertBox a{ color: #666666; text-decoration: underline; }
-#cOcAlertBox a:hover{ color: #FFFFFF; }*/
-
-
-
-
-
-
-/*#registration_form div#cOcAlertBox p{ margin: 0; padding: 9px; }
-#registration_form div#cOcAlertBox a{ text-decoration: underline; }*/
-
-/* form error div */
-#registration_form div#output{
-	display: none;
-	border: 2px solid red;
-	text-align: center;
-	padding:6px;
-	font-size:1.4em;
-	font-weight: bold;
-	color: red;
-	margin:0 0 24px;
-}
-
-#registration_form div#output li{ line-height: 1.2; }
-
-
-/*
-* Misc
+/**
+* About Section
 */
-span.triggerParticipantsTable{ text-decoration: underline; transition-duration: .250s;}
-span.triggerParticipantsTable:hover{ cursor: pointer; color:#7CC919; transition-duration: .250s; }
-
-
-.cannot_register{ opacity: 0.5; }
-td input[type="submit"].cannot_register:hover{
-	cursor:default;
-	background: #7CC919;
-	color:#365A09;
+article#about{
+	position: relative; z-index: 2;	top: -285px; width: 79.5%;
+	margin: 0 auto; padding: 1em 7.5% 4em;
+	border-radius: 12px; background: #ffffff;
+}
+#about h3{
+	font-size: 2em;	font-weight: 500;
+	padding: 3.25em 0 2em; line-height: 1.3;
+}
+#about p{
+	font-size: 1.3em;	padding: 1.5em 0 0;	line-height: 1.5;
+}
+/* hr not right still.. */
+#about hr{
+	height:1px;	font-size: 2em;	border: none;
+	background-image: linear-gradient(to right, #333 10%, rgba(255, 255, 255, 0) 0%);
+	background-position: top;	background-size: 10px 1px; background-repeat: repeat-x;
 }
 
-
-.triggerParticipantsTable{
-	font-size: 0.65em;
-  cursor: pointer;
-  color:blue;
-  text-decoration: underline;
+/**
+* Media Queries
+*/
+@media screen and (max-width: 1290px) and (min-width: 840px){
+	article#banner{
+		background-size: 102%;
+		background-position: -1000% 0%;
+	}
+	article#about{ width: 85%; }
 }
-span.permission{ font-size: 0.85em; color: #DA7C7C; }
+
+@media screen and (max-width: 1100px){
+	article#banner{ padding-left: 2.25em; }
+	#schedule div#schedule_container{ width:97%; }
+	article#about{ width: 88%; }
+	#schedule div#datesList_container{ left: 1.5em; }
+}
+
+@media screen and (max-width: 950px){
+	article#banner h1,h2{
+		width: 490px;
+		min-width: initial;
+		top:110px;
+	}
+	article#schedule, article#about{ top: 188px; }
+	#schedule div#schedule_container, #schedule table, #about{
+		min-width: initial;
+		width: 454px;
+	}
+	#schedule table{ position: relative; bottom: 60px; }
+	#schedule table td, #schedule table td span.button_container{
+		width: 100%;
+	}
+	#schedule div#datesList_container{ top: -164px; left: 0;}
+	#schedule table td:nth-child(2){
+		top: 115px; left: 0;
+	}
+	#schedule table td:last-child{
+		position: absolute;
+		top: -236px; left: 0;
+	}
+	article#about{
+		width: 78%;
+		margin-bottom: 32em;
+	}
+	#about h3{ padding-top: 2em;}
+}
+
+/* Query for stacking order of songcircle schedule */
+@media screen and (max-width: 839px){
+	main{
+		background: url('../images/songcircle/floating_notes.png') no-repeat 0% 100%, linear-gradient(to bottom, rgb(255,255,255) 0%,rgb(253,255,251) 7%,rgb(237,252,217) 14%,rgb(225,250,189) 27%,rgb(188,244,109) 39%,rgb(154,230,59) 46%,rgb(144,226,43) 49%,rgb(95,184,39) 64%,rgb(31,155,58) 75%,rgb(4,146,67) 81%,rgb(0,145,69) 83%,rgb(0,145,69) 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#009145',GradientType=0 );
+	}
+	article#banner{
+		background-size: 140%;
+		background-position: 12.5% 0%;
+	}
+	#schedule div#schedule_container{
+		min-width: 320px;
+	}
+	article#about{ width: 100%; border-radius: 0; }
+}
+
+@media screen and (max-width: 520px){
+	article#banner{ padding-left: 1.75em; }
+	article#banner h1,h2{
+		width: 100%;
+		padding-left: 0;
+	}
+	#schedule div#schedule_container, #schedule table{
+		width: 94%; margin: 0 auto;
+	}
+	article#schedule, article#about{ top: 198px; }
+	#schedule div#datesList_container{
+		min-width: 94%;
+	}
+	article#about p{ line-height: 1.8; }
+}
+
+@media screen and (max-width: 460px){
+	article#schedule, article#about{ top: 300px; } /* changes height of #schedule from top of page */
+	#schedule div#datesList_container{
+		top: -180px;
+		line-height: 1.2;
+	}
+}
+
+@media screen and (max-width: 349px){
+	main{
+		background: url('../images/songcircle/floating_notes.png') no-repeat 0% 100%, linear-gradient(to bottom, rgb(255,255,255) 0%,rgb(253,255,251) 4%,rgb(237,252,217) 7%,rgb(225,250,189) 20%,rgb(188,244,109) 34%,rgb(154,230,59) 46%,rgb(144,226,43) 49%,rgb(95,184,39) 64%,rgb(31,155,58) 75%,rgb(4,146,67) 81%,rgb(0,145,69) 83%,rgb(0,145,69) 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#009145',GradientType=0 );
+	}
+	article#schedule, article#about{ top: 450px; }
+	article#about{ margin-bottom: 42em; }
+}

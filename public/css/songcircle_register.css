@@ -1,78 +1,260 @@
-#registration_form, #registration_form input[type="submit"]{
+/**
+* Songcircle Registration Form & Confirmation Modal -- Styles
+*
+* 04/04/2016
+*/
+
+#registration_form{
+	font-family: 'museo_sans300', Arial, helvetica, sans-serif;
+	font-size: 1.2em;	color: #666;
+	top: 50%; left: 50%; transform: translate(-50%,-50%);
+	position: fixed; z-index: 3000;
+	border-radius: 30px; border: 1px solid #7EC919;
+	width: 25%; min-width: 320px;
+	padding: 2em 3em;
+	/*margin: 1em 0;*/
+	display: none;
+	/*overflow-y: auto;
+	max-height: 85%;*/
+}
+#registration_form p{ font-weight: bold; padding: 1.25em 0;	line-height: 1.5; }
+
+#registration_form input, select, .input_error{
+	position: relative; display: block;
+	width:99%; border: 4px solid rgba(0,0,0,0); outline: none;
+	font-size: inherit; margin:1em auto 0.5em; padding:10px 12px;
+	box-sizing: border-box;
+	border-radius: 15px 15px 15px 15px;
+	box-shadow: 1px 1px 1px 0px rgba(0,0,0,0.65);
+}
+#registration_form select{
+	margin:0 auto; padding-right: 2.6em;
+	appearance: none; outline: none;
+	-webkit-appearance: none;
+	-moz-appearance: none;
+	background: #ffffff url("../images/songcircle_form/select_box_arrow.png") no-repeat right center;
+	background-size: 46px 46px;
+	color: #666;
+}
+#registration_form select:focus, input:focus{ border: 4px solid rgba(0,0,0,0); }
+
+/* background color for registration form and register button */
+#registration_form, #registration_form span#submit_registration{
 	background: #e5fcca;
-	background: -moz-linear-gradient(top,  #e5fcca 0%, #99ee20 45%, #89dc3d 70%, #7ec919 90%, #92ea41 100%);
-	background: -webkit-linear-gradient(top,  #e5fcca 0%,#99ee20 45%,#89dc3d 70%,#7ec919 90%,#92ea41 100%);
 	background: linear-gradient(to bottom,  #e5fcca 0%,#99ee20 45%,#89dc3d 70%,#7ec919 90%,#92ea41 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5fcca', endColorstr='#92ea41',GradientType=0 );
 }
-/*
-* Schedule table
-*/
-table#songcircleTable{
-	width: 65%;
-	margin:0 auto;
-	border:5px double #7CC919;
-	border-spacing: 0;
-	text-align: center;
-	border-radius: 6px;
-	font-size:1.3em;
-	font-family: 'museo_sans300', Arial, Helvetica, sans-serif;
-	background-color: #fff;
-}
-#songcircleTable tr:not(:first-child) td{ border-top: 5px double #7CC919; }
 
-td{
-	vertical-align: middle;
-	padding:16px 0;
-	line-height: 1.3;
-	border: none;
-	border-right:5px double #7CC919;
-}
-
-td.date{ width:31%; font-size:0.9em; }
-td.name{ font-size: 1.15em;	padding-top: 0.9em; position:relative; }
-
-span.registered{ width: 19%; }
-td:last-child{ width:27%; padding: 0 0.5em; border-right:none; }
-
-td input[type="submit"], button.join{
-	background: #7CC919;
-	padding:9px 18px;
-	border-radius: 9px;
-	border:1px solid #66A811;
-	color:#365A09;
-	font-size: 1.4em;
-	box-shadow: 4px 4px 9px 2px #ccc;
-	transition: 0.250s;
-}
-button.join{ margin: 0 auto; }
-
-td input[type="submit"]:hover, button.join:hover{
-	cursor: pointer;
-	color:white; background: #2E63AF;
-	transition: 0.250s;
+/* faux 'submit' button */
+#registration_form span#submit_registration{
+	display: block;	text-align: center; width: 65%;
+	font-size:1.75em; color: white; font-weight: bold;
+	margin: 1em auto; padding: 12px 0;
+	cursor: pointer; border: none;
+	box-shadow: 0px 0px 2px 4px rgba(255,255,255,1);
+	border-radius: 100px 100px 100px 100px;
 	outline: none;
 }
+/* white arrow before */
+#registration_form span#submit_registration:before{
+	content: url('../images/arrows_and_lines/white_arrow_right.svg');
+	position: relative; right: 10px; top: 1px; z-index: 10;
+}
+/* actual submit button hidden */
+#registration_form input[name="register"]{ display: none; }
 
-/* Table participants pop-up */
-#songcircleTable table.participantsTable{
-  position: absolute; z-index:1;
-	left:7%; width:100%;
-  border:2px solid black;
-	font-size: .85em;
-	border-spacing: 0;
-	border-collapse: inherit;;
+#registration_form span#submit_registration:hover{
+	background: rgb(134,231,255);
+	background: linear-gradient(to bottom,  rgb(134,231,255) 0%,rgb(63,216,255) 17%,rgb(18,121,222) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#86e7ff', endColorstr='#1279de',GradientType=0 );
 }
 
-#songcircleTable table tr td:first-child{ border-right: 1px solid #ccc; }
-#songcircleTable table.participantsTable td{
-	width:50%;
-	line-height: 1.25;
-	padding:9px 6px;
-	border:none;
+div#details > p{ padding-left: 6px; padding-bottom: 6px; font-size: 1.25em; }
+#details label{	position: relative;	display: block;	border: 1px solid rgba(0,0,0,0); }
+
+div#loc{ text-align: center;	margin-top: 2em; border-top: 1px solid #ffffff; }
+#loc p#locationMsg{	font-weight: normal; padding-bottom: 0; }
+/* 'not right?' text */
+#locationMsg span#trigger-location{
+	color: #3FA8F4; font-weight: bold; font-size: 0.8em;
+	cursor: pointer; transition: color 250ms;
 }
-table.participantsTable tr:nth-child(even){ background:#ddd; }
-table.participantsTable tr:nth-child(odd){ background:#eee; }
+#locationMsg span#trigger-location:hover{ color: #FFF; }
+#user_location select#country_select{ margin-top: 1em; }
+
+div#codeOfConduct{
+	text-align: center;	position: relative;	margin:0 auto;
+}
+/*#codeOfConduct p{	padding:0 25px;	text-align: justify; }*/
+
+/* registration form checkbox */
+/* http://blog.karenmenezes.com/2014/nov/1/another-pure-css-checkbox-article/ */
+#codeOfConduct .checkbox-custom{ opacity: 0; position: absolute; display: none;}
+.checkbox-custom, .checkbox-custom-label{
+	display: inline-block; margin: 5px; cursor: pointer;
+}
+.checkbox-custom-label, #codeOfConduct a{
+	font-weight: bold;
+	margin-top: 1.25em;	line-height: 28px;
+	transition-duration: color 25ms;
+}
+.checkbox-custom-label{ color: #666666; }
+#codeOfConduct a, #cOcAlertBox a{ text-decoration: underline; }
+#cOcAlertBox a{ color: #fff; }
+.checkbox-custom-label a:hover,
+#codeOfConduct a:hover, #locationMsg span#trigger-location:hover{
+	color: #FFFFFF;
+}
+#cOcAlertBox a:hover{ color: #666; }
+.checkbox-custom + .checkbox-custom-label:before{
+	content: '';
+  background: #fff;
+  border: 4px solid rgba(0,0,0,0);
+  display: inline-block;
+  vertical-align: bottom;
+  width: 24px;
+  height: 24px;
+  margin-right: 6px;
+  text-align: center;
+	border-radius: 6px 6px;
+}
+input.checkbox-custom + .checkbox-custom-label.error:before{
+	border: 4px solid #3FA8F4;
+}
+.checkbox-custom:checked + .checkbox-custom-label:before{
+	content: "\2714";
+	font-size: 1.5em;
+  background: #FFFFFF;
+	color: #777;
+}
+.checkbox-custom:focus + .checkbox-custom-label{ outline: 1px solid #ddd; /* focus style */ }
+
+/**
+* Error Styles
+*/
+/* blue outline around inputs */
+#registration_form .input_error{
+	border: 4px solid #3FA8F4; box-shadow: 0px 0px 0px 0px rgba(0,0,0,0);
+}
+
+/* blue error pop-ups */
+#registration_form .form_error{
+	position: absolute;	z-index: 100;	top: 16px; left: 90%;
+	width:65%; padding:8px; text-align: left;
+	font-size: 0.9em;	color: white;	background: #3FA8F4;
+	border:6px solid #FFFFFF;	border-radius: 35px;
+	box-shadow: -1px 1px 5px 0px rgba(0,0,0,0.65);
+	display: none;
+}
+#registration_form .form_error p{
+	padding: 0;	display: table-cell; vertical-align: middle;
+}
+
+/* alert box for code of conduct */
+div#cOcAlertBox.form_error{
+	padding: 25px 35px;
+	/*display: block;*/
+}
+
+/* exclamation mark */
+.form_error:before, #cOcAlertBox + p:before{
+	content: '';
+	background: url('../images/songcircle_form/blue_exclamation_point.png');
+	background-size: cover;
+	height:50px;
+	width:50px;
+	float: left;
+	margin-left: 3px; margin-right: 5px;
+}
+div#cOcAlertBox.form_error:before{ margin-left: -30px; margin-top: -20px; }
+
+/* close form button */
+#registration_form span#close-form {
+	display: none; width: 100%;
+	cursor: pointer; text-align: center;
+	transition: color 250ms;
+	font-size: 0.9em;
+}
+span#close-form:hover { color: #fff; }
+
+@media screen and (max-width: 1760px){
+	#registration_form .form_error, #cOcAlertBox.form_error{
+		left: 96%;
+	}
+}
+
+@media screen and (max-width: 1440px){
+
+	#registration_form .form_error{
+		width: 82%;
+	}
+	#cOcAlertBox.form_error{
+		left: 104%;
+		width: 70%
+	}
+}
+
+@media screen and (max-width: 1280px){
+	#registration_form{
+		width: 35%;
+	}
+}
+
+@media screen and (max-width: 950px){
+	#registration_form{
+		max-height: 85%;
+		overflow-y: auto;
+	}
+	#registration_form .form_error{
+		position: relative;
+		top: -2px; left: -30px;
+		width: 120%;
+	}
+	div#cOcAlertBox.form_error{
+		top:12px;
+	}
+	#registration_form span#close-form{ display: inline; }
+}
+
+@media screen and (max-width: 480px){
+	#registration_form{
+		/*max-height: 85%;
+		overflow-y: auto;*/
+		padding-left: 2.5em; padding-right: 2.5em;
+	}
+	#registration_form input, select, .input_error{
+		width: 100%;
+	}
+	#registration_form .form_error{
+		left: 3px; width: 100%;
+	}
+}
+
+@media screen and (max-width:326px){
+	#registration_form input, select, .input_error{
+		width: 95%;
+	}
+	#registration_form .form_error{
+		left: 10px; width: 95%;
+	}
+	div#codeOfConduct{ padding: 0 0.5em; }
+	div#details > p{ padding-left: 16px; }
+}
+
+
+/* form error div */
+#registration_form div#output{
+	display: none;
+	border: 2px solid red;
+	text-align: center;
+	padding:6px;
+	font-size:1.4em;
+	font-weight: bold;
+	color: red;
+	margin:0 0 24px;
+}
+#registration_form div#output li{ line-height: 1.2; }
+
 
 /* Styles for Code of Conduct Modal */
 
@@ -132,12 +314,129 @@ table.participantsTable tr:nth-child(odd){ background:#eee; }
 #cOcModal button[name="cOcAgree"]{
   color:#365A09; background: #7CC919;
 }
-a[name="cOcNotAgree"]{
+#cOcModal a[name="cOcNotAgree"]{
   display: block; width: 45%;
   margin: 0 auto 1em; padding: 0.5em 1em;
   font-size: 0.75em;
   color:blue;
   text-decoration: underline;
 }
-a[name="cOcNotAgree"]:hover{color:#D7F6E4;}
+#cOcModal a[name="cOcNotAgree"]:hover{color:#D7F6E4;}
 #cOcModal button[name="cOcAgree"]:hover{ color:white; background: #2E63AF; cursor: pointer; }
+
+/*
+* Misc
+*/
+span.triggerParticipantsTable{ text-decoration: underline; transition-duration: .250s;}
+span.triggerParticipantsTable:hover{ cursor: pointer; color:#7CC919; transition-duration: .250s; }
+.cannot_register{ opacity: 0.5; }
+td input[type="submit"].cannot_register:hover{
+	cursor:default;
+	background: #7CC919;
+	color:#365A09;
+}
+.triggerParticipantsTable{
+	font-size: 0.65em;
+  cursor: pointer;
+  color:blue;
+  text-decoration: underline;
+}
+span.permission{ font-size: 0.85em; color: #DA7C7C; }
+
+
+
+
+/*
+* Schedule table
+*/
+/*table#songcircleTable{
+	width: 65%;
+	margin:0 auto;
+	border:5px double #7CC919;
+	border-spacing: 0;
+	text-align: center;
+	border-radius: 6px;
+	font-size:1.3em;
+	font-family: 'museo_sans300', Arial, Helvetica, sans-serif;
+	background-color: #fff;
+}*/
+/*#songcircleTable tr:not(:first-child) td{ border-top: 5px double #7CC919; }*/
+
+/*td{
+	vertical-align: middle;
+	padding:16px 0;
+	line-height: 1.3;
+	border: none;
+	border-right:5px double #7CC919;
+}*/
+
+/*td.date{ width:31%; font-size:0.9em; }*/
+/*td.name{ font-size: 1.15em;	padding-top: 0.9em; position:relative; }*/
+
+/*span.registered{ width: 19%; }*/
+/*td:last-child{ width:27%; padding: 0 0.5em; border-right:none; }*/
+
+/*td input[type="submit"], button.join{
+	background: #7CC919;
+	padding:9px 18px;
+	border-radius: 9px;
+	border:1px solid #66A811;
+	color:#365A09;
+	font-size: 1.4em;
+	box-shadow: 4px 4px 9px 2px #ccc;
+	transition: 0.250s;
+}*/
+/*button.join{ margin: 0 auto; }*/
+
+/*td input[type="submit"]:hover, button.join:hover{
+	cursor: pointer;
+	color:white; background: #2E63AF;
+	transition: 0.250s;
+	outline: none;
+}*/
+
+/* Table participants pop-up */
+/*#songcircleTable table.participantsTable{
+  position: absolute; z-index:1;
+	left:7%; width:100%;
+  border:2px solid black;
+	font-size: .85em;
+	border-spacing: 0;
+	border-collapse: inherit;;
+}
+
+#songcircleTable table tr td:first-child{ border-right: 1px solid #ccc; }
+#songcircleTable table.participantsTable td{
+	width:50%;
+	line-height: 1.25;
+	padding:9px 6px;
+	border:none;
+}
+table.participantsTable tr:nth-child(even){ background:#ddd; }
+table.participantsTable tr:nth-child(odd){ background:#eee; }*/
+
+
+
+/* registration form submit button */
+/*#registration_form input[type="submit"]{
+	width: 100%;
+	position: absolute; top: -6px;
+	line-height: 5;
+	border: none;
+	display: block;
+	cursor: pointer;
+	z-index: 100000;
+	margin: 1em auto;
+	color: white;
+	font-size:1.75em;
+	border: none;
+	-webkit-box-shadow: 0px 0px 2px 4px rgba(255,255,255,1);
+	-moz-box-shadow: 0px 0px 2px 4px rgba(255,255,255,1);
+	box-shadow: 0px 0px 2px 4px rgba(255,255,255,1);
+	visibility: hidden;
+}*/
+
+/*#cOcAlertBox a{ color: #666666; text-decoration: underline; }
+#cOcAlertBox a:hover{ color: #FFFFFF; }*/
+/*#registration_form div#cOcAlertBox p{ margin: 0; padding: 9px; }
+#registration_form div#cOcAlertBox a{ text-decoration: underline; }*/
