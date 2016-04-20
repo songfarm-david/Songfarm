@@ -96,13 +96,12 @@
 			<div id="cOcAlertBox" class="form_error"></div>
 		</div>
 		<!-- Submit button -->
-		<span id="submit_registration" name="register" tabindex="8">Register
-			<input type="submit" name="register">
-		</span>
+		<span id="submit_registration" name="register" tabindex="8">Register</span>
+		<input type="submit" name="register">
 		<!-- end of Submit button -->
 	</div>
 	<!-- error output -->
 	<div id="output"></div>
-	<span id="close-form">[X Close]</span>
+	<span id="close_form">[X Close]</span>
 </form>
 <!-- end of Registration Form -->

@@ -1,4 +1,4 @@
 <article id="modal">
-	<img id="musicNotesLeft" src="../public/images/music_notes2.png" alt="more playing music notes" height="100" width="100" style="float: left;"/>
-	<img id="musicNotesRight" src="../public/images/music_notes1.png" alt="playing music notes" height="100" width="100" style="float: right;"/>
+	<img src="http://songfarm.ca/public/images/music_notes2.png" alt="" height="auto" width="100%" style="position:absolute; top:0.5em; left:0.5em"/>
+	<img src="http://songfarm.ca/public/images/music_notes1.png" alt="" height="auto" width="100%" style="position:absolute; top:0.5em; right:0.5em"/>
 </article>

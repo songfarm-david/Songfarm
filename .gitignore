@@ -7,8 +7,8 @@ logs/
 
 
 ## ignored files ##
-includes/initialize.php
-includes/config.php
+#includes/initialize.php
+#includes/config.php
 .htaccess
 phpinfo.php
 template.htm*

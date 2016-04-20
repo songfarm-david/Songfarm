@@ -7,18 +7,14 @@
 #registration_form{
 	font-family: 'museo_sans300', Arial, helvetica, sans-serif;
 	font-size: 1.2em;	color: #666;
-	top: 50%; left: 50%; transform: translate(-50%,-50%);
 	position: fixed; z-index: 3000;
+	top: 50%; left: 50%; transform: translate(-50%,-50%);
 	border-radius: 30px; border: 1px solid #7EC919;
-	width: 25%; min-width: 320px;
+	min-width: 25%; width: 460px;
 	padding: 2em 3em;
-	/*margin: 1em 0;*/
 	display: none;
-	/*overflow-y: auto;
-	max-height: 85%;*/
 }
 #registration_form p{ font-weight: bold; padding: 1.25em 0;	line-height: 1.5; }
-
 #registration_form input, select, .input_error{
 	position: relative; display: block;
 	width:99%; border: 4px solid rgba(0,0,0,0); outline: none;
@@ -47,27 +43,35 @@
 
 /* faux 'submit' button */
 #registration_form span#submit_registration{
-	display: block;	text-align: center; width: 65%;
+	min-width: 65%; max-width: 70%;
 	font-size:1.75em; color: white; font-weight: bold;
 	margin: 1em auto; padding: 12px 0;
-	cursor: pointer; border: none;
+	display: block;	cursor: pointer;
+	border: none; text-align: center;
 	box-shadow: 0px 0px 2px 4px rgba(255,255,255,1);
 	border-radius: 100px 100px 100px 100px;
 	outline: none;
 }
-/* white arrow before */
-#registration_form span#submit_registration:before{
-	content: url('../images/arrows_and_lines/white_arrow_right.svg');
-	position: relative; right: 10px; top: 1px; z-index: 10;
-}
-/* actual submit button hidden */
-#registration_form input[name="register"]{ display: none; }
 
+/* white arrow before */
+/*#registration_form span#submit_registration:before{*/
+	/*content: url('../images/arrows_and_lines/white_arrow_right.svg');*/
+	/*position: relative; right: 10px;*/
+	/*top: 1px; z-index: 10;*/
+	/*width: 15px; height: 26px;*/
+/*background-size: 100% 100%;*/
+	/*background-position: center;*/
+	/*background-repeat: no-repeat;*/
+	/*height: 26px; max-width: 16px;*/
+/*}*/
 #registration_form span#submit_registration:hover{
 	background: rgb(134,231,255);
 	background: linear-gradient(to bottom,  rgb(134,231,255) 0%,rgb(63,216,255) 17%,rgb(18,121,222) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#86e7ff', endColorstr='#1279de',GradientType=0 );
 }
+/* actual submit button hidden */
+#registration_form input[name="register"]{ display: none; }
+
 
 div#details > p{ padding-left: 6px; padding-bottom: 6px; font-size: 1.25em; }
 #details label{	position: relative;	display: block;	border: 1px solid rgba(0,0,0,0); }
@@ -83,20 +87,24 @@ div#loc{ text-align: center;	margin-top: 2em; border-top: 1px solid #ffffff; }
 #user_location select#country_select{ margin-top: 1em; }
 
 div#codeOfConduct{
-	text-align: center;	position: relative;	margin:0 auto;
+	text-align: center;	position: relative;	margin:2em auto;
+	/*height: 26px;*/
 }
-/*#codeOfConduct p{	padding:0 25px;	text-align: justify; }*/
 
 /* registration form checkbox */
 /* http://blog.karenmenezes.com/2014/nov/1/another-pure-css-checkbox-article/ */
 #codeOfConduct .checkbox-custom{ opacity: 0; position: absolute; display: none;}
 .checkbox-custom, .checkbox-custom-label{
-	display: inline-block; margin: 5px; cursor: pointer;
+	display: inline-block;
+	/*margin: 5px; */
+	cursor: pointer;
 }
 .checkbox-custom-label, #codeOfConduct a{
 	font-weight: bold;
-	margin-top: 1.25em;	line-height: 28px;
+	/*margin-top: 1.25em;	*/
+	line-height: 28px;
 	transition-duration: color 25ms;
+	display: inline;
 }
 .checkbox-custom-label{ color: #666666; }
 #codeOfConduct a, #cOcAlertBox a{ text-decoration: underline; }
@@ -169,13 +177,15 @@ div#cOcAlertBox.form_error{
 div#cOcAlertBox.form_error:before{ margin-left: -30px; margin-top: -20px; }
 
 /* close form button */
-#registration_form span#close-form {
+#registration_form span#close_form {
 	display: none; width: 100%;
 	cursor: pointer; text-align: center;
 	transition: color 250ms;
 	font-size: 0.9em;
 }
-span#close-form:hover { color: #fff; }
+span#close_form:hover { color: #fff; }
+
+/*@media screen and (max-width: 1900px) and (min-width: 1280px)*/
 
 @media screen and (max-width: 1760px){
 	#registration_form .form_error, #cOcAlertBox.form_error{
@@ -184,7 +194,6 @@ span#close-form:hover { color: #fff; }
 }
 
 @media screen and (max-width: 1440px){
-
 	#registration_form .form_error{
 		width: 82%;
 	}
@@ -196,44 +205,57 @@ span#close-form:hover { color: #fff; }
 
 @media screen and (max-width: 1280px){
 	#registration_form{
-		width: 35%;
+		width: 40%;
 	}
+}
+@media screen and (max-width: 950px) and (min-width: 630px){
+	#registration_form{ width: 450px !important; }
 }
 
 @media screen and (max-width: 950px){
 	#registration_form{
 		max-height: 85%;
 		overflow-y: auto;
+		width: 65%;
 	}
 	#registration_form .form_error{
 		position: relative;
-		top: -2px; left: -30px;
-		width: 120%;
+		top: -2px; left: -26px;
+		width: 115%;
 	}
 	div#cOcAlertBox.form_error{
 		top:12px;
 	}
-	#registration_form span#close-form{ display: inline; }
+	#registration_form span#close_form{ display: inline; }
 }
+
+
 
 @media screen and (max-width: 480px){
 	#registration_form{
-		/*max-height: 85%;
-		overflow-y: auto;*/
-		padding-left: 2.5em; padding-right: 2.5em;
+		max-height: 85%;
+		overflow-y: auto;
+		padding-left: 2em; padding-right: 2em;
 	}
 	#registration_form input, select, .input_error{
 		width: 100%;
 	}
+	#registration_form span#submit_registration{ min-width: 85%; }
+
 	#registration_form .form_error{
 		left: 3px; width: 100%;
 	}
 }
 
 @media screen and (max-width:326px){
+	#registration_form{
+		width: 80%;
+		padding-left: 1.5em; padding-right: 1.5em;
+	}
 	#registration_form input, select, .input_error{
 		width: 95%;
 	}
+	#registration_form span#submit_registration{ min-width: 200px; }
 	#registration_form .form_error{
 		left: 10px; width: 95%;
 	}
@@ -327,21 +349,16 @@ span#close-form:hover { color: #fff; }
 /*
 * Misc
 */
-span.triggerParticipantsTable{ text-decoration: underline; transition-duration: .250s;}
-span.triggerParticipantsTable:hover{ cursor: pointer; color:#7CC919; transition-duration: .250s; }
-.cannot_register{ opacity: 0.5; }
-td input[type="submit"].cannot_register:hover{
-	cursor:default;
-	background: #7CC919;
-	color:#365A09;
-}
-.triggerParticipantsTable{
+/*span.triggerParticipantsTable{ text-decoration: underline; transition-duration: .250s;}
+span.triggerParticipantsTable:hover{ cursor: pointer; color:#7CC919; transition-duration: .250s; }*/
+
+/*.triggerParticipantsTable{
 	font-size: 0.65em;
   cursor: pointer;
   color:blue;
   text-decoration: underline;
-}
-span.permission{ font-size: 0.85em; color: #DA7C7C; }
+}*/
+/*span.permission{ font-size: 0.85em; color: #DA7C7C; }*/
 
 
 

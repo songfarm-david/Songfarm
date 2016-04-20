@@ -1,22 +1,23 @@
 $(document).ready(function(){
 
-	// Where re-direction will go after successful registration:
+	/*** Last update April 12th, 2016 ***/
 
+	// Where re-direction will go after successful registration:
 	/* local site */
 	// var redirectURL = 'http://localhost/songfarm-oct2015/public/index.php';
 
 	/* live test site */
-	var redirectURL = 'http://test.songfarm.ca';
+	// var redirectURL = 'http://test.songfarm.ca';
 
 	/* live site */
-	// var redirectURL = 'http://songfarm.ca';
+	var redirectURL = 'http://songfarm.ca';
 
 	// span to trigger registration form
-	var triggerForm = $('span[data-id="triggerRegForm"]');
+	var triggerForm = $('[data-id="triggerRegForm"]');
 	// Register button from Songcircle Table
 	var btnRegister = $('#schedule_container input[type="submit"]');
 	// Waiting list button from Songcircle Table
-	var btnWaitList = $('input[data-id="triggerWaitList"]');
+	// var btnWaitList = $('input[data-id="triggerWaitList"]');
 
 	// Overlay for Registration Form
 	var overlay = $('#overlay');
@@ -61,7 +62,7 @@ $(document).ready(function(){
 	// error output div
 	var outputDiv = $('#registration_form div#output');
 	// Confirmation notification container (after submission of registration form)
-	var confirmContainer = $('div#modal');
+	var confirmationModal = $('article#modal');
 
 	// create array
 	var songcircleData = [];
@@ -105,8 +106,8 @@ $(document).ready(function(){
 	* When user clicks on the 'Register' button on songcircle.php
 	* open the registration form
 	*/
-	$(btnRegister).add(btnWaitList).on('click', function(e){
-		e.preventDefault();
+	$(btnRegister).on('click', function(evt){ // 	$(btnRegister).add(btnWaitList).on('click', function(e){
+		evt.preventDefault();
 		overlay.show();
 		registrationForm.show();
 		// call function to retrieve songcircle data by ROW number
@@ -116,26 +117,60 @@ $(document).ready(function(){
 
 	/**
 	* Gathers input data for a given row and
-	* Sets it into the registration form
+	* inserts it into the registration form
 	*
 	*	Created: 01/28/2016
 	*
 	* @param (int) a row number
 	*/
 	function getAndSetSongcircleDataByRow(rowNumber){
-
+		// console.log('Row number: '+rowNumber);
 		// child inputs of songcircle data row
-		var childInputs = $('#schedule_container table tr[data-row-count="'+rowNumber+'"]').find('td:last-child').children('input[type="hidden"]');
-
+		var childInputs = $('#schedule_container .songcircle_table tr.active[data-row-count="'+rowNumber+'"]').find('td[name="songcircle_data_container"]').children('input[type="hidden"]');
+		// console.log(childInputs);
 		// loop through the child elements and extract key/value pairs
 		$(childInputs).each(function(index, element){
+			// console.log('index: '+index);
 			var name 	= $(element).attr('name');
 			var str = '<input type="hidden" name="'+name+'" value="'+$(element).val()+'">';
 			// insert elements into form
 			$(formSubmit).before(str);
 		});
-
 	}
+
+	// hook songcircle table class
+	var songcircleTable = $('#schedule #schedule_container table.songcircle_table');
+	// get hook to target container
+	var datesListContainer = $('#schedule #datesList_container');
+	// cycle through songcircle tables
+	/**
+	* Retrieves event data from songcircle event table rows
+	* and Populates a date-list container
+	*/
+	$(songcircleTable).find('tr')
+	.filter('.songcircle_table > tbody > tr').each(function(index, element){
+		// retrieve values
+		var rowNumber = $(element).data('row-count');
+		var monthDate = $(element).find('td:first-child').data('month-date');
+		// construct html string
+		var str = '<li data-row="'+rowNumber+'"> '+monthDate+' </li>';
+		// append values to li withing #datesList_container
+		$(datesListContainer).children('ul').append(str);
+	});
+
+	// Add selected class to first li
+	$(datesListContainer).find('li:first-child').addClass('selected');
+	$(songcircleTable).find('tr:first-child').filter('.songcircle_table > tbody > tr').addClass('active');
+
+	// on click, change select class
+	$('#schedule #datesList_container ul li').on('click', function(){
+		$('li.selected, tr.active').removeClass('selected active');
+		// add selected class to li
+		$(this).addClass('selected');
+		var rowNumber = $(this).data('row');
+		$(songcircleTable).find('tr[data-row-count="'+rowNumber+'"]').addClass('active');
+	})
+
 
 	/**
 	*	Targets specific hidden inputs in the registration form
@@ -228,24 +263,18 @@ $(document).ready(function(){
 	*	Closes registration form, hide overlay
 	* when user clicks outside of the form
 	*/
-	$(overlay).on('click', function(){
-		$(this).hide();
+	$(overlay).add('span#close_form').on('click', function(){
+		$(overlay).hide();
 		registrationForm.hide();
 		// hide confirmation notice, if present
-		confirmContainer.hide();
+		confirmationModal.hide();
 		// hide Code of Conduct, if present
 		codeOfConContainer.hide();
 		removeSongcircleData();
 	});
 
 	/**
-	* Trigger Form w/ hidden values
-	*/
-$('span')
-
-
-	/**
-	* Trigger Registration Form Submission
+	* Trigger Registration Form Submission on click of span
 	*/
 	$(formSubmitSpan).click(function(){
 		$(formSubmit).click();
@@ -327,7 +356,7 @@ $('span')
 				cOcErrorCounter++;
 				// console.log('error counter: '+cOcErrorCounter);
 
-				console.log('not checked');
+				// console.log('not checked');
 
 				// construct error message
 				// var alertMsg = '<div id="cOcAlertBox" class="form_error">';
@@ -336,13 +365,12 @@ $('span')
 				// append message to div
 				// codeOfConductDiv.append(alertMsg).show();
 				codeOfConductError.html(alertMsg).show();
-
-				$('.checkbox-custom-label, .checkbox-custom-label a').css('color','#3FA8F4');
+				$('.checkbox-custom-label, #codeOfConduct a').css({'color':'#3FA8F4','transition-duration':'0ms'});
 				$('.checkbox-custom + .checkbox-custom-label').addClass('error');
 
 				if(cOcErrorCounter >= 3){
 					// codeOfConductDiv.effect('shake');
-					console.log('shake the box');
+					// console.log('shake the box');
 					/*
 						program a shaking effect to occur on the error alert box
 					*/
@@ -354,161 +382,168 @@ $('span')
 
 		// test that all validation conditions are met
 		if( nameIsValid && emailIsValid && timezoneValid && codeOfConductRead ){
-			// no errors
-
+		// no errors
 			// serialize form data
 			var formData = registrationForm.serialize();
-			console.log(formData);
-			// send data to validation (includes/songcircle_register_user.php)
+
 			$.ajax({
-				// url : '../includes/songcircle_register_user.php',
-				/**
-				* Testing whether possible to include get variable in URL
-				* while using method : 'POST'
-				*/
 				url : '../includes/songcircle_user_action.php?action=register',
 				data : {
 					'formData' : formData
 				},
 				method : 'POST',
 				success: function(data){
-					console.log(data);
+					// console.log('return data: '+data);
 					// hide form and overlay
 					registrationForm.hide();
 					overlay.hide();
 
 					try {	// try to parse return data in JSON format
 
-					var songcircleObj = $.parseJSON(data); // parse return messages
-					var notificationMsg;
-					// console.log('script returned object');
-					// if returned data contains waitlist flag
-					if(songcircleObj.waitlist == true){
-						// waitlist message
-						notificationMsg = "<p><span>Thanks, "+songcircleObj.username+"!</span></p>";
-						notificationMsg+= "<p>You've been added to the Waiting List for <b>"+songcircleObj.songcircle_name+"</b> on <b>"+songcircleObj.date_of_songcircle+"</b></p>";
-						notificationMsg+= "<p>We'll notify as soon as a spot opens up!</p>"
-					} else {
-						// registration message
-						notificationMsg = "<p><span>Thank You, "+songcircleObj.username+"!</span></p>";
-						notificationMsg+= "<p>Please visit your email to confirm your attendance to <b>"+songcircleObj.songcircle_name+"</b> plus learn some simple tips for getting the most out of this upcoming Songcircle event.</p>";
-						// need to re-work this message...
-					}
+						/* try for JSON data = success */
+						if( $.parseJSON(data) ){
+							var songcircleObj = $.parseJSON(data);
+						}
 
-						// wait 5 seconds then redirect
-						setTimeout(function(){
-							window.location.replace(redirectURL);
-						}, 5000);
+						var notificationMsg;
+						// if this is a waitlist registration
+						if( songcircleObj.waitlist == true )
+						{
+							// waitlist message
+							notificationMsg = "<p><span>Thanks, "+songcircleObj.username+"!</span></p>";
+							notificationMsg+= "<p>You've been added to the Waiting List for <b>"+songcircleObj.songcircle_name+"</b> on <b>"+songcircleObj.date_of_songcircle+"</b></p>";
+							notificationMsg+= "<p><strong>We'll notify as soon as a spot opens up!</strong></p>";
+						}
+						else
+						{
+							// registration message
+							notificationMsg = "<p><span>Thank You, "+songcircleObj.username+"!</span></p>";
+							notificationMsg+= "<p>Please visit your email to confirm your attendance to <b>"+songcircleObj.songcircle_name+"</b> plus learn some simple tips for getting the most out of this upcoming Songcircle event.</p>";
+							// need to re-work this message...
+						}
 
-					} catch(e) { // catch returned error message as 'data'
-					console.log('script returned error');
+							// wait 5 seconds then redirect
+							setTimeout(function(){
+								window.location.replace(redirectURL);
+							}, 5000);
 
+					} catch(e) {
+						/* Returned data was an error */
+						// console.log('there was an error registering user');
 						var notificationMsg = data;
 
 						// trim returned data for keywords ('name','email')
-						var newStr = notificationMsg.substring( notificationMsg.indexOf('=')+2, notificationMsg.indexOf("_") );
+						var errorData = data.substring( data.indexOf('=')+2, data.indexOf("_") );
+						// console.log(errorData);
 
-						switch (newStr) {
+						// if error applies to a particular form field, highlight it
+						switch (errorData) {
 							case 'name':
 								var nameFocus = true;
 								break;
 							case 'email':
 								var emailFocus = true;
 								break;
-							// default:
-							// 	console.log('End of Switch Statement');
 						}
-						if(nameFocus || emailFocus){
-							// set timeout to return to form
+
+						if( nameFocus || emailFocus ){
+
 							setTimeout(function(){
+								// re-show form and overlay
 								overlay.show();
 								registrationForm.show();
-								if(nameFocus){
+
+								if( nameFocus ){
 									usernameInput.focus();
-								} else if (emailFocus) {
+								} else
+								if ( emailFocus ) {
 									emailInput.focus().select();
 								}
+
 								// hide notification box
-								confirmContainer.hide();
-							}, 2500);
+								confirmationModal.hide();
+							}, 5500);
+
 						}
 						else
 						{
 							setTimeout(function(){
-								console.log('mailing error occurred');
+								console.log('unknown error occurred');
 								overlay.show();
 								registrationForm.show();
-								confirmContainer.hide();
+								confirmationModal.hide();
 							}, 7500);
 						}
+
 					} finally {
-						// remove any child elements, if existing
-						$(confirmContainer).empty();
-						// append notification message to container
-						$(confirmContainer).append(notificationMsg);
+
+						// remove all but image tags
+						$(confirmationModal).contents(':not(img)').remove();
+						// append notification message
+						$(confirmationModal).append(notificationMsg);
+
 						// show overlay & confirmation container
 						overlay.show();
-						confirmContainer.show();
+						confirmationModal.show();
+
 					}
 				} // end of: success: function(data)
 			}); // end of: $.ajax
 		} // end of: if( nameIsValid && emailIsValid && timezoneValid && codeOfConductRead )
 		else
 		{
-			console.log('registration failed due to validation error..');
-			// exit script
+			// if form is submitted with errors
+			console.log('registration script failed due to a validation error. Exiting script');
 			return false;
 		}
+
 		return false;
+
 	}); // end of on formSubmit
-
-
 
 	/**
 	* Toggles checked property on codeOfConduct
+	* Also removes error styles
 	*/
-	// $.fn.toggleCoC = function(){
 		$('#codeOfConduct label').on('click',function(){
 			$(codeOfConductCheckbox).prop('checked',!codeOfConductCheckbox.prop("checked"));
-			$('.checkbox-custom-label, .checkbox-custom-label a').css('color','');
+			$('.checkbox-custom-label, #codeOfConduct a').css('color','');
 			$('.checkbox-custom + .checkbox-custom-label').removeClass('error');
 			$('div#cOcAlertBox').hide();
 		})
-	// }
 
 	/**
 	* Code of Conduct Modal
 	*/
-	/* CSS for Code Of Conduct Modal */
 	var modalTrigger = $('#codeOfConduct a');
 	var codeOfConContainer = $('<div id="cOcModal"></div>');
-
-	/**
-	* Function for retrieving 'Songfarm Code of Conduct' from filesystem
-	*/
-	$.fn.getCodeOfConduct = function(){
-		$.get('../code_of_conduct.html', function(data){
-			// construct modal
-			codeOfConContainer.html(data);
-			// append modal container at end of body
-			$('body').append(codeOfConContainer);
-			// show modal
-			codeOfConContainer.show();
-		});
-	}
 
 	/**
 	* When Code of Conduct link is clicked
 	*/
 	modalTrigger.on('click', function(){
-		// get page
 		$(this).getCodeOfConduct();
 	});
 
 	/**
-	* Open Modal event for Code of Conduct error alert
+	* Function for retrieving 'Songfarm Code of Conduct' from filesystem
 	*/
-	$('body').on('click', '#cOcAlertBox', function(){
+	$.fn.getCodeOfConduct = function(){
+
+		$.get('http://songfarm.ca/public/code_of_conduct.html', function(data){
+			// input return data as html
+			codeOfConContainer.html(data);
+			$('body').append(codeOfConContainer);
+			codeOfConContainer.show();
+		});
+
+	}
+
+	/**
+	* If 'Code of Conduct' link inside
+	* error alert box is clicked
+	*/
+	$('body').on('click', '#cOcAlertBox a', function(){
 		$.fn.getCodeOfConduct();
 	});
 
@@ -520,6 +555,12 @@ $('span')
 		codeOfConductCheckbox.prop('checked', true);
 		// hide Code of Conduct container
 		codeOfConContainer.fadeOut().hide();
+		/**
+		* NOTE: hide error dialogue box if present
+		*/
+		$('div#cOcAlertBox').hide();
+		$('.checkbox-custom + .checkbox-custom-label').removeClass('error');
+		$('.checkbox-custom-label').css('color','#666');
 	});
 
 	/**
@@ -528,19 +569,34 @@ $('span')
 	$('body').on('click', 'a[name="cOcNotAgree"]', function(){
 		codeOfConductCheckbox.prop('checked', false);
 		codeOfConContainer.fadeOut().hide();
-		// $.fn.toggleCoC();
+	});
+
+	// Trigger for showing songcircle participants
+	var triggerDiv = $('span.triggerParticipantsTable');
+	var participantsTable = $('#schedule #schedule_container table.songcircle_table td.participantsTable');
+	var eventName = $(songcircleTable).find('td[name="event_name"] div p').html();
+
+	/**
+	* Toggle participants table
+	*/
+	triggerDiv.add(participantsTable).on('mouseover mouseout', function(){
+		$(participantsTable).toggle();
 	});
 
 	/**
-	* If there are no registered user, display a unique message
-	*	Otherwise display registered users
+	* Get Event Name from songcircle_table and apply class .selected
 	*/
-	// Trigger for showing songcircle participants
-	var triggerDiv = $('span.triggerParticipantsTable');
-	var participantsTable = $('.participantsTable');
-
-	triggerDiv.on('mouseover mouseout', function(){
-		$(this).next().toggle();
-	});
+	// if the string contains the word Songfarm
+	if ( /Songfarm/i.test(eventName) )
+	{
+		var newStr = eventName.slice(9);
+		str = newStr.replace(newStr, "Songfarm <span class=\"selected green\">"+newStr+"</span>")
+		$(songcircleTable).find('td[name="event_name"] div p').html(str);
+	}
+	else
+	{
+		var str = eventName.replace(eventName, "<span class=\"selected green\">"+eventName+"</span>");
+		$(songcircleTable).find('td[name="event_name"] div p').html(str);
+	}
 
 }); // end document.ready

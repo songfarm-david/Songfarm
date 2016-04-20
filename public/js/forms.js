@@ -127,13 +127,16 @@ $("form#contact-form div.button").on('click', function(){
 			var formData = form.serialize();
 			// send data to php validation file
 			$.ajax({
-				url:'../includes/contactFormValidation.php',
+				url:'../includes/contactForm_validation.php',
 				type:'POST',
 				data: formData,
 				success: function(data){
 				$("#contact-form").css('display','none');
 				$("div#thank-you_message p").html(data);
 				$('div#thank-you_message').removeClass('hide');
+				/**
+				* NOTE: Redirect to somewhere more useful
+				*/
 				}
 			});
 		}

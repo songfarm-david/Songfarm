@@ -107,27 +107,31 @@ class User extends MySQLDatabase{
 	}
 
 	/**
-	* Deletes all user information for a given ID
+	* Deletes all user information from Database for a given ID
 	*
 	* @param (int) a user id
 	* @return (bool) true on success
 	*/
 	public function removeUserFromSongfarm($user_id){
 		global $db;
-		$sql = "DELETE user_register, user_timezone, songcircle_register ";
-		$sql.= "FROM user_register INNER JOIN user_timezone INNER JOIN songcircle_register ";
-		$sql.= "WHERE user_register.user_id = $user_id ";
-		$sql.= "AND user_timezone.user_id = $user_id ";
-		$sql.= "AND songcircle_register.user_id = $user_id";
-		// $sql.= "LIMIT 1";
-		if($result = $db->query($sql)){
-			// check mysqli affected rows
-			if(mysqli_affected_rows($db->connection) > 0){
-				return true;
+
+		$sql = "SELECT * FROM user_register WHERE user_id = $user_id LIMIT 1";
+		if( $result = $db->query($sql) ){
+			if ( $db->hasRows($result) ){
+				// echo 'Row exists in <b>user_register</b> for User Id '.$user_id.' (line '.__LINE__.') '.'<br>';
+				mysqli_free_result($result);
+				$sql = "DELETE FROM user_register WHERE user_id = $user_id";
+				if( $result = $db->query($sql) ){
+					if( mysqli_affected_rows($db->connection) > 0 ){
+							// echo 'record deleted';
+							return true; // record deleted successfully
+						} else {
+							// log error: unable to delete user id X from database
+							return false;
+						}
+				}
 			} else {
-				// log error
-				$err_msg = ' -- ERROR: '.mysqli_error($db->connection).' -- Could not remove user '.$user_id.' from database';
-				file_put_contents(SITE_ROOT.'/logs/user_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.PHP_EOL,FILE_APPEND);
+				// log error here: request to delete user id x -- no user id exists in database table: user_register
 				return false;
 			}
 		}

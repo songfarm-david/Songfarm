@@ -45,17 +45,31 @@ class MySQLDatabase{
 	*/
 	private function confirm_query($result) {
 		if(!$result) {
-			die("Database query failed." . mysqli_error($this->connection));
-			file_put_contents('../logs/log_'.date("m-d-Y").'.txt',date("G:i:s").mysqli_error($this->connection).PHP_EOL, FILE_APPEND);
+			file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s ").mysqli_error($this->connection).PHP_EOL, FILE_APPEND);
+			/**
+			* NOTE: Write Log Error here
+			*
+			* See error_log() // http://php.net/manual/en/function.error-log.php
+			*/
+			die("Database query failed. Exiting script.");
 		}
 	}
 
 	public function beginTransaction(){
-		return mysqli_begin_transaction($this->connection);
+		// $version = phpversion();
+		// echo $version;
+		// if( '5.4.0' < '5.5.0' ) {
+		// 	echo 'false';
+			return mysqli_autocommit($this->connection, FALSE);
+		// } else {
+		// 	return mysqli_begin_transaction($this->connection);
+		// {
 	}
 
 	public function commit(){
-		return mysqli_commit($this->connection);
+		mysqli_commit($this->connection);
+		// after commit, turn autocommit back ON
+		return mysqli_autocommit($this->connection, TRUE);
 	}
 
 	public function rollback(){
@@ -73,10 +87,16 @@ class MySQLDatabase{
 		return $value = mysqli_real_escape_string($this->connection, $value);
 	}
 
-	function escape_values($array=[]) {
+	/**
+	*	Escapes all values in an array
+	* @param (array)
+	* @return (array) an escaped array
+	*/
+	public function escapeValues($array=[]) {
 		foreach ($array as $key => $value) {
-			return $array[$key] = mysqli_real_escape_string($this->connection, $value);
+			$array[$key] = mysqli_real_escape_string($this->connection, $value);
 		}
+		return $array;
 	}
 
 	function userNameExists($username) {

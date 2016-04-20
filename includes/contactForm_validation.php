@@ -1,10 +1,11 @@
 <?php require_once('initialize.php');
+require_once(EMAIL_PATH.DS.'email_data.php');
 $errors = []; // <-- initialize empty errors array
 if(isset($_POST['submit'])) {
   // check for presence of 'name'
-  if($db->has_presence($_POST['name'])) {
+  if($db->hasPresence($_POST['name'])) {
     // make sure it's at least two characters
-    if($db->has_min_length($_POST['name'])) {
+    if($db->hasMinLength($_POST['name'],2)) {
       // assign clean, valid 'name' variable
       $name = htmlspecialchars($_POST['name']);
     } else {
@@ -16,9 +17,9 @@ if(isset($_POST['submit'])) {
     $errors[] = "Please enter a name";
   }
   // check for presence of email
-  if($db->has_presence($_POST['email'])) {
+  if($db->hasPresence($_POST['email'])) {
     // make sure email is valid
-    if($db->is_valid_email($_POST['email'])) {
+    if($db->isValidEmail($_POST['email'])) {
       // assign clean, valid 'email' variable
       $email = htmlspecialchars($_POST['email']);
     } else {
@@ -30,15 +31,15 @@ if(isset($_POST['submit'])) {
     $errors[] = "Please enter an email address";
   }
   // if there's a subject, clean it up
-  if($db->has_presence($_POST['subject'])) {
+  if($db->hasPresence($_POST['subject'])) {
     $subject = htmlspecialchars($_POST['subject']);
   } else {
     $subject = "";
   }
   // check for presence of a message
-  if($db->has_presence($_POST['message'])) {
+  if($db->hasPresence($_POST['message'])) {
     // if it's at least 3 characters long
-    if($db->has_min_length($_POST['message'], 3)) {
+    if($db->hasMinLength($_POST['message'], 3)) {
       $message = wordwrap(htmlspecialchars($_POST['message']),70);
     } else {
       $message = htmlspecialchars($_POST['message']);
@@ -62,6 +63,27 @@ if(isset($_POST['submit'])) {
     $result = mail($to, $subject, $message, $headers, '-fsongfarm'); // 5th arg. possible bug
     if($result){
       echo "Thank you, {$name}, for getting in touch!";
+      // create user data array
+      $user_data = [ "name" => $name ];
+      // try to send autorespond email
+      if(!$message = constructHTMLEmail($email_data['contact_us'], $user_data) ){
+
+        $err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") -- failed to constructHTMLEmail";
+  			file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.PHP_EOL,FILE_APPEND);
+
+      } else {
+
+        $to   = "{$name} <{$email}>";
+        $from = "Songfarm <contact@songfarm.ca>";
+        $subject = "Message Received!";
+        $headers = "From: {$from}\r\n";
+        $headers.= "Content-Type: text/html; charset=utf-8";
+        if( !$result = mail($to,$subject,$message,$headers,'-fsongfarm') ){
+          // write to error log
+          $err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") -- Unable to send autoresponse";
+          file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.PHP_EOL,FILE_APPEND);
+        }
+      }
     }else{
       echo "We were unable to send your message at this time. Please try again later.";
     }
