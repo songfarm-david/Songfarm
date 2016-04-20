@@ -1,16 +1,17 @@
-#any items in the sandbox
+
+
+## ignored folders ##
+uploaded_images/
 sandbox/
 logs/
-.gitignore
-.htaccess
-#any test-uploaded images
-uploaded_images/
 
-#config file
-config.php
 
-phpinfo.php
-template.htm
-*.sql
+## ignored files ##
 includes/initialize.php
-#includes/user.php
+includes/config.php
+.htaccess
+phpinfo.php
+template.htm*
+.git*
+*.txt
+README.md
