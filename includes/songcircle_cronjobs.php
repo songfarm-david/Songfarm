@@ -98,24 +98,24 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 // 				$sql.= "AND sc.songcircle_status = 0 ";
 // 				$sql.= "AND sr.confirm_status = 1";
 
-				
-				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, sr.user_id, ur.user_name, user_email, 
+
+				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, sr.user_id, ur.user_name, user_email,
 						SUBSTR(ut.full_timezone,5,6) AS user_timezone,
 						convert_tz(date_of_songcircle, @@global.time_zone, '+0:00') as date_of_songcircle_UTC,
 						convert_tz(now(), @@global.time_zone, '+0:00') as today_time_UTC,
 						convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00') as user_time_UTC
 						/*,TIMESTAMPDIFF( MINUTE, convert_tz(date_of_songcircle, @@global.time_zone, '+0:00'), convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00') ) */
 
-						FROM songcircle_create AS sc, 
-						songcircle_register AS sr 
-						INNER JOIN user_register AS ur 
-						ON sr.user_id = ur.user_id 
-						INNER JOIN user_timezone AS ut 
-						ON ur.user_id = ut.user_id 
-						
+						FROM songcircle_create AS sc,
+						songcircle_register AS sr
+						INNER JOIN user_register AS ur
+						ON sr.user_id = ur.user_id
+						INNER JOIN user_timezone AS ut
+						ON ur.user_id = ut.user_id
+
 						WHERE sc.songcircle_id = sr.songcircle_id AND sc.songcircle_status = 0 AND sr.confirm_status =1
 						and TIMESTAMPDIFF( MINUTE, convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00')  , convert_tz(date_of_songcircle, @@global.time_zone, '+0:00')) > 4305 and
-						TIMESTAMPDIFF( MINUTE, convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00')  , convert_tz(date_of_songcircle, @@global.time_zone, '+0:00')) < 4320"; 
+						TIMESTAMPDIFF( MINUTE, convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00')  , convert_tz(date_of_songcircle, @@global.time_zone, '+0:00')) < 4320";
 
 				if($result = $db->getRows($sql)){
 
@@ -132,7 +132,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 							$to = "{$user->username} <{$user->user_email}>";
 							$subject = $songcircle_user_data['songcircle_name']." is happening soon!";
 							$from = "Songfarm <noreply@songfarm.ca>";
-							if($message = constructHTMLEmail($email_data['first_reminder'],$songcircle_user_data)){
+							if($message = initiateEmail($email_data['first_reminder'],$songcircle_user_data)){
 								$headers = "From: {$from}\r\n";
 								$headers.= "Content-Type: text/html; charset=utf-8";
 
@@ -146,7 +146,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 									file_put_contents(SITE_ROOT.'/logs/cronjobs/error_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' '.error_get_last().' -- FAILED: Could not send email ('.$_SERVER['PHP_SELF'].__LINE__.') '.$songcircle_user_data['songcircle_id'].' ('.$songcircle_user_data['songcircle_name'].') '.$songcircle_user_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
 								}
 
-							} // end of: if($message = constructHTMLEmail($email_data['reminder_email'],$songcircle_user_data))
+							} // end of: if($message = initiateEmail($email_data['reminder_email'],$songcircle_user_data))
 							else {
 								// could not construct email
 								// log error
@@ -196,18 +196,18 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 				convert_tz(now(), @@global.time_zone, '+0:00') as today_time_UTC,
 				convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00') as user_time_UTC
 				/*,TIMESTAMPDIFF( MINUTE, convert_tz(date_of_songcircle, @@global.time_zone, '+0:00'), convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00') ) */
-				
+
 				FROM songcircle_create AS sc, songcircle_register AS sr
 				INNER JOIN user_register AS ur ON sr.user_id = ur.user_id
 				INNER JOIN user_timezone AS ut ON ur.user_id = ut.user_id
 				WHERE sc.songcircle_id = sr.songcircle_id AND sc.songcircle_status = 0 AND sr.confirm_status =1
-				
+
 				and TIMESTAMPDIFF( MINUTE, convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00')  , convert_tz(date_of_songcircle, @@global.time_zone, '+0:00')) > -1 and
 				TIMESTAMPDIFF( MINUTE, convert_tz(now(), SUBSTR(ut.full_timezone,5,6), '+0:00')  , convert_tz(date_of_songcircle, @@global.time_zone, '+0:00')) < 16 ";
-				
-				
-				
-				
+
+
+
+
 				if($result = $db->getRows($sql)){
 
 					foreach($result as $songcircle_user_data){
@@ -216,7 +216,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 						$to = "{$songcircle_user_data['user_name']} <{$songcircle_user_data['user_email']}>";
 						$subject = "Join ".$songcircle_user_data['songcircle_name']." now!";
 						$from = "Songfarm <noreply@songfarm.ca>";
-						if($message = constructHTMLEmail($email_data['join_songcircle'],$songcircle_user_data)){
+						if($message = initiateEmail($email_data['join_songcircle'],$songcircle_user_data)){
 							$headers = "From: {$from}\r\n";
 							$headers.= "Content-Type: text/html; charset=utf-8";
 
@@ -230,7 +230,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 								file_put_contents(SITE_ROOT.'/logs/cronjobs/error_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+5 hours')).' '.error_get_last().' -- FAILED: Could not send email ('.$_SERVER['PHP_SELF'].__LINE__.') '.$songcircle_user_data['songcircle_id'].' ('.$songcircle_user_data['songcircle_name'].') '.$songcircle_user_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
 							}
 
-						} // end of: if($message = constructHTMLEmail())
+						} // end of: if($message = initiateEmail())
 						else {
 							// could not construct email
 							// log error
