@@ -1,8 +1,10 @@
 
 
 ## ignored folders ##
+random_compat*
 uploaded_images/
 sandbox/
+error_log/
 logs/
 
 
@@ -13,5 +15,6 @@ logs/
 phpinfo.php
 template.htm*
 .git*
+*.sql
 *.txt
 README.md

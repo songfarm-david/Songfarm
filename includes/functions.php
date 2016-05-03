@@ -46,7 +46,7 @@ function initiateEmail($email_data, $user_data=''){
 				break;
 			default:
 				// write to log,
-				file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").' No cases matched -- '.$_SERVER['PHP_SELF'].' ('.__LINE__.')'.PHP_EOL,FILE_APPEND);
+				file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").' Error -- Function initiateEmail called. No cases matched -- '.$_SERVER['PHP_SELF'].' ('.__LINE__.')'.PHP_EOL,FILE_APPEND);
 				break;
 
 		} // end of switch
@@ -148,12 +148,14 @@ function constructHTMLEmail($email_data, $user_data, $email_template){
 		{
 
 			// retrieve user key from database
-			if( !$user_key = retrieveUserKey($compiled_user_data['user_email']) ){
-				// log error that you were unable to retrieve an email with provided data
-				// write to log,
-				file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").' Could not retrieve user key -- '.$_SERVER['PHP_SELF'].' ('.__LINE__.')'.PHP_EOL,FILE_APPEND);
+			if( !$user_key = retrieveUserKey($compiled_user_data['user_email']) )
+			{
+
+				file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").' Could not retrieve user key for user email '.$compiled_user_data['user_email'].' -- '.$_SERVER['PHP_SELF'].' ('.__LINE__.')'.PHP_EOL,FILE_APPEND);
+
 				exit('error retrieving necessary information to execute email script');
 			}
+
 			$email_template = str_replace('%user_key%',$user_key,$email_template);
 
 		} else {
@@ -192,6 +194,12 @@ function constructHTMLEmail($email_data, $user_data, $email_template){
 function makeAutoresponder($email_data, $user_data){
 	// retrieve email template
 	$autorespond_email = file_get_contents(EMAIL_PATH.DS.'email_templates/autoresponder.html');
+
+	$compiled_data_array = compileArrays($user_data);
+
+	/**
+	* NOTE: could implement a loop here..
+	*/
 	// input $email_data to replace keys
 	$autorespond_email = str_replace('%title%',$email_data['title'],$autorespond_email);
 	$autorespond_email = str_replace('%link%',$email_data['link'],$autorespond_email);
@@ -204,10 +212,27 @@ function makeAutoresponder($email_data, $user_data){
 	$autorespond_email = str_replace('%signature%',$email_data['signature'],$autorespond_email);
 	$autorespond_email = str_replace('%year%',$email_data['year'],$autorespond_email);
 	// input $user_data to replace keys
-	$autorespond_email = str_replace('%name%',$user_data['name'],$autorespond_email);
+	$autorespond_email = str_replace('%name%',$compiled_data_array['name'],$autorespond_email);
 	// return email
 	return $autorespond_email;
 }
+
+
+/**
+* Sends an email to administration in cases of certain errors
+*/
+function notifyAdminByEmail($msg){
+
+	$dt = date("Y-m-d H:i:s (T)");
+	$msg = $dt . ' -- ' . $msg;
+
+	// send email
+	error_log($msg, 1, ADMIN_EMAIL,"From: error_report@songfarm.ca");
+
+	return true;
+
+}
+
 
 /**
 *	Function - Attempt to validate
@@ -239,6 +264,7 @@ function generateIPData(){
 	// get contents of the IP address
 	if(	$ip_contents = unserialize(file_get_contents('http://www.geoplugin.net/php.gp?ip='.$user_ip))){
 		$ip_data = [];
+
 		// loop through contents and extract certain values
 		foreach ($ip_contents as $key => $value) {
 			$key = substr($key, 10); // remove 'geoplugin' part of key..
@@ -263,7 +289,6 @@ function generateIPData(){
 		if(isset($ip_data['continentCode'])){
 			$location_data['continent_code'] = strtoupper($ip_data['continentCode']); // make sure continent code is always uppercase
 		}
-
 		return $location_data;
 	}
 
@@ -325,12 +350,13 @@ function getToken($length){
 
 /**
 * Generate a unique selector
+*
+* NOTE: could be relocated to user class
 * NOTE: for use in user unsubscription
 *
 * @return (string) 12 characters
 */
 function generateUserKey(){
-
 	// to support random_bytes function in PHP version < 7
 	require_once(SITE_ROOT.DS.'/random_compat-2.0.2/lib/random.php');
 
@@ -344,6 +370,8 @@ function generateUserKey(){
 
 /**
 * Retrieve user_key from database
+*
+* NOTE: could be relocated to user class
 *
 * @param (string) user email
 * @return (string) user key
@@ -365,7 +393,6 @@ function retrieveUserKey($user_email){
 * @param (multi-dimensional array)
 */
 function compileArrays($multi_dimensional_array){
-
 	$compiled_data = [];
 
 	foreach ($multi_dimensional_array as $key => $value) {
@@ -376,7 +403,6 @@ function compileArrays($multi_dimensional_array){
 		}
 		$compiled_data[$key] = $value;
 	}
-
 	return $compiled_data;
 }
 

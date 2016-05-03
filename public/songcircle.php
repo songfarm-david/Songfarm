@@ -77,7 +77,7 @@ if( $location_by_ip = generateIPData() ){
 			<!-- start About Songcircle -->
 			<article id="about">
 				<h3>What is a <span>Songcircle?</span></h3>
-				<hr>
+				<img src="images/songcircle/hr_dotted.png">
 				<p>
 					A <a href="#linkToBlog">Songcircle</a> is an <em>opportunity</em> for Songwriters to gather together, workshop their ideas, collaborate, and get real-time feedback from artists from all over the globe.
 				</p>

@@ -1,3 +1,16 @@
+<?php
+	// if no message, EXIT script
+		if( !isset($success_msg) && !isset($error_msg) ){
+
+			$location = 'http://songfarm.ca';
+			header("Location: " . $location);
+			exit;
+
+			// temp
+			// $success_msg = $error_msg = '';
+
+		}
+?>
 <!doctype>
 <html>
 	<head>
@@ -60,16 +73,6 @@
 		</style>
 	</head>
 	<body>
-		<?php
-			// if no message, EXIT script
-				if( ($success_msg == '') && ($error_msg == '') ){
-
-					$location = 'http://songfarm.ca';
-					header("Location: " . $location);
-					exit;
-
-				}
-		?>
 		<article id="logoContainer">
 			<div>
 				<img src="../../public/images/songfarm_logo_l.png" alt="Songfarm Logo" height="auto" width="100%">
@@ -128,8 +131,8 @@
 
 			/*** redirect location ***/
 				// live config:
-					// redirectURL = 'http://test.songfarm.ca';
-					redirectURL = 'http://songfarm.ca';
+					redirectURL = 'http://test.songfarm.ca';
+					// redirectURL = 'http://songfarm.ca';
 
 				// test config:
 					// redirectURL = '../public';
@@ -178,13 +181,16 @@
 			, scale: 0.8 // Scales overall size of the spinner
 			, corners: 0.5 // Corner roundness (0..1)
 			, color: [
-				'#A0F122', // green
-				// '#009145', /* forest green */
-				'#E1D11A', // yellow
-				'#AC44A1', // purple
-				// '#557FC2', // blue
-				'#3F9FEB', /* powder blue */
-				'#D86919', // pinky red
+				'#81AD9A',
+				'#9FD65C',
+				'#CAE23E',
+				'#EDDF3C',
+				'#F1A426',
+				'#F17526',
+				'#D4545E',
+				'#B145A3', // purple
+				'#7F74C4', // purple/blue
+				'#6284D8', // blue
 			]// #rgb or #rrggbb or array of colors
 			, opacity: 0.5 // Opacity of the lines
 			, rotate: 0 // The rotation offset

@@ -167,7 +167,7 @@ div#cOcAlertBox.form_error{
 /* exclamation mark */
 .form_error:before, #cOcAlertBox + p:before{
 	content: '';
-	background: url('../images/songcircle_form/blue_exclamation_point.png');
+	background: url('../images/songcircle_form/exclamation_point_blue.png');
 	background-size: cover;
 	height:50px;
 	width:50px;

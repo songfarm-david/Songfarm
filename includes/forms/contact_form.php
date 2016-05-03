@@ -1,10 +1,10 @@
-<?php 
+<?php
 $errors = []; // <-- initialize empty errors array
-if(isset($_POST['submit'])) {
+if(isset($_POST['contact_submit'])) {
   // check for presence of 'name'
-  if(has_presence($_POST['name'])) {
+  if($db->hasPresence($_POST['name'])) {
     // make sure it's at least two characters
-    if(has_min_length($_POST['name'])) {
+    if($db->hasMinLength($_POST['name'],2)) {
       // assign clean, valid 'name' variable
       $name = htmlspecialchars($_POST['name']);
     } else {
@@ -16,9 +16,9 @@ if(isset($_POST['submit'])) {
     $errors[] = "Please enter a name";
   }
   // check for presence of email
-  if(has_presence($_POST['email'])) {
+  if($db->hasPresence($_POST['email'])) {
     // make sure email is valid
-    if(is_valid_email($_POST['email'])) {
+    if($db->isValidEmail($_POST['email'])) {
       // assign clean, valid 'email' variable
       $email = htmlspecialchars($_POST['email']);
     } else {
@@ -30,15 +30,15 @@ if(isset($_POST['submit'])) {
     $errors[] = "Please enter an email address";
   }
   // if there's a subject, clean it up
-  if(has_presence($_POST['subject'])) {
+  if($db->hasPresence($_POST['subject'])) {
     $subject = htmlspecialchars($_POST['subject']);
   } else {
     $subject = "";
   }
   // check for presence of a message
-  if(has_presence($_POST['message'])) {
+  if($db->hasPresence($_POST['message'])) {
     // if it's at least 3 characters long
-    if(has_min_length($_POST['message'], 3)) {
+    if($db->hasMinLength($_POST['message'], 3)) {
       $message = wordwrap(htmlspecialchars($_POST['message']),70);
     } else {
       $message = htmlspecialchars($_POST['message']);
@@ -71,32 +71,40 @@ if(isset($_POST['submit'])) {
 ?>
 <!-- Contact Form starts here -->
 <?php if($errors) { ?>
-  <span>Please fix the errors below before submitting:</span>
-  <ul>
-    <?php foreach ($errors as $error) {
-      echo "<li>{$error}</li>";
-    } ?>
-  </ul>
+  <div class="errors_php">
+    <span>Please fix the errors below before submitting:</span>
+    <ul>
+      <?php foreach ($errors as $error) {
+        echo "<li>{$error}</li>";
+      } ?>
+    </ul>
+  </div>
 <?php } ?>
 <form id="contact-form" action="<?php echo $_SERVER['PHP_SELF'] ?>" method="post">
   <div>
-    <label for="name">Name:</label>
-    <input type="text" id="name" name="name" value="<?php echo $name ?>" placeholder="Your name" autocomplete="off" minlength="2" required>
+    <label for="name">
+    <input type="text" id="name" name="name" value="<?php echo $name ?>" placeholder="Your name" autocomplete="off" minlength="2" required><div class="errorContainer error"></div>
+    </label>
   </div>
   <div>
-    <label for="mail">Email:</label>
+    <label for="email">
     <input type="email" id="email" name="email" value="<?php echo $email ?>" placeholder="Contact email" required>
+    <div class="errorContainer"></div>
+    </label>
   </div>
   <div>
-    <label for="subject">Subject:</label>
+    <label for="subject">
     <input type="text" id="subject" name="subject" value="<?php echo $subject ?>" placeholder="Subject of message (optional)"/>
+    </label>
   </div>
   <div>
-    <label for="msg">Message:</label>
+    <label for="msg">
     <textarea id="msg" name="message" placeholder="Comments, feedback, suggestions..." minlength="3" required><?php echo $message ?></textarea>
+    <div class="errorContainer"></div>
+    </label>
   </div>
   <div class="button">
-    <button type="submit" name="submit" id="submit_button" value="submit"></button>
+    <button type="submit" name="contact_submit" id="submit_button" class="contact" value="submit">Send Your Message</button>
   </div>
 </form>
 <div id="thank-you_message" class="hide"><p></p></div>

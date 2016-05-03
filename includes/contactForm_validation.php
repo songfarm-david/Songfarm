@@ -59,33 +59,41 @@ if(isset($_POST['submit'])) {
     $headers.= "Reply-to: {$email}\r\n";
     $headers.= "MIME-Version: 1.0\r\n";
     $headers.= "Content-Type: text/plain; charset=utf-8";
-    /* use 'X-' ... in your headers to append non-standard headers */
     $result = mail($to, $subject, $message, $headers, '-fsongfarm'); // 5th arg. possible bug
     if($result){
       echo "Thank you, {$name}, for getting in touch!";
-      // create user data array
       $user_data = [ "name" => $name ];
-      // try to send autorespond email
-      if(!$message = constructHTMLEmail($email_data['contact_us'], $user_data) ){
 
-        $err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") -- failed to constructHTMLEmail";
+      if( !$message = initiateEmail($email_data['contact_us'], $user_data) )
+      {
+        // NOTE: log error
+        $err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") -- initiateEmail failed";
   			file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.PHP_EOL,FILE_APPEND);
 
-      } else {
+        notifyAdminByEmail("Contact Form autoresponder failed to send -- {$_SERVER['PHP_SELF']}");
 
+      }
+      else
+      {
         $to   = "{$name} <{$email}>";
         $from = "Songfarm <contact@songfarm.ca>";
         $subject = "Message Received!";
         $headers = "From: {$from}\r\n";
         $headers.= "Content-Type: text/html; charset=utf-8";
-        if( !$result = mail($to,$subject,$message,$headers,'-fsongfarm') ){
-          // write to error log
-          $err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") -- Unable to send autoresponse";
+        if( !$result = mail($to,$subject,$message,$headers,'-fsongfarm') )
+        {
+          // NOTE: write to error log
+          $err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") -- PHP mail method failed. Unable to send autoresponse";
           file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.PHP_EOL,FILE_APPEND);
+
+          notifyAdminByEmail($err_msg);
+
         }
       }
-    }else{
-      echo "We were unable to send your message at this time. Please try again later.";
+    } else {
+      echo "We were unable to send your message at this time. Our team has been notified of this error. Please try again later.";
+      // NOTE: log error here: failed to send contact form comment via mail method PHP
+      notifyAdminByEmail("Failed to send contact form comment via mail method -- {$_SERVER['PHP_SELF']}");
     }
   }
 } else { $name = $email = $subject = $message = ""; }

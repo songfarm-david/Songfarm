@@ -38,7 +38,7 @@
 		</ul>
 	</nav>
 	<!-- <div class="register medium"></div> -->
-	<button class="register medium" value="Register Today">> Register Today</button>
+	<button class="register medium" value="Register Today">Register Today</button>
 </header>
 <script>
 	/**

@@ -15,10 +15,9 @@ class MySQLDatabase{
 	private function open_connection(){
 		$this->connection = mysqli_connect(DB_SERVER, DB_USER, DB_PASS, DB_NAME);
 		if(mysqli_connect_errno()) {
-			die("Database connect failed: " .
-					mysqli_connect_error() .
-					" (" . mysqli_connect_errno() . ")"
-			);
+			$mysli_connect_error = mysqli_connect_error() . " (" . mysqli_connect_errno() . ")" .PHP_EOL;
+			error_log($mysli_connect_error, 3, ERROR_PATH);
+			die("Database connect failed: " . $mysli_connect_error);
 		}
 	}
 
@@ -45,31 +44,29 @@ class MySQLDatabase{
 	*/
 	private function confirm_query($result) {
 		if(!$result) {
-			file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s ").mysqli_error($this->connection).PHP_EOL, FILE_APPEND);
-			/**
-			* NOTE: Write Log Error here
-			*
-			* See error_log() // http://php.net/manual/en/function.error-log.php
-			*/
+			$mysli_error = mysqli_error($this->connection).PHP_EOL;
+			// write to error log
+			error_log($mysli_error, 3, ERROR_PATH);
+
 			die("Database query failed. Exiting script.");
 		}
 	}
 
 	public function beginTransaction(){
-		// $version = phpversion();
-		// echo $version;
-		// if( '5.4.0' < '5.5.0' ) {
-		// 	echo 'false';
+		if( phpversion() < '5.5.0' ) {
 			return mysqli_autocommit($this->connection, FALSE);
-		// } else {
-		// 	return mysqli_begin_transaction($this->connection);
-		// {
+		} else {
+			return mysqli_begin_transaction($this->connection);
+		}
 	}
 
 	public function commit(){
+		if( phpversion() < '5.5.0' ){
+			mysqli_autocommit($this->connection, TRUE);
+		}
+		// return mysqli_autocommit($this->connection, TRUE);
 		mysqli_commit($this->connection);
-		// after commit, turn autocommit back ON
-		return mysqli_autocommit($this->connection, TRUE);
+
 	}
 
 	public function rollback(){

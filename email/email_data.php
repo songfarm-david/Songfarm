@@ -22,7 +22,7 @@ $email_data = [
 			"height" => "48"
 		],
 		"header" => "Message received!",
-		"intro" => "Thanks for getting in touch, %username%!",
+		"intro" => "Thanks for getting in touch, %name%!",
 		"body" => "We are reviewing your comment and will get back to you shortly.",
 		"signature" => "Thank you,<br />
 		The Songfarm Team",

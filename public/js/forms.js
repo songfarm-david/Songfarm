@@ -115,30 +115,52 @@ function resetForm($form) {
 // 	return this.optional(element) || /^[a-z0-9\s]+$/i.test(value); ///^[a-z0-9\-\s]
 // }, "Only letters and whitespace allowed");
 
-// on click: CONTACT FORM
-$("form#contact-form div.button").on('click', function(){
-	$(this).trigger("submit");
-	$("form#contact-form").validate({
-		errorElement : 'span',
-		// call a custom handler
-		submitHandler: function(form){
-			// grab from and serialize the data
-			var form = $("#contact-form");
-			var formData = form.serialize();
-			// send data to php validation file
-			$.ajax({
-				url:'../includes/contactForm_validation.php',
-				type:'POST',
-				data: formData,
-				success: function(data){
-				$("#contact-form").css('display','none');
-				$("div#thank-you_message p").html(data);
-				$('div#thank-you_message').removeClass('hide');
-				/**
-				* NOTE: Redirect to somewhere more useful
-				*/
-				}
-			});
-		}
+
+
+
+/**
+* Detect presence of error span and place border around select input fields
+*/
+$(document).ready(function(){
+	var errorContainer = $('div.errorContainer');
+	$(errorContainer).hide();
+
+	// on click: CONTACT FORM
+	$("form#contact-form div.button").on('click', function(){
+		$(this).trigger("submit");
+		$("form#contact-form").validate({
+			errorElement : 'p',
+			errorPlacement : function(error, element){
+				var container = element.next();
+				container.append(error);
+			},
+			invalidHandler : function(){
+				$(errorContainer).css('display','table');
+			},
+			success : function(label){
+				var errorParent = label.parent();
+				errorParent.css('display','none');
+			},
+			submitHandler: function(form){
+				// grab from and serialize the data
+				var form = $("#contact-form");
+				var formData = form.serialize();
+				// send data to php validation file
+				$.ajax({
+					url:'../includes/contactForm_validation.php',
+					type:'POST',
+					data: formData,
+					success: function(data){
+					$("#contact-form").css('display','none');
+					$("div#thank-you_message p").html(data);
+					$('div#thank-you_message').removeClass('hide');
+					/**
+					* NOTE: Redirect to somewhere more useful
+					*/
+					}
+				});
+			}
+		});
 	});
+	
 });

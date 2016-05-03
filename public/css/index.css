@@ -1,323 +1,270 @@
-
-
-/*	Global styles		*/
-/*html, body, div, p, ul, h1, h2, h3, img, em, small, li, span, time, section, article, header, nav, footer{
-	margin:0;
-	padding:0;
-	border: 0;
-	vertical-align: baseline;
-	font: inherit;
-	background: transparent;
-  font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
-}*/
-/*header, nav, main, section, article, footer, figure, figcaption{
-	display: block;
-}*/
-/*body{
-	font-size:16px;
-  font-weight: normal;
-  max-width:1600px;
-  min-width: 320px;
-  width:100%;
-	margin:0 auto;
-	line-height: 1;
-  height:100%;
-}*/
-
-/*img	{ outline: 0; border: none; }
-.hide	{ display: none; }*/
-
-/*ul {list-style: none; }
-a	{ text-decoration: none; border: none; color: #5D5161; transition-duration: .250s;}
-a:hover{ color: #7CC919; transition-duration: .250s; }*/
-
-article#banner a{ color:#34299E; text-decoration: underline; }
-article#banner a:hover{  color: #fff; }
-
-/*  Header  */
-/*header{
-	width:100%;
-	position: relative;
-  font-family: 'museo_sans300', Arial, Helvetica, sans-serif;
-  border: 1px solid #fff;
-  height: 168px;
-  margin-top:-12px;
-}
-header > img{
-  position: absolute;
-  top:-16px; left:0;
-  width: 1600px;
-}
-header#header ul#social_head{
-  position:absolute;
-  top:-4px; right: 12.75%;
-  width:250px;
-  margin:0;
-  height:60px;
-  text-align: center;
-}
-#header ul#social_head li{
-  transition-duration: .250s;
-  margin:0;
-  height:50px; width:50px;
-}
-#header ul#social_head li:hover{ transition-duration: .250s; }
-header#header ul#social_head li.facebook{
-  background: url('../images/icons/social icons/facebook_s.png');
-  height:50px; width:50px;
-}
-header#header ul#social_head li.facebook:hover{ background: url('../images/icons/social icons/facebook_s_hover.png'); }
-header#header ul#social_head li.twitter{ background: url('../images/icons/social icons/twitter_s.png');
-  height:50px; width:50px; }
-header#header ul#social_head li.twitter:hover{ background: url('../images/icons/social icons/twitter_s_hover.png'); }
-header#header ul#social_head li.linkedIn{
-  background: url('../images/icons/social icons/linkedIn_s.png');
-  height:50px; width:50px;
-}
-header#header ul#social_head li.linkedIn:hover{ background: url('../images/icons/social icons/linkedIn_s_hover.png'); }
-header#header ul#social_head li a{
-  background: url('../images/icons/social icons/message.png') no-repeat;
-  height:50px; width:50px;
-  display: block;
-}
-header#header ul#social_head li a:hover{ background: url('../images/icons/social icons/message_hover.png') no-repeat; }
-header#header ul#social_head a:hover:before{ content: ''; }
-
-header nav{ font-size: 1.2em; position: relative; height: 168px; }
-header ul{
-  line-height: 38px;
-  position: absolute;
-  top: 76px;
-  right: 4%;
-  width: 44%;
-  min-width: 550px;
-}
-header ul#links{ height:76px; text-align: right; }
-ul#links span#style, span.menu{ visibility: hidden; }
-
-header ul#links li:last-child{
-  position: relative;
-}
-header ul li { margin-left: 5%; }
-header ul li{
-	display: inline-block;
-	text-transform: uppercase;
-  position: relative;
-}
-header ul li a{ padding: .3em .1em; }
-/*header ul li a[title="songcircle"]{ font-size: 1.5em; }*/
-/*header ul#links li a:hover::before{
-  content:url('../images/arrows_and_lines/navActive_arrow.png');
-  position:absolute; left:-15px; top:3px;
-}
-
-header ul#links li:last-child{ right:-12px; }
-header ul#links li:nth-child(5):after{
-  content: '|';
-  position: relative;
-  right:-22px;
-}
-header ul#links li a[title="Log In"]:hover:before{ content:''; position: relative;
-}
-header nav ul#links li a[href^="songcircle"]{ font-size:1.1em;}
-header .logo{
-  height: 84px; width: 31.5%;
-  max-width: 370px;
-  min-width: 200px;
-  background: url("../images/songfarm_logo.png") center center no-repeat;
-  background-size: 100% auto;
-  position: absolute;
-  top:44px; left:13.3%;
-  z-index: 1000;
-}
-header div.logo:after{
-  content: 'BETA';
-  position: absolute;
-  right:-30px; top:30px;
-  font-size: 0.75em;
-  cursor: default;
-  color:#666666;
-}
-header div.logo:hover:after{ color: #000; transition-duration: 0; cursor: default; }*/
-
-/* background gradient */
-/* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e5fcca+0,99ee20+45,89dc3d+70,7ec919+90,92ea41+100 */
-#registration_form, #registration_form input[type="submit"]{
-	background: #e5fcca;
-	background: -moz-linear-gradient(top,  #e5fcca 0%, #99ee20 45%, #89dc3d 70%, #7ec919 90%, #92ea41 100%);
-	background: -webkit-linear-gradient(top,  #e5fcca 0%,#99ee20 45%,#89dc3d 70%,#7ec919 90%,#92ea41 100%);
-	background: linear-gradient(to bottom,  #e5fcca 0%,#99ee20 45%,#89dc3d 70%,#7ec919 90%,#92ea41 100%);
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5fcca', endColorstr='#92ea41',GradientType=0 );
-}
-
-ul#links span.menu:hover{ color: #7CC919; }
-ul#links div.active{ display: block; }
-ul#links span.menu.active-color{ color: #7CC919;}
-
-/* start media queries */
-@media screen and (max-width: 1099px) and (min-width:849px){
-  header .logo{ left: 9.7%; }
-}
-@media screen and (max-width: 848px){
-  header .logo{ left: 5.25%; width: 35%; }
-}
-
 /**
-* Register button
+* Index.php Styles
 */
-@media screen and (max-width: 1024px) and (min-width: 768px){
-  button.register, header div.register.medium, header div.register.medium:hover:before{
-    right: 10.5%;
-    width:30%;
-    bottom: -30px;
-    font-size:1.6em;
-  }
-}
-@media screen and (max-width: 767px) and (min-width: 640px){
-  button.register, header div.register.medium, header div.register.medium:hover:before{
-    right: 10.5%;
-    width:32%;
-    bottom: -28px;
-    font-size:1.5em;
-  }
-}
 
-/**
-* Break nav onto two lines
-*/
-/*@media screen and (max-width: 1024px) and (min-width: 640px){
-  ul#links span{ display: block; }
-  header ul#links{
-    min-width: 350px;
-    line-height: 40px;
-    top: 44px;
-  }
-}*/
-
-/*@media screen and (max-width: 639px){
-  header{ height: 142px; }
-  header, nav{ top: -18.5%; }
-  header div.register.medium, header div.register.medium:hover:before{ right: 7.5%; width:30%;}
-  ul#links span.menu{
-    visibility: visible;
-    color: #666666;
-    font-size: 3em;
-    cursor: pointer;
-    padding: 0 0.25em;
-    position: relative; top: 8px;
-  }
-  ul#links li{ display: block; line-height: 40px; }
-  ul#links div{
-    position: absolute;
-    z-index: 1000;
-    top: 70px; right: 0;
-    width: 18%; min-width: 155px;
-    text-align: right;
-    padding: 0.5em 1.25em;
-    background: #ffffff;
-    -webkit-box-shadow: -1px -1px 5px 0px rgba(0,0,0,0.75);
-    -moz-box-shadow: -1px -1px 5px 0px rgba(0,0,0,0.75);
-    box-shadow: -1px -1px 5px 0px rgba(0,0,0,0.75);
-    border-radius: 10px 10px 10px 10px;
-    -moz-border-radius: 10px 10px 10px 10px;
-    -webkit-border-radius: 10px 10px 10px 10px;
-    border: 0px solid #000000;
-    display: none;
-  }
-  button.register{
-    font-size: 1.3em;
-    bottom: -24px;
-    width: 30%;
-  }
-}*/
-
-/*button.register{
-  position:absolute;
-  bottom:-36px; right: 12.5%;
-  z-index:15;
-  display: inline-block;
-  padding: 0.5em 0.5em;
-  width: 50%;
-  max-width: 294px;  min-width: 206px;
-  font-size: 2em; color: #2A5C03;
-  border-radius: 50px;
-  border: none;
-  cursor: pointer;
-  box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.65);
-	-moz-box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.65);
-	-webkit-box-shadow: 2px 2px 2px 0px rgba(0,0,0,.65);
-}
-button.register:hover{
-  background: blue;
-}*/
-
-/*header div.register.medium{
-  height:70px; width: 50%;
-  max-width: 294px;
-  min-width: 196px;
-  background: url('../images/buttons/register_m.png') no-repeat;
-  background-size: contain;
-  position:absolute; z-index:500;
-  bottom:-40px;
-  right: 200px;
-  right: 12.5%
-}*/
-/*div.register.medium:hover:before{
-  content: url('../images/buttons/register_m_hover.png');
-  position: relative;
-  top:-1px; left:-1px;
-  height:70px; width: 50%;
-  max-width: 294px;
-  min-width: 196px;
-  background-size: contain;
-}*/
-
-/*Register Buttons*/
-article#about div.register{
-  width:377px; height:89px;
-  background: url('../images/buttons/register_l.png') no-repeat;
-  padding:0;
-}
-article#about div div.register{ margin-top:48px; }
-div.register:hover:before{
-  content: url('../images/buttons/register_l_hover.png');
-  position: relative;
-  top:-1px; left:-1px;
-  cursor:pointer;
-}
-
-
+html, body{ min-width: 320px; }
 
 /* Sections Global  */
 article#about, article#features, article#contactUs{
   font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
 }
-article#about{
-  background-color: #B8B8B8;
-}
-article#about h2{ font-size: 2.8em; }
-article#features h2, article#contactUs h2{
-  font-size: 2.8em; padding-left: 18.2%;
-}
 
-.slide-container .slide-panel .panel-caption p{ max-width:85%; }
+article#features h2, article#contactUs h2{
+  font-size: 2.8em; margin-left: 18.2%;
+}
 
 /*About Section*/
 article#about{
   height:620px;
-  background:url("../images/about_background.jpg") center center no-repeat;
-  -webkit-background-size: cover;
-  -moz-background-size: cover;
-  -o-background-size: cover;
-  background-size: cover;
+	background: #a8a8a8; /* Old browsers */
+	background: -moz-linear-gradient(top,  #a8a8a8 0%, #b1b1b1 4%, #bbbbbb 6%, #d9d9d9 9%, #dfdfdf 10%, #e8e8e8 12%, #eeeeee 13%, #f2f2f2 16%, #f3f3f3 100%); /* FF3.6-15 */
+	background: -webkit-linear-gradient(top,  #a8a8a8 0%,#b1b1b1 4%,#bbbbbb 6%,#d9d9d9 9%,#dfdfdf 10%,#e8e8e8 12%,#eeeeee 13%,#f2f2f2 16%,#f3f3f3 100%); /* Chrome10-25,Safari5.1-6 */
+	background: linear-gradient(to bottom,  #a8a8a8 0%,#b1b1b1 4%,#bbbbbb 6%,#d9d9d9 9%,#dfdfdf 10%,#e8e8e8 12%,#eeeeee 13%,#f2f2f2 16%,#f3f3f3 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a8a8a8', endColorstr='#f3f3f3',GradientType=0 ); /* IE6-9 */
+  background: url("../images/about_background.jpg") no-repeat;
+	background-size: cover;
+	background-position: 50% top;
 }
 article#about > div{
-  padding-top: 110px;
-  width:516px;
+  padding-top: 5em;
+  width:30%;
   margin-left: 18.2%;
 }
-article#about h2{ margin-bottom:24px; }
+article#about h2{ font-size: 2.8em; margin-bottom:24px; }
 article#about p{ line-height: 1.4; }
+
+article#about button.medium{
+	position: static;
+	/*width: 100%;*/
+	margin-top: 0.9em;
+	/*width: 76%;*/
+	font-size: 2.5em;
+	min-width: 400px;
+	line-height: 1;
+}
+
+/*	Contact Us	*/
+article#contactUs{
+	height:auto;
+	background-color: #81C91C;
+	background:url("../images/contact_background.jpg") no-repeat;
+	background-size: cover;
+	background-position: 50% top;
+}
+article#contactUs > h2 {
+	padding: 0.5em 0;
+	display: inline-block;
+}
+div.rounded-contact{
+	height:100px;
+	background: url("../images/contact_top_rounded.png") no-repeat;
+	background-size: cover;
+	background-position: left top;
+  margin-top: 115px;
+  position:relative;
+}
+article#contactUs button.contact{
+	position: static;
+	margin-top: 30px;
+	min-width: 80%;
+	font-size: 1.75em;
+	line-height: 1.5;
+}
+
+/*Contact Form*/
+form#contact-form, div.errors_php{
+    margin: 0 0 0 18.2%;
+    width: 32%;
+		min-width: 416px;
+		padding-bottom: 6em;
+}
+form#contact-form div{ margin-top: 1em; }
+form#contact-form label {
+	display: block; position: relative;
+	border: 1px solid rgba(0,0,0,0);
+}
+form#contact-form input, textarea {
+    font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
+    font-size: 1.2em; width: 100%;
+    box-sizing: border-box; border: 4px solid #7FC91B;
+    border-radius: 50px;
+    padding:.75em; padding-left: 1.5em;
+		position: relative;
+}
+form#contact-form textarea{ overflow: auto; } /* remove scrollbar in IE */
+form#contact-form input:focus, textarea:focus {
+    /*border: 4px solid #7FC91B;*/
+    /*box-shadow: 0 0 0 2pt #99EE20;*/
+    outline: none;
+}
+form#contact-form textarea {
+    height: 4.5em; resize: vertical;
+}
+#contact-form .errorContainer{
+	font-family: 'museo_sans300';
+	position: absolute;	z-index: 100;	left: 90%;
+	width: 65%;
+	top: -21px;
+	color: white; background: #E81927;
+	border:6px solid #FFFFFF;	border-radius: 35px;
+	box-shadow: -1px 1px 5px 0px rgba(0,0,0,0.65);
+	display: table;
+	padding: 3px;
+}
+#contact-form .errorContainer:before{
+	content: '';
+	background: url('../images/songcircle_form/exclamation_point_red.png');
+	background-size: cover;
+	height:50px;
+	width:50px;
+	float: left;
+	margin-left: 3px; margin-right: 5px;
+}
+#contact-form p.error{
+	font-size: 1.25em;
+  display: table-cell;
+	vertical-align: middle;
+	padding: 5px 0;
+}
+#contact-form .errorContainer #name-error{ top: -12px;}
+#contact-form #email-error, #contact-form #msg-error{ top: -6px; }
+
+div#thank-you_message{
+  margin-left: 18.2%;
+  font-size:1.75em;
+  width:50%;
+  line-height: 1.25;
+}
+div#thank-you_message p{ padding: 1em 0 6em; margin: 1em 0 0; font-family: 'museo_sans300'; }
+#contact-form input.error,
+#contact-form textarea.error{ border: 4px solid #E81927; }
+
+div.errors_php{
+  /*margin-left: 18.2%;*/
+  /*width: 35%;*/
+  padding: 5px 0.5em;
+  color: #E81927;
+  border: 3px solid #E81927;
+  font-size: 1.25em;
+  line-height: 1.25;
+  margin-bottom: 1.25em;
+  font-weight: bold;
+}
+div.errors_php span{ font-family: 'museo_sans900'; font-size: 1.15em;}
+div.errors_php ul{ padding-left: 1.5em; }
+div.errors_php ul li{ list-style-type: disc; }
+
+
+/* media queries */
+@media screen and (max-width: 1024px) and (min-width: 669px){
+	article#about{
+		background-position: 40% top;
+	}
+	article#about div,
+  article#contactUs #contact-form,
+  div.errors_php,
+  div#thank-you_message{
+    margin-left: 11.5%;
+    width: 46%;
+    min-width: 410px;
+  }
+  div#thank-you_message{ width: 54%; }
+	article#contactUs h2{ margin-left: 11.5%; }
+	/*#contact-form span.error{ min-width: 270px; }*/
+}
+@media screen and (max-width: 800px){
+	#contact-form .error#name-error,
+	#contact-form .error#email-error{ top: 3px;}
+	#contact-form #msg-error{ top: initial;}
+	#contact-form .errorContainer{
+		position: relative; display: block;
+		left: 14px; top: -14px;
+		min-width: 320px;
+	}
+}
+@media screen and (max-width: 736px){
+	article#contactUs{
+		background: #81C91C;
+	}
+}
+@media screen and (max-width: 668px) and (min-width: 466px){
+	article#about{ background-position: 40% top; }
+
+  article#about div,
+  article#contactUs #contact-form,
+  article#contactUs h2,
+  div#thank-you_message,
+  div.errors_php{ margin-left: 8.5%; }
+
+	article#about div{
+		font-size: 1.15em;
+		padding-top: 3em;
+		width: 57%; min-width: 350px;
+	}
+	article#contactUs #contact-form,
+  div#thank-you_message,
+  div.errors_php{ width: 70%; }
+  article#about button.medium{ font-size: 1.9em; min-width: 300px;}
+}
+
+@media screen and (max-width: 465px){
+	article#about{
+		height: auto;
+		background: #a8a8a8; /* Old browsers */
+		background: -moz-linear-gradient(top,  #a8a8a8 0%, #b1b1b1 4%, #bbbbbb 6%, #d9d9d9 9%, #dfdfdf 10%, #e8e8e8 12%, #eeeeee 13%, #f2f2f2 16%, #f3f3f3 100%); /* FF3.6-15 */
+		background: -webkit-linear-gradient(top,  #a8a8a8 0%,#b1b1b1 4%,#bbbbbb 6%,#d9d9d9 9%,#dfdfdf 10%,#e8e8e8 12%,#eeeeee 13%,#f2f2f2 16%,#f3f3f3 100%); /* Chrome10-25,Safari5.1-6 */
+		background: linear-gradient(to bottom,  #a8a8a8 0%,#b1b1b1 4%,#bbbbbb 6%,#d9d9d9 9%,#dfdfdf 10%,#e8e8e8 12%,#eeeeee 13%,#f2f2f2 16%,#f3f3f3 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#a8a8a8', endColorstr='#f3f3f3',GradientType=0 ); /* IE6-9 */
+	}
+	article#about div, article#contactUs{
+		width: 100%; margin: 0;
+		padding: 3em 1.5em 5em;
+	}
+	article#about div{ font-size: 1.15em; }
+	article#about button.medium{
+		position: relative;
+		left: 50%; transform: translateX(-50%);
+		font-size: 1.75em;
+		min-width: 320px;
+		margin-top: 0;
+	}
+	article#contactUs{
+		background: #81C91C;
+	}
+	article#contactUs h2, div#thank-you_message{
+		width: 100%; margin-left: 0;
+	}
+	article#contactUs #contact-form, div.errors_php{
+		width: 100%; margin: 0;
+		min-width: 310px;
+	}
+	article#contactUs button.contact{
+    font-size: 1.25em;
+    padding-right: 2em; padding-left: 2.25em;
+	}
+	article#contactUs #contact-form input{ padding: 0.75em; }
+	article#contactUs #contact-form .errorContainer{ min-width: 270px; left:0; }
+}
+
+
+
+
+
+
+
+article#banner a{ color:#34299E; text-decoration: underline; }
+article#banner a:hover{  color: #fff; }
+
+
+ul#links span.menu:hover{ color: #7CC919; }
+ul#links div.active{ display: block; }
+ul#links span.menu.active-color{ color: #7CC919;}
+
+
+
+
+.slide-container .slide-panel .panel-caption p{ max-width:85%; }
+
 
 
 
@@ -394,54 +341,13 @@ article#features section.feature h3{
   left:0; bottom:0;
 }
 
-/*	Contact Us	*/
-article#contactUs{
-	height:700px; width: 100%;
-	background:url("../images/contact_background.jpg") no-repeat;
-	background-size: contain;
-}
-article#contactUs{
-	background-color: #81C91C;
-	position: relative;
-	margin-bottom: -100px; /* to raise footer */
-}
-article#contactUs > h2 { margin: 0 0 24px; padding-top: 24px; }
-div.rounded-contact{
-	height:100px;
-	background: url("../images/contact_top_rounded.png") no-repeat;
-  margin-top: 115px;
-  position:relative;
-}
 
-/*	Footer	*/
-/*footer{
-	height:120px;
-	position: absolute;
-	bottom: -20px;
-}
-footer > p{ line-height: 120px; }
-footer div.share-links{
-  position: absolute; z-index: 10;
-  top:34px; left:18.2%;
-  height:40px; width: 200px;
-  text-align: left;
-}*/
-/*footer div.share-links p { margin-bottom: 10px; }
-footer div.share-links ul{ margin:0; padding:0; }
-footer div.share-links ul li{ display: inline-block; margin: 0 6% 0 0; }
-footer div.share-links ul li img{ height:40px; width:40px; }*/
 
-/*footer{
-	width:100%;
-	background-color: #343238;
-	text-align: center;
-  font-family: 'museo_sans300', Arial, Helvetica, sans-serif;
-  color: #9A999C;
-}*/
+
 
 /* Social Icons */
 
-.facebook, .twitter, .linkedIn{ /* can add other calls here */
+/*.facebook, .twitter, .linkedIn{
   opacity: .8;
   transition-duration: .250s;
 }
@@ -449,7 +355,7 @@ footer div.share-links ul li img{ height:40px; width:40px; }*/
   transition-duration: .250s;
   cursor: pointer;
   opacity: 1;
-}
+}*/
 
 
 
@@ -584,61 +490,7 @@ div#back-to-top:after{
   width:100%; height: inherit; position: absolute; top:0; left:0;
 }
 
-/*Contact Form*/
-form#contact-form {
-    margin: 0 0 0 18.2%;
-    width: 32%;
-}
-#contact-form span.error{
-	position:absolute;
-	width:65%;
-	font-size: 1em;
-  margin: 20px 0 0 8px;
-	color:#9C4646;
-  display: inline !important;
-}
-form#contact-form div{ margin-top: 1em; }
-form#contact-form label { display: none; }
 
-form#contact-form input, textarea {
-    font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
-    font-size: 1.2em;
-    width: 100%;
-    -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;
-    box-sizing: border-box;
-    border: none;
-    border-radius: 50px;
-    padding:.75em; padding-left: 1.5em;
-}
-form#contact-form input:focus, textarea:focus {
-    border-color: #000;
-    box-shadow: 0 0 0 2pt #99EE20;
-    outline: none;
-}
-form#contact-form textarea {
-    height: 4.5em;
-    resize: vertical;
-}
-form#contact-form button#submit_button{
-  height: 62px; width: 334px;
-  border:none; outline:none;
-  background: url('../images/buttons/send_message.png') no-repeat;
-  margin-top: 30px;
-}
-form#contact-form button#submit_button:hover:before{
-  content: url('../images/buttons/send_message_hover.png');
-  position: relative;
-  top:-1px; left:-5px;
-  cursor: pointer;
-}
-div#thank-you_message{
-  margin: 0 auto;
-  height:300px;
-  line-height:300px;
-  font-size:1.5em;
-  width:50%;
-}
 
 /*Register Form*/
 #register-form span.error{
@@ -654,7 +506,7 @@ div#thank-you_message{
 	z-index: 1002;
 	top:5px; right:5px;
   cursor: pointer;
-  opacity: 0.2;
+  opacity: 0.25;
   transition-duration: .250s;
 }
 #register-form img:hover{ opacity: .5; transition-duration: .250s; }
@@ -662,15 +514,18 @@ div#thank-you_message{
 #register-form{
 	position: fixed;
 	z-index: 1001;
-	top:18px;
+	/*top:18px;
 	right:0;
 	bottom:0;
-	left:0;
+	left:0;*/
+  top: 35%; transform: transformY(-50%);
+  left: 50%; transform: translateX(-50%);
 	color: #2A5C03;
   max-width:30%;
-	min-width:480px; height: 500px;
-	margin:auto;
-	padding:2em auto;
+	min-width:480px;
+  /*height: 500px;*/
+	/*margin:0 auto;
+	padding:2em 0;*/
 	text-align: center;
 	font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
 	background:rgba(0,0,0,0);
@@ -681,13 +536,13 @@ div#thank-you_message{
 #register-form div + div > p{	margin-bottom: 40px; }
 #register-form label{ font-size: 1.1em; }
 #register-form div.user{
-	height:126px; width:126px;
+	height: 126px; width: 126px;
 	border-radius: 63px;
 	display: inline-block;
 	line-height: 120px;
-	margin:0 0.4em 36px;
+	margin: 0 0.4em 36px;
 	background-color: #99EE20;
-	font-size:1.1em;
+	font-size: 1.1em;
   transition-duration: .250s;
 }
 #register-form div.user:hover{

@@ -350,17 +350,20 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					// capture unix formatted start time in variable
 					$start_time = $songcircle_data['UNIX_TIMESTAMP(date_of_songcircle)'];
 					if(empty($start_time)){
-						// craft err_msg
+
+						// craft log err_msg
 						$err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") case 'confirm_registration' - ";
-						$err_msg.= 'Unable to retrieve start_time for songcircle '.$songcircle_id;
-						// write to log
+						$err_msg.= 'Unable to retrieve start_time for songcircle '.$songcircle_id.PHP_EOL;
 						file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.PHP_EOL,FILE_APPEND);
-						// construct error_msg for user
+
+						notifyAdminByEmail("Error retrieving start time of songcircle (id: {$songcircle_id}).");
+
+						// client-facing error msg:
 						$error_msg[] = 'An error has occurred retrieving the start time of '.$songcircle_name.' on '.$date_of_songcircle;
 						$error_msg[] = 'Please contact support at <a href="mailto:support@songfarm.ca">support@songfarm.ca</a> if this problem has not been addressed within 24 hours.<br>Our sincere apologies for the inconvenience.';
-						// exit script
+
 						return false;
-						// exit('An error has occurred retrieving start time of Songcircle. We are very sorry for the inconvenience.');
+
 					} else {
 						$current_time = time();
 						// if the link is expired
@@ -444,6 +447,8 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 														$err_msg.= "Could not confirm ".$user_id." for songcircle ".$songcircle_id;
 														// write to log
 														file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.PHP_EOL,FILE_APPEND);
+
+														notifyAdminByEmail("Error confirming user id {$user_id} for songcircle id {$songcircle_id}\r\nSee error log");
 
 														$error_msg[] = 'There was an error confirming your registration. If this problem is not addressed within 24 hours, please contact support at <a href="mailto:support@songfarm.ca">support@songfarm.ca</a>.';
 														$error_msg[] = 'Our sincerest apologies for the inconvenience.';

@@ -84,7 +84,12 @@ a{
 }
 a:hover{ color: #7CC919; transition-duration: .250s; }
 
-button{	background: #99EE20; color: #2A5C03; width: 100%; }
+button{	background: #99EE20; color: #2A5C03;
+  /*width: 100%; */
+  /**
+  * NOTE: setting a width on containers prevent svg images from scaling properly in IE
+  */
+}
 button a{
   padding:12px 0;
   display: block;
@@ -145,7 +150,7 @@ nav{
   font-size: 1.2em;
   height: 168px;
   position: relative;
-   z-index: 10;
+   /*z-index: 10;*/
  }
 nav ul{
   line-height: 76px;
@@ -174,13 +179,18 @@ ul#links li a:hover:before{
   content:url('../images/arrows_and_lines/navActive_arrow.png');
   position:absolute; left:-15px; top:3px;
 }
+/* mobile style */
+/*ul#links li a:hover:before{
+  content:url('../images/arrows_and_lines/navActive_arrow.png');
+  position: relative; left:-6px; top:3px;
+}*/
 ul#links li a[title="Log In"]:hover:before{ content:''; position: relative; } /* remove arrow from this link */
 ul#links span#style, span.menu{ visibility: hidden; }
 
 
 
 /* Gradient background */
-#modal, button.register{
+#modal, button.register, button.contact{
 	background: #e5fcca;
 	background: -moz-linear-gradient(top,  #e5fcca 0%, #99ee20 45%, #89dc3d 70%, #7ec919 90%, #92ea41 100%);
 	background: -webkit-linear-gradient(top,  #e5fcca 0%,#99ee20 45%,#89dc3d 70%,#7ec919 90%,#92ea41 100%);
@@ -195,26 +205,33 @@ ul#links span.menu.active-color{ color: #7CC919;}
 
 
 /* Register Button */
-button.register{
+button.register, button.contact{
   position:absolute;
   bottom:-36px; right: 12.5%;
-  z-index:15;
+  z-index:9; /* 9 z-index allows login dialog to appear above register button */
   display: inline-block;
-  /*height:70px; */
-  padding: 0.5em 0.5em;
-  width: 50%;
-  max-width: 294px;  min-width: 206px;
+  padding: 0.5em 1em;
+  padding-left: 1.5em;
+  /*width: 23%;*/
   font-size: 2em; color: #2A5C03;
-  /*font-weight: bold;*/
   border-radius: 50px;
   border: none;
   cursor: pointer;
   box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.65);
-	-moz-box-shadow: 2px 2px 2px 0px rgba(0,0,0,0.65);
-	-webkit-box-shadow: 2px 2px 2px 0px rgba(0,0,0,.65);
 }
-button.register:hover{
-  background: blue;
+button.register:before, button.contact:before{
+  content: url('../images/arrows_and_lines/grey_arrow_right.svg');
+	position: relative;
+  top: 2px;
+  right: 10px;
+	/*width: 15px;*/
+  /*height: 26px;*/
+  /*width: auto;*/
+}
+button.register:hover, button.contact:hover{
+  background: rgb(63,216,255);
+	background: linear-gradient(to bottom,  rgb(134,231,255) 0%,rgb(63,216,255) 17%,rgb(18,121,222) 100%);
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#86e7ff', endColorstr='#1279de',GradientType=0 );
 }
 
 
@@ -314,6 +331,7 @@ form#login-form span#password-error{
 	padding: 1em 0 0.5em;
 	font-weight: bold;
 	margin-bottom: 0;
+  font-family: 'museo_sans900';
 }
 #modal p, #modal ul li{
 	display: block;
@@ -323,7 +341,9 @@ form#login-form span#password-error{
 	line-height: 1.2;
   font-family: 'museo_sans300';
 }
-#modal ul li{ margin-top: 1.5em; font-weight: bold; }
+#modal ul li{ margin-top: 1.5em;
+  /*font-weight: bold; */
+}
 #modal img{
 	margin: 0.5em 18px;
 	opacity: 0.75;
@@ -363,28 +383,23 @@ div.global_msg{
 /**
 * Media Queries
 */
-@media screen and (max-width: 1099px) and (min-width:849px){
+@media screen and (max-width: 1099px) and (min-width:841px){
   header .logo{ left: 9.7%; }
 }
-@media screen and (max-width: 849px){
-  header .logo{ left: 5.25%; width: 35%; }
+@media screen and (max-width: 840px) and (min-width: 321px){
+  header .logo{ left: 5.25%; width: 69%; }
+}
+@media screen and (max-width: 320px){
+  header .logo{ left: 5%; width: 66%; }
 }
 
 /* Register button */
 @media screen and (max-width: 1024px) and (min-width: 768px){
   button.register, header div.register.medium, header div.register.medium:hover:before{
-    right: 10.5%;
+    /*right: 10.5%;
     width:30%;
     bottom: -30px;
-    font-size:1.6em;
-  }
-}
-@media screen and (max-width: 767px) and (min-width: 640px){
-  button.register, header div.register.medium, header div.register.medium:hover:before{
-    right: 10.5%;
-    width:32%;
-    bottom: -28px;
-    font-size:1.5em;
+    font-size:1.6em;*/
   }
 }
 
@@ -400,10 +415,26 @@ div.global_msg{
   }
   ul#links li:nth-child(5):after{ right: -15px; }
   button.register.medium{
-    font-size: 1.5em;
+    font-size: 1.75em;
+    min-width: 290px;
   }
 
 }
+
+@media screen and (max-width: 900px) and (min-width: 640px){
+  button.register, header div.register.medium, header div.register.medium:hover:before{
+    /*right: 10.5%;
+    width:32%;
+    bottom: -28px;
+    font-size:1.5em;*/
+  }
+  /*button.register{
+    width: 290px;
+    font-size: 1.5em;
+    line-height: 1.5;
+  }*/
+}
+
 /* w/ log in */
 @media screen and (max-width: 839px){
   #modal p, #modal ul li{
@@ -412,9 +443,15 @@ div.global_msg{
   ul#links li:nth-child(5):after{
     content: '';
   }
+  /* green arrow on hover - position changes to relative from absolute */
+  ul#links li a:hover:before{
+    position: relative; left: -7px;
+  }
+  /* add green arrow to 'Log In' */
   ul#links li a[title="Log In"]:hover:before{
     content:url('../images/arrows_and_lines/navActive_arrow.png');
-    position:absolute; left:-15px; top:3px;
+    /*position:absolute; left:-15px; */
+    top:3px;
   }
   ul#links span.menu{
     visibility: visible;
@@ -429,7 +466,7 @@ div.global_msg{
     position: absolute;
     z-index: 1000;
     top: 70px; right: 0;
-    width: 27%; min-width: initial;
+    width: 28.5%; min-width: initial;
     text-align: right;
     padding: 0.5em 1.25em;
     background: #ffffff;
@@ -442,16 +479,24 @@ div.global_msg{
     border: 0px solid #000000;
     display: none;
   }
+  button.register{
+    /*width: 260px;*/ /* cause svg to break in IE */
+    font-size: 1.5em;
+    line-height: 1.5;
+    right: 6%;
+  }
+  button.register:before{ top: 4px;  }
 }
+
 /* end of log in test */
 @media screen and (max-width: 639px){
   header{ height: 142px; }
   header, nav{ top: -18.5%; }
   header div.register.medium, header div.register.medium:hover:before{ right: 7.5%; width:30%;}
   button.register.medium{
-    font-size: 1.3em;
+    /*font-size: 1.3em;
     bottom: -24px;
-    width: 30%;
+    width: 30%;*/
   }
   #modal{ width: 75%; min-width: 474px; }
 }
