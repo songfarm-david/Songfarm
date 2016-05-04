@@ -110,42 +110,39 @@ function resetForm($form) {
 
 }
 
-// Validator method to check for letters only and not numbers
-// jQuery.validator.addMethod("lettersAndNumbers", function(value, element) {
-// 	return this.optional(element) || /^[a-z0-9\s]+$/i.test(value); ///^[a-z0-9\-\s]
-// }, "Only letters and whitespace allowed");
 
 
-
-
-/**
-* Detect presence of error span and place border around select input fields
-*/
 $(document).ready(function(){
+
+	/*** Contact Form ***/
+
+	/* Get contact form error containers	*/
 	var errorContainer = $('div.errorContainer');
 	$(errorContainer).hide();
 
-	// on click: CONTACT FORM
-	$("form#contact-form div.button").on('click', function(){
+	/* on contact form submit */
+	$("form#contact-form button[name='contact_submit']").on('click', function(){
 		$(this).trigger("submit");
 		$("form#contact-form").validate({
 			errorElement : 'p',
+			// places errorElement inside target elements "Next" sibling
+			// which is a <span> with error styles
 			errorPlacement : function(error, element){
 				var container = element.next();
 				container.append(error);
 			},
+			// makes errorContainer appear when form errors exist
 			invalidHandler : function(){
 				$(errorContainer).css('display','table');
 			},
+			// hides errorContainer when errors are fixed
 			success : function(label){
 				var errorParent = label.parent();
 				errorParent.css('display','none');
 			},
 			submitHandler: function(form){
-				// grab from and serialize the data
 				var form = $("#contact-form");
 				var formData = form.serialize();
-				// send data to php validation file
 				$.ajax({
 					url:'../includes/contactForm_validation.php',
 					type:'POST',
@@ -160,7 +157,7 @@ $(document).ready(function(){
 					}
 				});
 			}
-		});
+		}); // end of: $("form#contact-form").validate
 	});
-	
+
 });

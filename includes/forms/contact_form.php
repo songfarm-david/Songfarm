@@ -104,7 +104,7 @@ if(isset($_POST['contact_submit'])) {
     </label>
   </div>
   <div class="button">
-    <button type="submit" name="contact_submit" id="submit_button" class="contact" value="submit">Send Your Message</button>
+    <button type="submit" class="contact" name="contact_submit">Send Your Message</button> <!-- value="submit"-->
   </div>
 </form>
 <div id="thank-you_message" class="hide"><p></p></div>

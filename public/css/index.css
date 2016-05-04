@@ -65,7 +65,6 @@ div.rounded-contact{
 }
 article#contactUs button.contact{
 	position: static;
-	margin-top: 30px;
 	min-width: 80%;
 	font-size: 1.75em;
 	line-height: 1.5;
@@ -78,7 +77,12 @@ form#contact-form, div.errors_php{
 		min-width: 416px;
 		padding-bottom: 6em;
 }
-form#contact-form div{ margin-top: 1em; }
+form#contact-form div:not(.button){ margin-bottom: 1em; }
+form#contact-form div:nth-child(4){
+  margin-bottom: 2em;
+}
+form#contact-form div.button{ margin-left: 0.5em; }
+
 form#contact-form label {
 	display: block; position: relative;
 	border: 1px solid rgba(0,0,0,0);
@@ -100,18 +104,17 @@ form#contact-form input:focus, textarea:focus {
 form#contact-form textarea {
     height: 4.5em; resize: vertical;
 }
-#contact-form .errorContainer{
-	font-family: 'museo_sans300';
-	position: absolute;	z-index: 100;	left: 90%;
-	width: 65%;
-	top: -21px;
+form#contact-form div.errorContainer{
+	position: absolute;	z-index: 100;	top: -21px;
+	left: 90%; width: 65%;
+  padding: 3px; margin-bottom: 0;
+  font-family: 'museo_sans300';
+  display: table;
 	color: white; background: #E81927;
 	border:6px solid #FFFFFF;	border-radius: 35px;
-	box-shadow: -1px 1px 5px 0px rgba(0,0,0,0.65);
-	display: table;
-	padding: 3px;
+	box-shadow: 1px -1px 5px 0px rgba(0,0,0,0.65);
 }
-#contact-form .errorContainer:before{
+form#contact-form div.errorContainer:before{
 	content: '';
 	background: url('../images/songcircle_form/exclamation_point_red.png');
 	background-size: cover;
@@ -126,8 +129,11 @@ form#contact-form textarea {
 	vertical-align: middle;
 	padding: 5px 0;
 }
-#contact-form .errorContainer #name-error{ top: -12px;}
-#contact-form #email-error, #contact-form #msg-error{ top: -6px; }
+form#contact-form div.errorContainer #name-error{
+  top: -12px;
+}
+form#contact-form div.errorContainer #email-error,
+form#contact-form div.errorContainer #msg-error{ top: -6px; }
 
 div#thank-you_message{
   margin-left: 18.2%;
@@ -170,16 +176,18 @@ div.errors_php ul li{ list-style-type: disc; }
   }
   div#thank-you_message{ width: 54%; }
 	article#contactUs h2{ margin-left: 11.5%; }
-	/*#contact-form span.error{ min-width: 270px; }*/
 }
 @media screen and (max-width: 800px){
 	#contact-form .error#name-error,
 	#contact-form .error#email-error{ top: 3px;}
-	#contact-form #msg-error{ top: initial;}
-	#contact-form .errorContainer{
+	#contact-form #msg-error{
+    top: initial;
+  }
+	form#contact-form div.errorContainer{
 		position: relative; display: block;
-		left: 14px; top: -14px;
+		left: 14px; top: -10px;
 		min-width: 320px;
+    margin-bottom: -12px; /* nullify extra space caused my positioning */
 	}
 }
 @media screen and (max-width: 736px){
@@ -243,7 +251,7 @@ div.errors_php ul li{ list-style-type: disc; }
     padding-right: 2em; padding-left: 2.25em;
 	}
 	article#contactUs #contact-form input{ padding: 0.75em; }
-	article#contactUs #contact-form .errorContainer{ min-width: 270px; left:0; }
+	article#contactUs #contact-form .errorContainer{ min-width: 270px; }
 }
 
 
