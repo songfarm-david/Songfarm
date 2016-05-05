@@ -2,7 +2,7 @@ var slideVars = {
 		screenSize:'',
 		width:0,
 		mobileSize:480,
-		autoPlay:true,
+		autoPlay:false,
 		currentPanel:1,
 		totalPanels:0,
 		timePassed:0,
@@ -16,20 +16,25 @@ $(document).ready(function(){
 	slideGatherData();
 });
 
+/**
+* Gather slide data
+*/
 function slideGatherData(){
 	$('.slide-data .slide-panel').each(function(index){
 		slideVars.totalPanels = index + 1;
 		var panel_image_l = $(this).attr('data-image');//+'_l.jpg'//;
 		var panel_image_s = $(this).attr('data-image')+'_s.jpg';
 		var panel_caption = $(this).html();
-		slideVars.panelContent[index] = '<div class="slide-panel" data-image-s="'+panel_image_s+'" style="background-image:url('+panel_image_l+');"><div class="overlay"></div><div class="panel-caption">'+panel_caption+'</div></div>';
+		slideVars.panelContent[index] = '<div class="slide-panel" data-image-s="'+panel_image_s+'" style="background-image:url('+panel_image_l+'); height: 470px"><div class="panel-caption">'+panel_caption+'</div></div>';
 	});
 	var slideTimer = setInterval(slideAdvance,150);
-}
+} // <div class="overlay"></div>
 
 function slideAdvance(){
-	var slideWidth = $('.slide-container').width();
+	var slideWidth = $('.slide-container').width() +18; /* to account for a few extra pixels */
+	console.log(slideWidth);
 	var currentSize = slideVars.screenSize;
+	/* determine whether mobileSize */
 	if ( slideWidth > slideVars.mobileSize ){
 		var newSize = 'large';
 	} else {
@@ -46,6 +51,7 @@ function slideAdvance(){
 	if ( slideVars.timePassed == slideVars.timeToChange ){
 		slideVars.timePassed = 0;
 		if ( slideVars.autoPlay == true ){
+			/* nav triggers */
 			if( slideVars.currentPanel == slideVars.totalPanels ){
 				$('.slide-nav div:nth-child(1)').trigger('click');
 			} else {
@@ -55,7 +61,6 @@ function slideAdvance(){
 	} else {
 		slideVars.timePassed += 1;
 	}
-
 };
 
 function slideMultiPanel(){
@@ -65,14 +70,14 @@ function slideMultiPanel(){
 	var newHTML = '<div class="slide-stage-large"><div class="slide-container-1"></div><div class="slide-nav"></div><div class="btn prev"></div><div class="btn next"></div></div>';
 	$('.slide-container').html('').append(newHTML);
 
-	for( i=0; i<slideVars.totalPanels; i++ ){
+	for( i = 0; i < slideVars.totalPanels; i++ ){
 		$('.slide-nav').append('<div></div>');
 	}
 
 	$('.slide-container').hover(function(){
 		slideVars.autoPlay = false;
 	},function(){
-		slideVars.autoPlay = true;
+		slideVars.autoPlay = false;
 		slideVars.timePassed = Math.floor(slideVars.timeToChange / 2);
 	});
 
@@ -123,7 +128,7 @@ function slideMultiPanel(){
 function slideSinglePanel(){
 	$('.slide-container').html('').append('<div class="slide-stage-small">'+slideVars.panelContent[0]+'</div>'); //index number corresponds to panel...
 	var panel_image_s = $('.slide-container .slide-stage-small .slide-panel').attr('data-image-s');
-	$('.slide-container .slide-stage-small .slide-panel').css('background-image','url('+panel_image_s+')');
+	$('.slide-container .slide-stage-small .slide-panel').css('background-image','url('+panel_image_l+')');
 }
 /*
 //debugger

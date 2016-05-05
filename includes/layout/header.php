@@ -14,7 +14,7 @@
 		<h2 class="hide">Navigation</h2>
 		<a href="index.php"><div class="logo"></div></a>
 		<ul id="links">
-			<div>
+			<div id="nav-mini_container">
 				<li><!-- remember to use a class="active" on links that are currently active -->
 					<a href="index.php#about" title="About Songfarm" rel="bookmark">About</a>
 				</li>

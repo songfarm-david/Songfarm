@@ -9,9 +9,8 @@ article#about, article#features, article#contactUs{
   font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
 }
 
-article#features h2, article#contactUs h2{
-  font-size: 2.8em; margin-left: 18.2%;
-}
+article#features h2,
+article#contactUs h2{ font-size: 2.8em; margin-left: 18.2%; }
 
 /*About Section*/
 article#about{
@@ -195,7 +194,7 @@ div.errors_php ul li{ list-style-type: disc; }
 		background: #81C91C;
 	}
 }
-@media screen and (max-width: 668px) and (min-width: 466px){
+@media screen and (max-width: 668px) and (min-width: 480px){
 	article#about{ background-position: 40% top; }
 
   article#about div,
@@ -215,7 +214,7 @@ div.errors_php ul li{ list-style-type: disc; }
   article#about button.medium{ font-size: 1.9em; min-width: 300px;}
 }
 
-@media screen and (max-width: 465px){
+@media screen and (max-width: 479px){
 	article#about{
 		height: auto;
 		background: #a8a8a8; /* Old browsers */
@@ -260,21 +259,217 @@ div.errors_php ul li{ list-style-type: disc; }
 
 
 
-article#banner a{ color:#34299E; text-decoration: underline; }
-article#banner a:hover{  color: #fff; }
-
-
-ul#links span.menu:hover{ color: #7CC919; }
-ul#links div.active{ display: block; }
-ul#links span.menu.active-color{ color: #7CC919;}
+article#banner a{
+  color:#34299E;
+  text-decoration: underline;
+}
+article#banner a:hover{ color: #fff; }
 
 
 
 
+/* following 3 test styles */
+/*.slide-container{ overflow: hidden; }*/
+/*.slide-panel{ border: 3px solid red; height: auto; }
+.panel-caption{ border: 3px solid blue; }
+.overlay{ border: 4px solid green; height: 100%;}*/
+
+/*  Banner Slides styles  */
+.slide-container{
+  height: 470px;
+  position: relative;
+  z-index: 1;
+  overflow: auto;
+  min-width: 320px;
+}
+.slide-container .slide-data{ display:none; }
+.slide-container .slide-stage-large{
+  height: inherit;
+  position: relative;
+  overflow: hidden;
+}
+.slide-container .slide-container-1,
+.slide-container .slide-container-2{
+  height: inherit;
+  position: absolute;
+  top: 0;
+  left: auto;
+  width: 100%;
+  color: #fff;
+}
+.slide-container .slide-container-1{ z-index: 101; }
+.slide-container .slide-container-2{ z-index: 102; }
+
+.slide-container .slide-panel {
+  height: inherit;
+  width: 100%;
+  position: absolute;
+  top:0; left:0;
+  background-repeat: no-repeat;
+  background-position: center 0px;
+  background-size: cover;
+}
+
+.slide-container .slide-panel .panel-caption{
+  width: 68%;
+  position: absolute;
+  top: 150px; left:18.2%;
+  color:#fff;
+  text-transform: uppercase;
+  /*display: none; /* test */*/
+}
+.slide-container .slide-panel .panel-caption h3 {
+  margin: -47px 0px 47px 0px;
+  font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
+  font-size:4em;
+  font-weight: normal;
+}
+.slide-container .slide-panel .panel-caption h3 span.bold{
+  font-family: 'museo_sans900', Arial, Helvetica, sans-serif;
+  /*font-size:2.4em;*/
+}
+.slide-container .slide-panel .panel-caption p{
+  font-family: 'museo_sans700', Arial, Helvetica, sans-serif;
+  line-height: 1.5;
+  font-size: 1.3em;
+  text-transform: none;
+}
 .slide-container .slide-panel .panel-caption p{ max-width:85%; }
+.slide-container .slide-panel .panel-caption p#caption-one{ max-width: 70%; }
 
+/* slide nav */
+.slide-container .slide-nav{
+  position: absolute; bottom: 10px; left:0;
+  text-align: center; width: 100%;
+  z-index:1003;
+}
+.slide-container .slide-nav div{
+  display:inline-block;
+  width:10px; height: 10px;
+  border:2px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  margin: 0 8px;
+  cursor: pointer;
+  transition: background-color .4s, border .4s;
+}
+.slide-container .slide-nav div:hover{ border-color: #fff; background-color: rgba(255,255,255,.2); }
+.slide-container .slide-nav div.selected{ background-color: #fff; }
+.slide-container .slide-nav div:hover{ border-color: #fff; background-color: rgba(255,255,255,.2); }
+.slide-container .slide-nav div.selected{ background-color: #fff; }
 
+/* left/right buttons */
+.slide-container .btn{
+  height:45px; width: 45px;
+  position: absolute;
+  top: 50%; /* 235px */
+  cursor: pointer;
+  border-radius: 50%;
+  transition: background-color .250s, border .250s;
+}
+.slide-container .btn:hover{ border-color: rgba(255,255,255,.1); background-color: rgba(255,255,255,.2); }
+.slide-container .btn.prev{
+  left: 10%; z-index: 1004;
+  background-image: url('../images/arrows_and_lines/slider_arrow_left.png') ; background-position: 1px 0px;
+}
+.slide-container .btn.next{
+  right: 10%; z-index: 1004;
+  background-image: url('../images/arrows_and_lines/slider_arrow_right.png'); background-position: 1px 0px;
+}
 
+.slide-container .slide-stage-small{
+  height: inherit;
+  position: relative;
+  overflow: hidden;
+}
+.slide-container .slide-stage-small .slide-panel{
+  width:100%; height: inherit; position: absolute; top:0; left:0;
+}
+
+@media screen and (max-width: 1400px) and (min-width: 991px){
+  .slide-container .slide-panel .panel-caption p#caption-one{ max-width: 85%; }
+  .slide-container .slide-panel .panel-caption h3#caption-seven{ min-width: 830px; }
+  .slide-container .slide-panel{
+    background-position: 33% top;
+  }
+  .slide-container .btn.prev{ left: 5%; }
+  .slide-container .btn.next{ right: 5%; }
+}
+@media screen and (max-width: 1115px){
+  .slide-container .slide-panel .panel-caption{
+    /*left: 11.3%; min-width: 815px;*/
+    width: 82%;
+  }
+  .slide-container .btn.prev{ left: 3.5%; }
+  .slide-container .btn.next{ right: 3.5%; }
+}
+@media screen and (max-width: 990px){
+  .slide-container .slide-panel .panel-caption{
+    /*min-width: initial; width: 88%;
+    top: 125px; left: 4%;*/
+    width: 100%;
+    left: 0; right: 0;
+    top: 156px;
+    padding: 0 10.5%;
+    min-width: initial;
+    height: 0;
+  }
+  .slide-container .slide-panel .panel-caption h3{
+    font-size: 3.75em; width: 95%;
+    bottom: -120px;
+    vertical-align: bottom;
+    position: absolute;
+    padding-right: 0.5em;
+  }
+  .slide-container .slide-panel .panel-caption p{
+    position: relative; top: 120px;
+    vertical-align: baseline;
+    width: 95%;
+    max-width: 100%;
+    font-size: 1.25em;
+  }
+  .slide-container .slide-panel{
+    /*background-size: 164%;*/
+    background-position: 50% top;
+  }
+  .slide-container .btn.prev{ left: 2.5%; }
+  .slide-container .btn.next{ right: 2.5%; }
+  /*.slide-container .btn.prev, .slide-container .btn.next{ top: 285px; }*/
+}
+@media screen and (max-width: 700px){
+  .slide-container .slide-panel .panel-caption{ min-width: initial;
+    padding: 0 2.5em;
+    top: 156px; }
+  .slide-container .slide-panel .panel-caption h3{
+  font-size: 3.25em; margin: -64px 2em 25px 0; width: 96%;
+  padding-right: 0.5em;
+  }
+  .slide-container .slide-panel .panel-caption p{
+    position: relative;
+    font-size: 1.2em;
+    width: 100%; max-width: 100%;
+  }
+  .slide-container .btn{ display: none; }
+}
+@media screen and (max-width: 480px){
+  .slide-container .slide-panel .panel-caption{
+    width: 100%; left: 0; top: 0;
+    height: 100%;
+    padding-top: 3em; padding-left: 1.25em;
+    text-shadow: 1px 1px rgba(0,0,0,0.5);
+    min-width: initial;
+  }
+  .slide-container .slide-panel .panel-caption h3{
+    font-size: 3em; margin:0; margin-bottom: 0.5em;
+    position: static;
+  }
+  .slide-container .slide-panel .panel-caption p{
+    top: 0; background: rgba(255,255,255,0.2);
+    margin-left: -0.5em; padding: 0.25em 0.25em 0.25em 0.5em;
+    box-shadow: 0px 5px 15px 15px rgba(255,255,255,0.2);
+    border-top-right-radius:  35px; border-bottom-right-radius: 10px;
+    min-width: 250px;
+  }
+}
 
 /*Features*/
 article#features{
@@ -394,109 +589,6 @@ div#back-to-top:after{
 }
 
 
-/*  Banner Slides styles  */
-.slide-container{
-  height:470px;
-  position:relative;
-  z-index:1;
-}
-.slide-container .slide-data{ display:none; }
-.slide-container .slide-stage-large{
-  height:inherit;
-  position:relative;
-  overflow: hidden;
-}
-.slide-container .slide-container-1,
-.slide-container .slide-container-2{
-  height:inherit;
-  position:absolute;
-  top:0;
-  left:0;
-  width: 100%;
-  color:#fff;
-}
-.slide-container .slide-container-1{ z-index: 101; }
-.slide-container .slide-container-2{ z-index: 102; }
-
-.slide-container .slide-panel {
-  height: inherit;
-  width: 100%;
-  position: absolute;
-  top:0; left:0;
-  background-repeat: no-repeat;
-  background-position: center 0px;
-  background-size: cover;
-}
-.slide-container .slide-panel .panel-caption{
-  width: 68%;
-  position: absolute;
-  top:150px; left:18.2%;
-  color:#fff;
-  text-transform: uppercase;
-}
-.slide-container .slide-panel .panel-caption h3 {
-  margin: -47px 0px 47px 0px;
-  font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
-  font-size:4em;
-  font-weight: normal;
-}
-.slide-container .slide-panel .panel-caption h3 span.bold{
-  font-family: 'museo_sans900', Arial, Helvetica, sans-serif;
-  /*font-size:2.4em;*/
-}
-.slide-container .slide-panel .panel-caption p{
-  font-family: 'museo_sans700', Arial, Helvetica, sans-serif;
-  line-height: 1.5;
-  font-size: 1.3em;
-  text-transform: none;
-}
-
-.slide-container .slide-nav{
-  position: absolute; bottom: 10px; left:0;
-  text-align: center; width: 100%;
-  z-index:1003;
-}
-.slide-container .slide-nav div{
-  display:inline-block;
-  width:10px; height: 10px;
-  border:2px solid rgba(255, 255, 255, 0.5);
-  border-radius: 50%;
-  margin: 0 8px;
-  cursor: pointer;
-  transition: background-color .4s, border .4s;
-}
-.slide-container .slide-nav div:hover{ border-color: #fff; background-color: rgba(255,255,255,.2); }
-.slide-container .slide-nav div.selected{ background-color: #fff; }
-
-.slide-container .slide-nav div:hover{ border-color: #fff; background-color: rgba(255,255,255,.2); }
-.slide-container .slide-nav div.selected{ background-color: #fff; }
-
-.slide-container .btn{
-  height:45px; width: 45px;
-  position: absolute; top:235px;
-  cursor: pointer;
-  border-radius: 50%;
-  transition: background-color .250s, border .250s;
-}
-.slide-container .btn:hover{ border-color: rgba(255,255,255,.1); background-color: rgba(255,255,255,.2); }
-
-.slide-container .btn.prev{
-  left: 10%; z-index: 1004;
-  background-image: url('../images/arrows_and_lines/slider_arrow_left.png') ; background-position: 1px 0px;
-}
-.slide-container .btn.next{
-  right: 10%; z-index: 1004;
-  background-image: url('../images/arrows_and_lines/slider_arrow_right.png'); background-position: 1px 0px;
-}
-
-.slide-container .slide-stage-small{
-  height:inherit;
-  position: relative;
-  overflow: hidden;
-}
-.slide-container .slide-stage-small .slide-panel{
-  width:100%; height: inherit; position: absolute; top:0; left:0;
-}
 
 
 

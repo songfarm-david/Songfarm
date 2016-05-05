@@ -179,14 +179,16 @@ ul#links li a:hover:before{
   content:url('../images/arrows_and_lines/navActive_arrow.png');
   position:absolute; left:-15px; top:3px;
 }
-/* mobile style */
-/*ul#links li a:hover:before{
-  content:url('../images/arrows_and_lines/navActive_arrow.png');
-  position: relative; left:-6px; top:3px;
-}*/
-ul#links li a[title="Log In"]:hover:before{ content:''; position: relative; } /* remove arrow from this link */
-ul#links span#style, span.menu{ visibility: hidden; }
 
+ul#links li a[title="Log In"]:hover:before{ content:''; position: relative; } /* remove arrow from this link */
+ul#links span#style, ul#links span.menu{ visibility: hidden; }
+
+/* nav mini-menu */
+ul#links span.menu:hover{ color: #7CC919; }
+ul#links span.menu.active-color{ color: #7CC919;}
+
+/* nav-mini container */
+ul#links div#nav-mini_container.active{ display: block; }
 
 
 /* Gradient background */
@@ -199,10 +201,9 @@ ul#links span#style, span.menu{ visibility: hidden; }
 }
 /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e5fcca+0,99ee20+45,89dc3d+70,7ec919+90,92ea41+100 */
 
-ul#links span.menu:hover{ color: #7CC919; }
+/*ul#links span.menu:hover{ color: #7CC919; }
 ul#links div.active{ display: block; }
-ul#links span.menu.active-color{ color: #7CC919;}
-
+ul#links span.menu.active-color{ color: #7CC919;}*/
 
 /* Register Button */
 button.register, button.contact{
