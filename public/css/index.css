@@ -319,10 +319,11 @@ article#banner a:hover{ color: #fff; }
   /*display: none; /* test */*/
 }
 .slide-container .slide-panel .panel-caption h3 {
-  margin: -47px 0px 47px 0px;
+  margin: -47px 0px 17px 0px;
   font-family: 'museo_sans100', Arial, Helvetica, sans-serif;
   font-size:4em;
   font-weight: normal;
+  position: relative;
 }
 .slide-container .slide-panel .panel-caption h3 span.bold{
   font-family: 'museo_sans900', Arial, Helvetica, sans-serif;
@@ -333,9 +334,25 @@ article#banner a:hover{ color: #fff; }
   line-height: 1.5;
   font-size: 1.3em;
   text-transform: none;
+  margin-top: 17px;
 }
+/*.slide-container .slide-panel .panel-caption p:nth-child(1)-child{ margin-top: 0; }*/
 .slide-container .slide-panel .panel-caption p{ max-width:85%; }
 .slide-container .slide-panel .panel-caption p#caption-one{ max-width: 70%; }
+
+.slide-panel img{
+  border: 2px solid white; background: white;
+  width: 100%; display: none;
+}
+/*.slide-container .slide-panel .panel-caption h3:after{
+  content: url('../images/songcircle/hr_dotted.png');
+  border: 1px solid white; width: 100%;
+  background: white;
+  font-size: initial;
+  background-size: 10px auto;
+  display: inline-block;
+  position: absolute; left: 0; right: 0;
+}*/
 
 /* slide nav */
 .slide-container .slide-nav{
@@ -398,18 +415,24 @@ article#banner a:hover{ color: #fff; }
   .slide-container .slide-panel .panel-caption{
     /*left: 11.3%; min-width: 815px;*/
     width: 82%;
+    left: 13.5%;
   }
   .slide-container .btn.prev{ left: 3.5%; }
   .slide-container .btn.next{ right: 3.5%; }
+  .slide-panel img{ width: 95%; }
 }
 @media screen and (max-width: 990px){
+  .slide-container .slide-panel{
+    /*background-size: 164%;*/
+    background-position: 50% top;
+  }
   .slide-container .slide-panel .panel-caption{
     /*min-width: initial; width: 88%;
     top: 125px; left: 4%;*/
     width: 100%;
     left: 0; right: 0;
     top: 156px;
-    padding: 0 10.5%;
+    padding: 0 8.5%;
     min-width: initial;
     height: 0;
   }
@@ -418,7 +441,8 @@ article#banner a:hover{ color: #fff; }
     bottom: -120px;
     vertical-align: bottom;
     position: absolute;
-    padding-right: 0.5em;
+    padding-right: 1.5em;
+    min-width: 750px;
   }
   .slide-container .slide-panel .panel-caption p{
     position: relative; top: 120px;
@@ -426,11 +450,10 @@ article#banner a:hover{ color: #fff; }
     width: 95%;
     max-width: 100%;
     font-size: 1.25em;
+    margin-top: 0;
   }
-  .slide-container .slide-panel{
-    /*background-size: 164%;*/
-    background-position: 50% top;
-  }
+  .slide-panel img{ width: 95%; position: relative; top: 106px; }
+
   .slide-container .btn.prev{ left: 2.5%; }
   .slide-container .btn.next{ right: 2.5%; }
   /*.slide-container .btn.prev, .slide-container .btn.next{ top: 285px; }*/
@@ -440,17 +463,22 @@ article#banner a:hover{ color: #fff; }
     padding: 0 2.5em;
     top: 156px; }
   .slide-container .slide-panel .panel-caption h3{
-  font-size: 3.25em; margin: -64px 2em 25px 0; width: 96%;
-  padding-right: 0.5em;
+    font-size: 3.25em; margin: -64px 2em 25px 0;
+    width: 96%; min-width: initial;
+    padding-right: 0.5em;
   }
   .slide-container .slide-panel .panel-caption p{
     position: relative;
-    font-size: 1.2em;
+    font-size: 1.15em;
     width: 100%; max-width: 100%;
   }
   .slide-container .btn{ display: none; }
 }
 @media screen and (max-width: 480px){
+  .slide-container .slide-panel{
+    /*background-size: 164%;*/
+    background-position: 61% top;
+  }
   .slide-container .slide-panel .panel-caption{
     width: 100%; left: 0; top: 0;
     height: 100%;
@@ -463,12 +491,13 @@ article#banner a:hover{ color: #fff; }
     position: static;
   }
   .slide-container .slide-panel .panel-caption p{
-    top: 0; background: rgba(255,255,255,0.2);
+    top: 0; background: rgba(255,255,255,0.25);
     margin-left: -0.5em; padding: 0.25em 0.25em 0.25em 0.5em;
-    box-shadow: 0px 5px 15px 15px rgba(255,255,255,0.2);
+    box-shadow: 0px 5px 15px 15px rgba(255,255,255,0.25);
     border-top-right-radius:  35px; border-bottom-right-radius: 10px;
-    min-width: 250px;
+    min-width: 314px; font-size: 1.35em;
   }
+  .slide-container .slide-panel .panel-caption img{ width: 63%; top: -10px; }
 }
 
 /*Features*/

@@ -8,7 +8,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 
 		$cronlog_location 	= SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt';
 		$errorLog_location = SITE_ROOT.'/logs/cronjobs/error_'.date("m-d-Y").'.txt';
-		$server_time = date("G:i:s",strtotime('+5 hours'));
+		$server_time = date("G:i:s",strtotime('+4 hours')); // converts detroit time to UTC
 
 		foreach ($argv as $arg) {
 			switch ($arg) {
@@ -75,7 +75,8 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 			/**
 			* Sends reminder email, RELATIVE TO USER TIMEZONE, 3 days out from event
 			*
-			* NOTE: Cron runs every 15 minutes on the 7 (7,21,35,49)
+			* NOTE: ##Cron runs every 15 minutes on the 7 (7,21,35,49)
+			* Runs every half hour on the 3
 			*/
 				case 'reminder_songcircle':
 
@@ -94,11 +95,13 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 								WHERE sc.songcircle_id = sr.songcircle_id
 								AND sc.songcircle_status = 0
 								AND sr.confirm_status = 1
-								AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ(now(),SUBSTR(ut.full_timezone,5,6),'+0:00'), CONVERT_TZ(date_of_songcircle,@@global.time_zone,'+0:00') ) > 5745
-								AND	TIMESTAMPDIFF( MINUTE, CONVERT_TZ(now(), SUBSTR(ut.full_timezone,5,6), '+0:00')  , CONVERT_TZ(date_of_songcircle, @@global.time_zone, '+0:00') ) < 5760";
+								AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ(now(),SUBSTR(ut.full_timezone,5,6),'+0:00'), CONVERT_TZ(date_of_songcircle,@@global.time_zone,'+0:00') ) > 8640 -- 6 days
+								AND	TIMESTAMPDIFF( MINUTE, CONVERT_TZ(now(),SUBSTR(ut.full_timezone,5,6),'+0:00'), CONVERT_TZ(date_of_songcircle,@@global.time_zone,'+0:00') ) < 8670"; // 6 days + 30 min
 								/**
 								* NOTE: for testing purposes
-								* Changed 4320/4305 ( 3 days in minutes ) to 5760/5745 ( 4 days in minutes )
+								* Changed 4320/4350 ( 3 days in minutes ) to 5760/5745 ( 4 days in minutes )
+								*
+								* 4320 = 3 fulls day in minutes.
 								*/
 				if($result = $db->getRows($sql)){
 

@@ -44,54 +44,56 @@
         <!-- hidden h2 -->
         <h2 class="hide">Highlights</h2>
         <div class="slide-data">
-          <section class="slide-panel" data-image="images/banner/slide_1.jpg" id="slide-1">
+          <section class="slide-panel" data-image="images/banner/slide_1" id="slide-1">
             <h3><span class="bold">Nurturing Talent</span><br> Harvesting Success</h3>
+            <!-- <img src="images/songcircle/hr_dotted.png"> -->
             <p id="caption-one">
               Songfarm is an organic growth, exposure, and collaboration platform for aspiring and professional singer/songwriters.
             </p>
           </section>
-          <section class="slide-panel" data-image="images/banner/slide_4.jpg" id="slide-4">
+          <section class="slide-panel" data-image="images/banner/slide_4" id="slide-4">
             <h3><span class="bold">Organic Exposure</span><br> and Feedback</h3>
+            <!-- <img src="images/songcircle/hr_dotted.png"> -->
             <p>
               Songfarm is designed to expose your talents and provide feedback on your&nbsp;songs.
               Upload your video and start receiving feedback from the Songfarm Community of Artists, Industry Professionals and Music Fans.
             </p>
           </section>
-          <section class="slide-panel" data-image="images/banner/slide_2.jpg" id="slide-2">
+          <section class="slide-panel" data-image="images/banner/slide_2" id="slide-2">
             <h3><span class="bold">Direct Networking</span><br> and Natural Growth</h3>
+            <!-- <img src="images/songcircle/hr_dotted.png"> -->
             <p>
               Connect directly to other Artists, Industry Professionals and Music Fans.
               Grow your fanbase, discover new opportunities, and let your career take root.
             </p>
           </section>
-          <section class="slide-panel" data-image="images/banner/slide_5.jpg" id="slide-5">
+          <section class="slide-panel" data-image="images/banner/slide_5" id="slide-5">
             <h3>Virtual<br><span class="bold">Songwriter's Circles</span></h3>
             <p>
               Workshop your newest song in a virtual songwriter's circle and get real-time feedback from other artists.
               <strong><a href="songcircle.php" title="Songcircle - A virtual songwriter's circle">Register for one today!</a></strong>
             </p>
           </section>
-          <section class="slide-panel" data-image="images/banner/slide_6.jpg" id="slide-6">
+          <section class="slide-panel" data-image="images/banner/slide_6" id="slide-6">
             <h3><span class="bold">Live-Streaming</span><br>Concerts</h3>
             <p>
               Broadcast your talents to all your biggest fans and make live-streaming concerts an essential part of your career growth.
             </p>
           </section>
-          <section class="slide-panel" data-image="images/banner/slide_3.jpg" id="slide-3">
+          <section class="slide-panel" data-image="images/banner/slide_3" id="slide-3">
             <h3><span class="bold">Transparent</span><br> Business Model</h3>
             <p>
               No third parties. No middle men.
-            </p>
-            <p>
+            <br>
               Songfarm Artists retain 100% of their earnings.
             </p>
           </section>
-          <section class="slide-panel" data-image="images/banner/slide_7.jpg" id="slide-7">
+          <section class="slide-panel" data-image="images/banner/slide_7" id="slide-7">
             <h3 id="caption-seven"><span class="bold">Cheap Enough Even</span><br> for the Starving Artist</h3>
+            <!-- <img src="images/songcircle/hr_dotted.png"> -->
             <p>
               Songfarm is free to use for Artists and Fans.
-            </p>
-            <p>
+            <br>
               Full Artist Membership costs only $2.99/mo. Cancel anytime.
             </p>
           </section>
@@ -222,6 +224,13 @@
     <script src="js/picturefill.min.js" async></script>
     <!-- banner preload script -->
     <script>
+
+    /**
+    * Place horizontal rule image after banner h3s
+    */
+    var bannerHorizontalRule = '<img src="images/songcircle/hr_dotted.png">';
+    $('.slide-panel h3').after(bannerHorizontalRule);
+
     //smooth scrolling function
     $(function() {
       $('a[href*=#]:not([href=#])').click(function() {

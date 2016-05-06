@@ -22,17 +22,16 @@ $(document).ready(function(){
 function slideGatherData(){
 	$('.slide-data .slide-panel').each(function(index){
 		slideVars.totalPanels = index + 1;
-		var panel_image_l = $(this).attr('data-image');//+'_l.jpg'//;
-		var panel_image_s = $(this).attr('data-image')+'_s.jpg';
+		var panel_image_l = $(this).attr('data-image') +'.jpg';
+		var panel_image_s = $(this).attr('data-image') +'_s.jpg';
 		var panel_caption = $(this).html();
-		slideVars.panelContent[index] = '<div class="slide-panel" data-image-s="'+panel_image_s+'" style="background-image:url('+panel_image_l+'); height: 470px"><div class="panel-caption">'+panel_caption+'</div></div>';
+		slideVars.panelContent[index] = '<div class="slide-panel" data-image-s="'+panel_image_s+'" style="background-image:url('+panel_image_l+'); height: 470px; "><div class="panel-caption">'+panel_caption+'</div></div>';
 	});
 	var slideTimer = setInterval(slideAdvance,150);
 } // <div class="overlay"></div>
 
 function slideAdvance(){
 	var slideWidth = $('.slide-container').width() +18; /* to account for a few extra pixels */
-	console.log(slideWidth);
 	var currentSize = slideVars.screenSize;
 	/* determine whether mobileSize */
 	if ( slideWidth > slideVars.mobileSize ){
@@ -128,7 +127,7 @@ function slideMultiPanel(){
 function slideSinglePanel(){
 	$('.slide-container').html('').append('<div class="slide-stage-small">'+slideVars.panelContent[0]+'</div>'); //index number corresponds to panel...
 	var panel_image_s = $('.slide-container .slide-stage-small .slide-panel').attr('data-image-s');
-	$('.slide-container .slide-stage-small .slide-panel').css('background-image','url('+panel_image_l+')');
+	$('.slide-container .slide-stage-small .slide-panel').css('background-image','url('+panel_image_s+')');
 }
 /*
 //debugger
