@@ -29,7 +29,7 @@ if( $location_by_ip = generateIPData() ){
     <meta property="og:image:width" content="1772">
     <meta property="og:image:height" content="1170">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png">
-    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" type="text/css" href="css/global_no_login.css">
     <link rel="stylesheet" href="css/songcircle.css">
 		<link rel="stylesheet" href="css/songcircle_register.css">
     <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>

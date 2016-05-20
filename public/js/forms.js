@@ -125,6 +125,20 @@ $(document).ready(function(){
 		$(this).trigger("submit");
 		$("form#contact-form").validate({
 			errorElement : 'p',
+			messages : {
+				name : {
+					required : 'Please enter a name',
+					minlength : 'Your name is 1 character? Come on, what\s your <em style="font-style:italic;">real</em> name?'
+				},
+				email : {
+					required : 'Please enter your email',
+					invalid : 'Please enter a valid email!'
+				},
+				message : {
+					required : 'Did you forget to write a comment? What\'s on your mind?',
+					minlength : 'You have more to say than that don\'t you? Say something more than that please!'
+				}
+			},
 			// places errorElement inside target elements "Next" sibling
 			// which is a <span> with error styles
 			errorPlacement : function(error, element){
@@ -152,7 +166,8 @@ $(document).ready(function(){
 					$("div#thank-you_message p").html(data);
 					$('div#thank-you_message').removeClass('hide');
 					/**
-					* NOTE: Redirect to somewhere more useful
+					* NOTE: Redirect to somewhere more useful or
+					* scroll to top
 					*/
 					}
 				});

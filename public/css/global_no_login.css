@@ -159,8 +159,9 @@ nav ul{
   top: 44px;
   right: 4%;
   width: 44%;
-  /*min-width: 550px; */
-  min-width: 700px; /* w/ log in */
+  min-width: 550px;
+  /* min-width w/ log in */
+  /* min-width: 700px; */
 }
 ul#links{ height:76px; text-align: right; }
 ul#links li { margin-left: 5%; }
@@ -169,19 +170,21 @@ ul#links li{
 	text-transform: uppercase;
   position: relative;
 }
-ul#links li:last-child{ position: relative; }
-ul#links li:nth-child(5):after{
+
+/*ul#links li:last-child{ position: relative; }*/
+/*ul#links li:nth-child(5):after{
   content: '|';
   position: relative;
   right:-20px;
-}
+}*/
+/*ul#links li a[title="Log In"]:hover:before{ content:''; position: relative; } /* remove arrow from this link */*/
+
 ul#links li a{ padding: .3em .1em; }
 ul#links li a:hover:before{
   content:url('../images/arrows_and_lines/navActive_arrow.png');
   position:absolute; left:-15px; top:3px;
 }
 
-ul#links li a[title="Log In"]:hover:before{ content:''; position: relative; } /* remove arrow from this link */
 ul#links span#style, ul#links span.menu{ visibility: hidden; }
 
 /* nav mini-menu */
@@ -356,28 +359,19 @@ form#login-form span#password-error{
 
 /* Overlays */
 #overlay{
-		position:fixed;
-		z-index: 1000;
-		top:0;
-		right:0;
-		bottom:0;
-		left:0;
+		position:fixed;	z-index: 1000;
+		top:0; right:0; bottom:0; left:0;
 		background-color: rgba(0,0,0,0.5);
     display: none;
 }
 
 /* Global Message styles */
 div.global_msg{
-  position: absolute;
-  top:5px;
-  left:50%;
-  margin-left: -30%;
-  width:60%;
-  padding:15px 60px;
-  background: #FC3A3A;
-  color: #fff;
-  text-align: center;
-  line-height: 1.2;
+  position: absolute; top:5px;
+  left:50%; margin-left: -30%;
+  width:60%; padding:15px 60px;
+  background: #FC3A3A; color: #fff;
+  text-align: center; line-height: 1.2;
   border-radius: 6px;
 }
 
@@ -407,34 +401,20 @@ div.global_msg{
 
 /* Break nav onto two lines */
 @media screen and (max-width: 1290px) and (min-width: 840px){ /* max-width: 1024px & min-width: 640px*/
-  ul#links span{ display: block; }
-  header ul#links{
-    /*min-width: 350px;*/
-    min-width: 420px; /* w/ log in */
-    text-align: left; /* w/ log in */
-    line-height: 40px;
-    top: 44px;
-  }
-  ul#links li:nth-child(5):after{ right: -15px; }
   button.register.medium{
     font-size: 1.75em;
     min-width: 290px;
   }
-
 }
 
-@media screen and (max-width: 900px) and (min-width: 640px){
-  button.register, header div.register.medium, header div.register.medium:hover:before{
-    /*right: 10.5%;
-    width:32%;
-    bottom: -28px;
-    font-size:1.5em;*/
+@media screen and (max-width: 990px) and (min-width: 840px){
+  header ul#links{
+    line-height: 40px;
+    text-align: left;
+    top: 44px; right: 0;
+    width: 37.5%; min-width: 0;
   }
-  /*button.register{
-    width: 290px;
-    font-size: 1.5em;
-    line-height: 1.5;
-  }*/
+  ul#links span{ display: block; }
 }
 
 /* w/ log in */
@@ -468,7 +448,7 @@ div.global_msg{
     position: absolute;
     z-index: 1000;
     top: 70px; right: 0;
-    width: 28.5%; min-width: initial;
+    width: 28.5%; min-width: 190px;
     text-align: right;
     padding: 0.5em 1.25em;
     background: #ffffff;

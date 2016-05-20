@@ -65,7 +65,7 @@ $email_data = [
 		"disclaimer" => "You are receiving this email because you registered for a Songcircle on <a href=\"http://songfarm.ca\" style=\"text-decoration: none; color: #153643;\"><font color=\"#153643\">songfarm.ca</font></a><br />
 		If you received this email in error or do not wish to receive any further communications from Songfarm, please ",
 		"unsubscribeLink" => [
-			"unsubscribeLinkLocation" => "http://test.songfarm.ca/includes/unsubscribe.php?user_key=%user_key%"
+			"unsubscribeLinkLocation" => "http://test.songfarm.ca/includes/unsubscribe.php?unsubscribe_key=%unsubscribe_key%&user_email=%user_email%"
 		],
 		"year" => date("Y")
 	],
@@ -96,7 +96,7 @@ $email_data = [
 		"disclaimer" => "You are receiving this email because you registered for a Songcircle on <a href=\"http://songfarm.ca\" style=\"text-decoration: none; color: #153643;\"><font color=\"#153643\">songfarm.ca</font></a><br />
 		If you received this email in error or do not wish to receive any further communications from Songfarm, please ",
 		"unsubscribeLink" => [
-			"unsubscribeLinkLocation" => "http://test.songfarm.ca/includes/unsubscribe.php?user_key=%user_key%"
+			"unsubscribeLinkLocation" => "http://test.songfarm.ca/includes/unsubscribe.php?unsubscribe_key=%unsubscribe_key%&user_email=%user_email%"
 		],
 		"year" => date("Y")
 	],
@@ -127,7 +127,7 @@ $email_data = [
 		"disclaimer" => "You are receiving this email because you registered for a Songcircle on <a href=\"http://songfarm.ca\" style=\"text-decoration: none; color: #153643;\"><font color=\"#153643\">songfarm.ca</font></a><br />
 		If you received this email in error or do not wish to receive any further communications from Songfarm, please ",
 		"unsubscribeLink" => [
-			"unsubscribeLinkLocation" => "http://test.songfarm.ca/includes/unsubscribe.php?user_key=%user_key%"
+			"unsubscribeLinkLocation" => "http://test.songfarm.ca/includes/unsubscribe.php?unsubscribe_key=%unsubscribe_key%&user_email=%user_email%"
 		],
 		"year" => date("Y")
 	],
@@ -151,7 +151,7 @@ $email_data = [
 		"disclaimer" => "You are receiving this email because you registered for a Songcircle on <a href=\"http://songfarm.ca\" style=\"text-decoration: none; color: #153643;\"><font color=\"#153643\">songfarm.ca</font></a><br />
 		If you received this email in error or do not wish to receive any further communications from Songfarm, please ",
 		"unsubscribeLink" => [
-			"unsubscribeLinkLocation" => "http://test.songfarm.ca/includes/unsubscribe.php?user_key=%user_key%"
+			"unsubscribeLinkLocation" => "http://test.songfarm.ca/includes/unsubscribe.php?unsubscribe_key=%unsubscribe_key%&user_email=%user_email%"
 		],
 		"year" => date("Y")
 	],
@@ -178,7 +178,7 @@ $email_data = [
 		"disclaimer" => "You are receiving this email because you registered for a Songcircle on <a href=\"http://songfarm.ca\" style=\"text-decoration: none; color: #153643;\"><font color=\"#153643\">songfarm.ca</font></a><br />
 		If you received this email in error or do not wish to receive any further communications from Songfarm, please ",
 		"unsubscribeLink" => [
-			"unsubscribeLinkLocation" => "http://test.songfarm.ca/includes/unsubscribe.php?user_key=%user_key%"
+			"unsubscribeLinkLocation" => "http://test.songfarm.ca/includes/unsubscribe.php?unsubscribe_key=%unsubscribe_key%&user_email=%user_email%"
 		],
 		"year" => date("Y")
 	]

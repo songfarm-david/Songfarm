@@ -5,11 +5,11 @@
 	<div id="details">
 		<p>Songcircle Registration</p>
 		<label for="username">
-		<input type="text" name="username" maxlength="60" placeholder="Please enter your Name" tabindex="1">
+		<input type="text" name="username" maxlength="60" placeholder="Please enter your Name" tabindex="1" value="<?php if(isset($session->username)){echo $session->username; }?>">
 		<div class="form_error" name="username"></div>
 		</label>
 		<label for="user_email">
-		<input type="email" name="user_email" maxlength="80" placeholder="Please enter your Email" tabindex="2">
+		<input type="email" name="user_email" maxlength="80" placeholder="Please enter your Email" tabindex="2" value="<?php if(isset($session->email)){echo $session->email; }?>">
 		<!-- NOTE: have fallbacks in place for browsers that don't support the email input (ie 8 & 9)-->
 		<div class="form_error" name="user_email"></div>
 		</label>
@@ -19,7 +19,8 @@
 	<div id="loc">
 		<!-- conditional for whether generateIPData() has provided values -->
 		<?php
-			if((isset($country_code) && !empty($country_code))
+			if (isset($session->country_code) && isset($session->country_name)
+			|| (isset($country_code) && !empty($country_code))
 			&& (isset($country_name) && !empty($country_name))){
 		?>
 		<p id="timezone">
@@ -29,7 +30,7 @@
 			Jquery inserts timezone select list here if user has IP data
 		-->
 		<p id="locationMsg">
-			Timezone based on <b><?php echo $country_name; ?></b>
+			Timezone based on <b><?php if(isset($session->country_name)){echo $session->country_name;} else {echo $country_name;} ?></b>
 			<br>
 			<span id="trigger-location" tabindex="4">&lpar;Not right?&rpar;</span>
 		</p>
@@ -87,8 +88,10 @@
 	<!-- hidden inputs for location -->
 	<input type="hidden" name="full_timezone" value="">
 	<input type="hidden" name="city_name" value="<?php if(isset($city_name)){echo $city_name;}?>">
-	<input type="hidden" name="country_name" value="<?php if(isset($country_name)){echo $country_name;}?>">
-	<input type="hidden" name="country_code" value="<?php if(isset($country_code)){echo $country_code;}?>">
+	<input type="hidden" name="country_name" value="<?php
+	if(isset($session->country_name)){ echo $session->country_name; }	elseif(isset($country_name)){ echo $country_name; }
+	?>">
+	<input type="hidden" name="country_code" value="<?php if(isset($session->country_code)){ echo $session->country_code; }elseif(isset($country_code)){ echo $country_code; }?>">
 	<!-- Code of Conduct -->
 	<div>
 		<div id="codeOfConduct">

@@ -3,8 +3,12 @@
 if( !$session->isLoggedIn() ){
 	redirectTo('index.php');
 }
+else /* test code */
+{
+	// var_dump($_SESSION);
+}
 
-if(isset($_SESSION['message'])){echo $_SESSION['message'];}
+if( isset($_SESSION['message']) ){ echo $_SESSION['message']; }
 
 
 /* regarding getting and setting country code

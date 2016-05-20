@@ -113,7 +113,6 @@ article#schedule{
 }
 
 
-
 /* Middle td */
 #schedule table.songcircle_table td:nth-child(2){
 	position: relative;
@@ -121,7 +120,8 @@ article#schedule{
 	top: -30px;
 }
 #schedule table.songcircle_table td:nth-child(2) > div{
-	position: absolute; top: -12px;	height: 134px;
+	position: absolute; top: -12px;
+	height: 134px;
 	/*display: table; */
 	width: 100%;
 	padding: 1.5em 0 0;
@@ -146,6 +146,7 @@ article#schedule{
 	position: relative;
 	z-index: 2;
 }
+#schedule table.songcircle_table td[name="event_name"] p{ min-width: 302px; }
 
 /* blue register button */
 #schedule table.songcircle_table td span.button_container{
@@ -176,20 +177,18 @@ article#schedule{
 */
 #schedule #schedule_container table.songcircle_table td.participantsTable{
 	position: absolute;
-	/*top: 75px;*/
-	/*top: 94px;*/
 	top: 112px;
 	left: 50%; transform: translateX(-50%);
-	z-index: -100; width: 90%;
+	z-index: -100;
+	width: 100%;
 	padding: 0;
 	display: none;
-	/*display: block;*/
 }
 #schedule #schedule_container table.songcircle_table table.participantsTable{
-	/*margin: 1em auto; */
-	padding: 0.5em 0;
+	display: block; margin: 0 auto; padding: 0.5em 0;
 	border-width: 5px; border-radius: 0px;
 	background: #DFEECB; line-height: 1;
+	width: 90%;
 }
 .participantsTable tbody{ display: block; max-height: 224px; overflow-y: auto; }
 #schedule #schedule_container .participantsTable tr{ width: 100%; display: table; }
@@ -293,10 +292,10 @@ article#about{
 	}
 	#schedule table.songcircle_table td:nth-child(3){
 		position: absolute;
-		top: -236px; left: 0;
+		top: -225px; left: 0;
 	}
 	#schedule #schedule_container table.songcircle_table td:last-child{
-		top: 147px;
+		top: 184px;
 	}
 	#schedule #schedule_container td table.participantsTable{
 		width: 95%;
@@ -322,6 +321,7 @@ article#about{
 	#schedule div#schedule_container{
 		min-width: 320px;
 	}
+	#schedule #schedule_container td table.participantsTable{ width: 70%; }
 	article#about{ width: 100%; border-radius: 0; }
 }
 
@@ -342,13 +342,22 @@ article#about{
 	#schedule #schedule_container td table.participantsTable{
 		width: 90%;
 	}
+	#schedule table.songcircle_table td[name="event_name"] p{
+		position: absolute;
+		vertical-align: bottom;
+		bottom: 63px;
+		left: 50%; transform: translateX(-50%);
+		width: 100%;
+		line-height: 1.25;
+	}
+	#schedule table.songcircle_table td[name="event_name"] span{ padding-top: 39px; }
 	article#about p{ line-height: 1.8; }
 }
 
 @media screen and (max-width: 460px){
 	article#about{ top: 300px; } /* changes height of #schedule from top of page */
 	#schedule div#datesList_container{
-		top: -180px;
+		top: -162px;
 		line-height: 1.2;
 	}
 }

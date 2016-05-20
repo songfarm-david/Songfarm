@@ -1,7 +1,7 @@
 <?php require_once('initialize.php');
 require_once(EMAIL_PATH.DS.'email_data.php');
 $errors = []; // <-- initialize empty errors array
-if(isset($_POST['submit'])) {
+if(isset($_POST['contact_submit'])) {
   // check for presence of 'name'
   if($db->hasPresence($_POST['name'])) {
     // make sure it's at least two characters

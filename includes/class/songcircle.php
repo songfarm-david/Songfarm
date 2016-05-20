@@ -421,7 +421,7 @@ class Songcircle extends MySQLDatabase{
 				// construct log text
 				$log_text = ' Created: UTC --'.$date_of_songcircle.' '.$this->songcircle_name.' ('.$songcircle_id.') -- created by: '.$this->global_user_id;
 				// write to log file
-				file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',date("G:i:s").$log_text.PHP_EOL,FILE_APPEND);
+				file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',date("G:i:s",strtotime('+4 hours')).$log_text.PHP_EOL,FILE_APPEND);
 
 				return true;
 			}

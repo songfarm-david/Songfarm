@@ -15,7 +15,7 @@ function redirectTo($location) {
 *
 * Created: 01/25/2016
 *
-* @param (array) email data
+* @param (multi-dimensional array) email data
 * @param (array) songcircle/user specific data
 * @return (string) an HTML email
 */
@@ -38,6 +38,9 @@ function initiateEmail($email_data, $user_data=''){
 			case 'join_songcircle':
 				$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_join_songcircle.html');
 				break;
+			// case 'confirm_waitlist':
+			// 	$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_confirm_waitlist.html');
+			// 	break;
 			case 'waitlist':
 				$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_waitlist_notice.html');
 				break;
@@ -140,15 +143,15 @@ function constructHTMLEmail($email_data, $user_data, $email_template){
 	{
 		$email_template = str_replace('%linkUnsubscribe%',$email_data['unsubscribeLink']['unsubscribeLinkLocation'],$email_template);
 
-		if( array_key_exists('user_key', $compiled_user_data) )
+		if( array_key_exists('unsubscribe_key', $compiled_user_data) )
 		{
-			$email_template = str_replace('%user_key%',$compiled_user_data['user_key'],$email_template);
+			$email_template = str_replace('%unsubscribe_key%',$compiled_user_data['unsubscribe_key'],$email_template);
 		}
 		elseif( array_key_exists('user_email', $compiled_user_data) )
 		{
 
 			// retrieve user key from database
-			if( !$user_key = retrieveUserKey($compiled_user_data['user_email']) )
+			if( !$unsubscribe_key = retrieveUserKey($compiled_user_data['user_email']) )
 			{
 
 				file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").' Could not retrieve user key for user email '.$compiled_user_data['user_email'].' -- '.$_SERVER['PHP_SELF'].' ('.__LINE__.')'.PHP_EOL,FILE_APPEND);
@@ -156,7 +159,7 @@ function constructHTMLEmail($email_data, $user_data, $email_template){
 				exit('error retrieving necessary information to execute email script');
 			}
 
-			$email_template = str_replace('%user_key%',$user_key,$email_template);
+			$email_template = str_replace('%unsubscribe_key%',$unsubscribe_key,$email_template);
 
 		} else {
 			// log error that no user email was provided
@@ -245,6 +248,9 @@ function notifyAdminByEmail($msg){
 *
 */
 function generateIPData(){
+
+	return false; /* for testing purposes sans internet */
+
 	// if the Server detects an IP address, set it to $user_ip variable
 	if(isset($_SERVER['REMOTE_ADDR']) && filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)){
 
@@ -254,8 +260,7 @@ function generateIPData(){
 		// $user_ip = ""; // equates to nothing, outputs NL Netherlands
 		// $user_ip = '181.196.204.134'; // IP for Ecuador
 		// $user_ip = '192.206.151.131'; // IP for Toronto
-		$user_ip = '2605:e000:fa83:6c00:d143:745:8b73:2daa'; // California IP
-
+		// $user_ip = '2605:e000:fa83:6c00:d143:745:8b73:2daa'; // California IP
 	} else {
 		// if results here, could not detect IP address - Should do something
 		$user_ip = " ";
@@ -369,7 +374,7 @@ function generateUserKey(){
 }
 
 /**
-* Retrieve user_key from database
+* Retrieve unsubscribe_key from database
 *
 * NOTE: could be relocated to user class
 *
@@ -379,10 +384,10 @@ function generateUserKey(){
 function retrieveUserKey($user_email){
 	global $db;
 
-	$sql = "SELECT user_key FROM user_register WHERE user_email = '$user_email'";
+	$sql = "SELECT unsubscribe_key FROM user_register WHERE user_email = '$user_email'";
 	if( $result = $db->query($sql) ){
 		if( $data = $db->fetchArray($result) ){
-			return $data['user_key'];
+			return $data['unsubscribe_key'];
 		}
 	}
 }

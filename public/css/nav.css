@@ -20,10 +20,13 @@ nav span.logo{
 }
 nav ul#settings-trigger{
 	position: relative;
+	z-index: 100;
+	top: 0; right: 0;
   float:right;
   min-width: 220px; max-width:300px;
   padding:0 8px;
   text-align: right;
+	line-height: 1;
 }
 nav ul#settings-trigger li{
 	display: inline-block;

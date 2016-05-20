@@ -14,8 +14,8 @@
       <meta property="og:image:width" content="1772">
       <meta property="og:image:height" content="1170">
       <link rel="icon" type="image/png" sizes="16x16" href="../favicon-16x16.png">
-      <link href="css/global.css" rel="stylesheet" type="text/css">
-      <link href="css/index.css" rel="stylesheet" type="text/css">
+      <link type="text/css" rel="stylesheet" href="css/global_no_login.css">
+      <link type="text/css" rel="stylesheet" href="css/index.css" >
       <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
       <script type="text/javascript" src="js/jquery.validate.min.js"></script>
       <script type="text/javascript" src="//platform.linkedin.com/in.js">
@@ -46,54 +46,56 @@
         <div class="slide-data">
           <section class="slide-panel" data-image="images/banner/slide_1" id="slide-1">
             <h3><span class="bold">Nurturing Talent</span><br> Harvesting Success</h3>
-            <!-- <img src="images/songcircle/hr_dotted.png"> -->
             <p id="caption-one">
               Songfarm is an organic growth, exposure, and collaboration platform for aspiring and professional singer/songwriters.
             </p>
           </section>
           <section class="slide-panel" data-image="images/banner/slide_4" id="slide-4">
             <h3><span class="bold">Organic Exposure</span><br> and Feedback</h3>
-            <!-- <img src="images/songcircle/hr_dotted.png"> -->
             <p>
-              Songfarm is designed to expose your talents and provide feedback on your&nbsp;songs.
-              Upload your video and start receiving feedback from the Songfarm Community of Artists, Industry Professionals and Music Fans.
+              Songfarm is designed to nurture your songwriting.
+            </p>
+            <p class="last-p-element">
+              Upload your songs and get constructive criticism from the Songfarm Community of Artists, Industry Professionals and Music Fans.
             </p>
           </section>
           <section class="slide-panel" data-image="images/banner/slide_2" id="slide-2">
             <h3><span class="bold">Direct Networking</span><br> and Natural Growth</h3>
-            <!-- <img src="images/songcircle/hr_dotted.png"> -->
             <p>
               Connect directly to other Artists, Industry Professionals and Music Fans.
+            </p>
+            <p class="last-p-element">
               Grow your fanbase, discover new opportunities, and let your career take root.
             </p>
           </section>
           <section class="slide-panel" data-image="images/banner/slide_5" id="slide-5">
             <h3>Virtual<br><span class="bold">Songwriter's Circles</span></h3>
             <p>
-              Workshop your newest song in a virtual songwriter's circle and get real-time feedback from other artists.
+              Workshop your songs in a virtual songwriter's circle and get real-time feedback from other artists.
               <strong><a href="songcircle.php" title="Songcircle - A virtual songwriter's circle">Register for one today!</a></strong>
             </p>
           </section>
           <section class="slide-panel" data-image="images/banner/slide_6" id="slide-6">
             <h3><span class="bold">Live-Streaming</span><br>Concerts</h3>
             <p>
-              Broadcast your talents to all your biggest fans and make live-streaming concerts an essential part of your career growth.
+              Broadcast in real-time to all your biggest fans and make live-streaming concerts an essential part of your career growth.
             </p>
           </section>
           <section class="slide-panel" data-image="images/banner/slide_3" id="slide-3">
             <h3><span class="bold">Transparent</span><br> Business Model</h3>
             <p>
               No third parties. No middle men.
-            <br>
+            </p>
+            <p class="last-p-element">
               Songfarm Artists retain 100% of their earnings.
             </p>
           </section>
           <section class="slide-panel" data-image="images/banner/slide_7" id="slide-7">
             <h3 id="caption-seven"><span class="bold">Cheap Enough Even</span><br> for the Starving Artist</h3>
-            <!-- <img src="images/songcircle/hr_dotted.png"> -->
             <p>
               Songfarm is free to use for Artists and Fans.
-            <br>
+            </p>
+            <p class="last-p-element">
               Full Artist Membership costs only $2.99/mo. Cancel anytime.
             </p>
           </section>
@@ -101,7 +103,7 @@
       </article>
 
       <!-- About -->
-      <article id="about" >
+      <article id="about">
         <div>
           <h2>About</h2>
           <p>
@@ -114,7 +116,7 @@
       </article>
 
       <!-- Features -->
-      <article id="features" class="hide">
+      <article id="features">
         <h2>Features</h2>
         <div class="divide-one"></div>
         <div class="section first">
@@ -180,11 +182,11 @@
             <img src="images/icons/liveConcert_icon.png">
             <h3>Live Concerts</h3>
             <p>
-              Host a live concert to all your biggest fans from the comfort of your home and earn performance revenue without ever setting foot on a tour bus.
+              Host a live concert to all your biggest fans from the comfort of your home and earn performance revenue without ever having to set foot on a tour bus.
             </p>
           </section>
           <section class="feature">
-            <img src="images/icons/community_icon.png">
+            <img src="images/icons/community_icon.png" class="rule">
             <h3>The Songfarm Community</h3>
             <p>
               Songfarm is home to aspiring singer/songwriters, music industry professionals and fans. You never know who you'll meet when you become part of the Songfarm Community.              </p>
@@ -206,31 +208,18 @@
     <!-- registration form -->
     <?php require_once(LIB_PATH.DS."forms/register.php"); ?>
 
-    <!-- Login form -->
-
-    <!-- end of form -->
-
     <!-- Javascripts -->
     <script type="text/javascript" src="js/slide-gallery.js"></script>
     <!-- // <script type="text/javascript" src="js/register_form.js"></script>
     // <script type="text/javascript" src="js/contact_form.js"></script> -->
     <script type="text/javascript" src="js/forms.js"></script>
     <script type="text/javascript" src="js/login.js"></script>
-
-    <script>
+    <script type="text/javascript">
     // Picture element HTML5 shiv
     document.createElement( "picture" );
     </script>
     <script src="js/picturefill.min.js" async></script>
-    <!-- banner preload script -->
-    <script>
-
-    /**
-    * Place horizontal rule image after banner h3s
-    */
-    var bannerHorizontalRule = '<img src="images/songcircle/hr_dotted.png">';
-    $('.slide-panel h3').after(bannerHorizontalRule);
-
+    <script type="text/javascript">
     //smooth scrolling function
     $(function() {
       $('a[href*=#]:not([href=#])').click(function() {
@@ -255,11 +244,9 @@
         if(y_scroll_pos > scroll_pos_test) {
           // $("#back-to-top").css('display','block');
           $("#back-to-top").fadeIn();
-
         }else{
           // $("#back-to-top").css('display','none');
           $("#back-to-top").fadeOut();
-
         }
     });
 

@@ -141,10 +141,12 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 				// if emailInDatabase is false, user is not registered in the database
 
 				// generate user key
-				$user_key = generateUserKey();
-				// echo $user_key;
+				$unsubscribe_key = generateUserKey();
 				/*
-				* Make sure user_key is unique
+				* NOTE: Make sure unsubscribe_key is unique
+				* - do so in a function off script ..perhaps in functions.php
+				* Or better yet, find out what the odds are of duplication!
+				* or - have to levels of verification: unsubscribe_key && user_email
 				*/
 
 				// begin transaction
@@ -152,8 +154,8 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 
 					try {
 						// construct first query
-						$sql = "INSERT INTO user_register (user_name, user_email, reg_date, user_key)";
-						$sql.= "VALUES ('$username', '$email', NOW(), '$user_key')";
+						$sql = "INSERT INTO user_register (user_name, user_email, reg_date, unsubscribe_key)";
+						$sql.= "VALUES ('$username', '$email', NOW(), '$unsubscribe_key')";
 						if(!$result = $db->query($sql)){
 							// if no result, throw error
 							throw new Exception("Error Processing Registration Insert Request", 1);
@@ -168,13 +170,21 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 								// if no result, throw error
 								throw new Exception("Error Processing Timezone Insert Request", 1);
 							} else {
+								// create session variables
+								$_SESSION['user_id'] 	= $user_id;
+								$_SESSION['username'] = $username;
+								$_SESSION['email'] 		= $email;
+								$_SESSION['timezone'] = $timezone;
+								$_SESSION['full_timezone'] = $full_timezone;
+								$_SESSION['country_name'] = $country_name;
+								$_SESSION['country_code'] = $country_code;
+
 								// commit query to database
 								$db->commit();
 								// construct log text
 								$log_text = ' Subscribed -- user_id: '.$user_id.'; email: '.$email;
 								// write to log
 								file_put_contents(SITE_ROOT.'/logs/user_'.date("m-d-Y").'.txt',date("G:i:s").$log_text.PHP_EOL,FILE_APPEND);
-
 							}
 						}
 					} catch (Exception $e) {
@@ -188,9 +198,6 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 				No errors..
 				User either was already IN the database or is NOW in the database
 				*/
-				// if( !isset($user_key) ){
-				// 	return $user_key = retrieveUserKey($email);
-				// }
 
 				// create unique confirmation key
 				$confirmation_key = getToken(40);
@@ -207,7 +214,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 						"songcircle_id" 		=> $songcircle_id,
 						"user_email" 				=> $email,
 						"confirmation_key" 	=> $confirmation_key,
-						'user_key'					=> $user_key
+						'unsubscribe_key'		=> $unsubscribe_key
 					]
 				];
 
@@ -226,7 +233,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					if( $message = initiateEmail($email_data['confirm_registration'],$songcircle_user_data) ){
 						$headers = "From: {$from}\r\n";
 						$headers.= "Content-Type: text/html; charset=utf-8";
-						if( $result = mail($to,$subject,$message,$headers,'-fsongfarm') ){
+						// if( $result = mail($to,$subject,$message,$headers,'-fsongfarm') ){
 							// enter user into songcircle_register
 							$sql = "INSERT INTO songcircle_register (songcircle_id, user_id, confirmation_key) ";
 							$sql.= "VALUES ('$songcircle_id', $user_id, '$confirmation_key')";
@@ -239,14 +246,16 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 								// json encode and send confirmation data
 								echo json_encode($confirmation_data);
 							}
-						} else {
-						// email failed to send
-							// construct error message
-							$output = '<span>Oops!</span><br /><br />';
-							$output.= 'We\'re sorry but registration for <b>'.$songcircle_name.'</b> on <b>'.$songcircle_date.'</b> could not be completed';
-							$output.= '<br /><br />Please try again in a few minutes. <br>If you\'re still having trouble, please contact support at <a href="mailto:support@songfarm.ca"><b>support@songfarm.ca</b></a>.';
-							print $output;
-						}
+						// }
+						// else
+						// {
+						// // email failed to send
+						// 	// construct error message
+						// 	$output = '<span>Oops!</span><br /><br />';
+						// 	$output.= 'We\'re sorry but registration for <b>'.$songcircle_name.'</b> on <b>'.$songcircle_date.'</b> could not be completed';
+						// 	$output.= '<br /><br />Please try again in a few minutes. <br>If you\'re still having trouble, please contact support at <a href="mailto:support@songfarm.ca"><b>support@songfarm.ca</b></a>.';
+						// 	print $output;
+						// }
 					} // end of: if($message = initiateEmail())
 					else
 					{

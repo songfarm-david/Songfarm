@@ -4,13 +4,13 @@ $(document).ready(function(){
 
 	// Where re-direction will go after successful registration:
 	/* local site */
-	// var redirectURL = 'http://localhost/songfarm-oct2015/public/index.php';
+	var redirectURL = 'http://localhost/songfarm-oct2015/public/index.php';
 
 	/* live test site */
 	// var redirectURL = 'http://test.songfarm.ca';
 
 	/* live site */
-	var redirectURL = 'http://songfarm.ca';
+	// var redirectURL = 'http://songfarm.ca';
 
 	// span to trigger registration form
 	var triggerForm = $('[data-id="triggerRegForm"]');

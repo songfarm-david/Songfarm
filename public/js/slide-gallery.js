@@ -25,10 +25,24 @@ function slideGatherData(){
 		var panel_image_l = $(this).attr('data-image') +'.jpg';
 		var panel_image_s = $(this).attr('data-image') +'_s.jpg';
 		var panel_caption = $(this).html();
+
+		var slideWidth = $('.slide-container').width() +18; /* to account for a few extra pixels */
+		if( slideWidth > 700 ){
+			var content = '<img src="images/arrows_and_lines/hr_dotted_white.png">'
+		} else {
+			var content = '<img src="images/arrows_and_lines/hr_dotted_white_short.png">';
+		}
+
+		/* insert an img tag after h3 tag */
+		var position = panel_caption.indexOf('</h3>');
+		var panel_caption = [panel_caption.slice(0,position+5), content, panel_caption.slice(position+5)].join('');
+
 		slideVars.panelContent[index] = '<div class="slide-panel" data-image-s="'+panel_image_s+'" style="background-image:url('+panel_image_l+'); height: 470px; "><div class="panel-caption">'+panel_caption+'</div></div>';
 	});
-	var slideTimer = setInterval(slideAdvance,150);
-} // <div class="overlay"></div>
+
+	setInterval(slideAdvance,150);
+
+}
 
 function slideAdvance(){
 	var slideWidth = $('.slide-container').width() +18; /* to account for a few extra pixels */
@@ -60,6 +74,9 @@ function slideAdvance(){
 	} else {
 		slideVars.timePassed += 1;
 	}
+
+	horizontalRuleLength(slideWidth);
+
 };
 
 function slideMultiPanel(){
@@ -123,12 +140,21 @@ function slideMultiPanel(){
 
 }
 
-//single panel function
 function slideSinglePanel(){
 	$('.slide-container').html('').append('<div class="slide-stage-small">'+slideVars.panelContent[0]+'</div>'); //index number corresponds to panel...
 	var panel_image_s = $('.slide-container .slide-stage-small .slide-panel').attr('data-image-s');
 	$('.slide-container .slide-stage-small .slide-panel').css('background-image','url('+panel_image_s+')');
 }
+
+function horizontalRuleLength( slideWidth ){
+	var target = $('.slide-container .panel-caption img');
+	if( slideWidth < 700 ){
+		target.attr('src','images/arrows_and_lines/hr_dotted_white_short.png');
+	} else {
+		target.attr('src','images/arrows_and_lines/hr_dotted_white.png');
+	}
+}
+
 /*
 //debugger
 var debugTimer = setInterval(setDebugger,100);

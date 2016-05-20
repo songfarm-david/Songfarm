@@ -1,13 +1,15 @@
 <?php require_once('initialize.php');
 /**
-* Removes a user from the site by email address
+* Removes a user from the site by unsubscribe_key && email
 */
-if(isset($_GET['user_key']) && !empty($_GET['user_key'])){
+if( (isset($_GET['unsubscribe_key']) && !empty($_GET['unsubscribe_key']) )
+ && (isset($_GET['user_email']) && !empty($_GET['user_email']) ) ){
 	// init error array
 	$error_msg = [];
 	// sanitize the data
-	$user_key = $db->escapeValue($_GET['user_key']);
-	$sql = "SELECT user_id FROM user_register WHERE user_key = '{$user_key}' LIMIT 1";
+	$unsubscribe_key = $db->escapeValue($_GET['unsubscribe_key']);
+	$user_email = $db->escapeValue($_GET['user_email']);
+	$sql = "SELECT user_id FROM user_register WHERE unsubscribe_key = '{$unsubscribe_key}' AND user_email = '$user_email' LIMIT 1";
 	if($result = $db->query($sql)){
 		if($row = $db->hasRows($result)){
 			if($data = $db->fetchArray($result)){
