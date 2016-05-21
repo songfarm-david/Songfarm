@@ -7,6 +7,7 @@ require_once('../email/email_data.php');
 if(isset($_GET['action']) && !empty($_GET['action'])){
 	// collect action into variable
 	$action = $db->escapeValue($_GET['action']);
+	$currentUTCTime = date("H:i:s",strtotime('+4 hours'));
 	// construct switch statement
 	switch ($action) {
 
@@ -184,7 +185,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 								// construct log text
 								$log_text = ' Subscribed -- user_id: '.$user_id.'; email: '.$email;
 								// write to log
-								file_put_contents(SITE_ROOT.'/logs/user_'.date("m-d-Y").'.txt',date("G:i:s").$log_text.PHP_EOL,FILE_APPEND);
+								file_put_contents(SITE_ROOT.'/logs/user_'.date("m-d-Y").'.txt',$currentUTCTime.$log_text.PHP_EOL,FILE_APPEND);
 							}
 						}
 					} catch (Exception $e) {
@@ -233,7 +234,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					if( $message = initiateEmail($email_data['confirm_registration'],$songcircle_user_data) ){
 						$headers = "From: {$from}\r\n";
 						$headers.= "Content-Type: text/html; charset=utf-8";
-						// if( $result = mail($to,$subject,$message,$headers,'-fsongfarm') ){
+						if( $result = mail($to,$subject,$message,$headers,'-fsongfarm') ){
 							// enter user into songcircle_register
 							$sql = "INSERT INTO songcircle_register (songcircle_id, user_id, confirmation_key) ";
 							$sql.= "VALUES ('$songcircle_id', $user_id, '$confirmation_key')";
@@ -242,27 +243,27 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 								// construct log text
 								$log_text = ' Registered -- User ID: '.$user_id.' registered for Songcircle ID: '.$songcircle_id;
 								// write to log
-								file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',date("G:i:s").$log_text.PHP_EOL,FILE_APPEND);
+								file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',$currentUTCTime.$log_text.PHP_EOL,FILE_APPEND);
 								// json encode and send confirmation data
 								echo json_encode($confirmation_data);
 							}
-						// }
-						// else
-						// {
-						// // email failed to send
-						// 	// construct error message
-						// 	$output = '<span>Oops!</span><br /><br />';
-						// 	$output.= 'We\'re sorry but registration for <b>'.$songcircle_name.'</b> on <b>'.$songcircle_date.'</b> could not be completed';
-						// 	$output.= '<br /><br />Please try again in a few minutes. <br>If you\'re still having trouble, please contact support at <a href="mailto:support@songfarm.ca"><b>support@songfarm.ca</b></a>.';
-						// 	print $output;
-						// }
+						}
+						else
+						{
+						// email failed to send
+							// construct error message
+							$output = '<span>Oops!</span><br /><br />';
+							$output.= 'We\'re sorry but registration for <b>'.$songcircle_name.'</b> on <b>'.$songcircle_date.'</b> could not be completed';
+							$output.= '<br /><br />Please try again in a few minutes. <br>If you\'re still having trouble, please contact support at <a href="mailto:support@songfarm.ca"><b>support@songfarm.ca</b></a>.';
+							print $output;
+						}
 					} // end of: if($message = initiateEmail())
 					else
 					{
 						// write error notice
 						$err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") case 'register' - ";
 						$err_msg.= "Failed to send confirm_registration email to ".$username." ".$email." for ".$songcircle_id." on ".$songcircle_date;
-						file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.PHP_EOL,FILE_APPEND);
+						file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',$currentUTCTime.$err_msg.PHP_EOL,FILE_APPEND);
 					}
 				} else { // waiting list is open
 					// enter user into songcircle_wait_register
@@ -276,7 +277,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 						// construct log text
 						$log_text = ' New Waitlist Registrant -- User ID: '.$user_id.' registered for waitlist for Songcircle ID: '.$songcircle_id;
 						// write to log
-						file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',date("G:i:s").$log_text.PHP_EOL,FILE_APPEND);
+						file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',$currentUTCTime.$log_text.PHP_EOL,FILE_APPEND);
 						// create waitlist flag
 						$confirmation_data['waitlist'] = true;
 						// json encode and send confirmation data
@@ -285,7 +286,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 						// write error notice
 						$err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") case 'register' - ";
 						$err_msg.= "Failed to insert values into songcircle_wait_register for ".$username." ".$email." for ".$songcircle_id." on ".$songcircle_date;
-						file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.PHP_EOL,FILE_APPEND);
+						file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',$currentUTCTime.$err_msg.PHP_EOL,FILE_APPEND);
 					}
 				}
 			} // end of: else ($diff = array_diff($required_data, $form_data))
@@ -294,7 +295,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 		{
 			// write error notice
 			$err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") case 'register' - ";
-			file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.PHP_EOL,FILE_APPEND);
+			file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',$currentUTCTime.$err_msg.PHP_EOL,FILE_APPEND);
 
 			// if there is an error in the $_POST data sent from songcircle.php
 			$output = '<p>Our system has experienced a problem processing your request. Please <a href="mailto:support@songfarm.ca">contact support</a> at support@songfarm.ca.</p><br>';
@@ -363,7 +364,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 						// craft log err_msg
 						$err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") case 'confirm_registration' - ";
 						$err_msg.= 'Unable to retrieve start_time for songcircle '.$songcircle_id.PHP_EOL;
-						file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.PHP_EOL,FILE_APPEND);
+						file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',$currentUTCTime.$err_msg.PHP_EOL,FILE_APPEND);
 
 						notifyAdminByEmail("Error retrieving start time of songcircle (id: {$songcircle_id}).");
 
@@ -443,7 +444,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 																// construct log text
 																$log_text = ' Confirmed --- User ID: '.$user_id.' confirmed for Songcircle ID: '.$songcircle_id;
 																// write to log
-																file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',date("G:i:s").$log_text.PHP_EOL,FILE_APPEND);
+																file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',$currentUTCTime.$log_text.PHP_EOL,FILE_APPEND);
 																$error_msg = false;
 																$success_msg[] = 'You have been successfully confirmed for '.$songcircle_name.'!';
 																$success_msg[] = 'Check your inbox for all the details.';
@@ -455,7 +456,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 														$err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") case 'confirm_registration' - ";
 														$err_msg.= "Could not confirm ".$user_id." for songcircle ".$songcircle_id;
 														// write to log
-														file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.PHP_EOL,FILE_APPEND);
+														file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',$currentUTCTime.$err_msg.PHP_EOL,FILE_APPEND);
 
 														notifyAdminByEmail("Error confirming user id {$user_id} for songcircle id {$songcircle_id}\r\nSee error log");
 
@@ -470,7 +471,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 												$err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") case 'confirm_registration' - ";
 												$err_msg.= 'Unable to retrieve user location for user id '.$user_id;
 												// write to log
-												file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.PHP_EOL,FILE_APPEND);
+												file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',$currentUTCTime.$err_msg.PHP_EOL,FILE_APPEND);
 												$error_msg[] = 'No timezone exists for '.$username;
 												$error_msg[] = 'Please contact support at <a href="mailto:support@songfarm.ca">support@songfarm.ca</a> if this problem has not been addressed within 24 hours.';
 												$error_msg[] = 'Our sincere apologies for the inconvenience.';
@@ -526,7 +527,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					$message_status = $waitlist == 'true' ? ' Waitlist Unregistered' : ' Unregistered';
 					// construct log text
 					$log_text = $message_status.' -- User ID: '.$user_id.' unregistered from Songcircle ID: '.$songcircle_id;
-					file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',date("G:i:s").$log_text.PHP_EOL,FILE_APPEND);
+					file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',$currentUTCTime.$log_text.PHP_EOL,FILE_APPEND);
 					// create success message
 					$success_msg = "Unregistration successful.<br>";
 					$success_msg.= "Please consider signing up for a Songcircle again soon!";
@@ -561,13 +562,13 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 								// write log text
 								$log_text = ' Waitlist -- User ID: '.$waitlist_data['user']['user_id'].' was notified for Songcircle ID: '.$waitlist_data['songcircle']['songcircle_id'];
 								// write to log
-								file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',date("G:i:s").$log_text.PHP_EOL,FILE_APPEND);
+								file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',$currentUTCTime.$log_text.PHP_EOL,FILE_APPEND);
 							} // end of: if( $result = mail($to,$subject,$message,$headers,'-fsongfarm') )
 							else
 							{
 								$err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") Failed to send email. ";
 								// write to log
-								file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg		.error_get_last().PHP_EOL,FILE_APPEND);
+								file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',$currentUTCTime.$err_msg		.error_get_last().PHP_EOL,FILE_APPEND);
 							}
 						} // end of: if($message = initiateEmail($email_data['waitlist_notice'], $songcircle_user_data))
 						else
@@ -576,14 +577,14 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 							$err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") case 'unregister' - ";
 							$err_msg.= "Unable to send waitlist notice to User id: ".$waitlist_data['user']['user_id']." for ".$songcircle_name." (".$waitlist_data['songcircle']['songcircle_id'].") ";
 							// write to log
-							file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.error_get_last().PHP_EOL,FILE_APPEND);
+							file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',$currentUTCTime.$err_msg.error_get_last().PHP_EOL,FILE_APPEND);
 						}
 					} // end of: if($waitlist_data) // NO WAITLIST REGISTRANTS
 					else
 					{
 						// log no waitlist for given songcircle id
 						$log_text = " Checked Waitlist -- No registrants on waitlist for Songcircle ID: ".$songcircle_id;
-						file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',date("G:i:s").$log_text.PHP_EOL,FILE_APPEND);
+						file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',$currentUTCTime.$log_text.PHP_EOL,FILE_APPEND);
 					}
 				}
 				else // end of: $songcircle->unregisterUserFromSongcircle
@@ -592,7 +593,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					$err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") case 'unregister' - ";
 					$err_msg.= 'User: '.$user_id.' attempted to unregister from Songcircle: '.$songcircle_id.'. Unregistration failed.';
 					// write to log
-					file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.PHP_EOL,FILE_APPEND);
+					file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',$currentUTCTime.$err_msg.PHP_EOL,FILE_APPEND);
 					$error_msg[] = "User has already unregistered from this Songcircle";
 				}
 
@@ -601,7 +602,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 			{
 				// error text for logging
 				$err_msg = " -- ERROR: ".$_SERVER['PHP_SELF']." (line ".__LINE__.") case 'unregister' - Failed to execute script";
-				file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").$err_msg.PHP_EOL,FILE_APPEND);
+				file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',$currentUTCTime.$err_msg.PHP_EOL,FILE_APPEND);
 
 				$error_msg[] = "There was an error processing your request. If this problem persists, please contact support at <a href=\"mailto:support@songfarm.ca\">support@songfarm.ca</a>. We apologize for the inconvenience.";
 			}

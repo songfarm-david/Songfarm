@@ -8,7 +8,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 
 		$cronlog_location 	= SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt';
 		$errorLog_location = SITE_ROOT.'/logs/cronjobs/error_'.date("m-d-Y").'.txt';
-		$server_time = $currentUTCTime = date("G:i:s",strtotime('+4 hours')); // converts detroit time to UTC
+		$server_time = $currentUTCTime = date("H:i:s",strtotime('+4 hours')); // converts detroit time to UTC
 
 		foreach ($argv as $arg) {
 			switch ($arg) {
@@ -75,8 +75,8 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 			/**
 			* Sends reminder email, RELATIVE TO USER TIMEZONE, 3 days out from event
 			*
-			* NOTE: ##Cron runs every 15 minutes on the 7 (7,21,35,49)
-			* Runs every half hour on the 3
+			* NOTE: Runs on 3 & 34
+			*
 			*/
 				case 'reminder_songcircle':
 
@@ -84,25 +84,16 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 				file_put_contents($cronlog_location,$server_time.' CALLED: reminder_songcircle'.PHP_EOL,FILE_APPEND);
 
 				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, sr.user_id, ur.user_name, user_email,
-								SUBSTR(ut.full_timezone,5,6) AS user_timezone,
-								-- do we need next 3 lines??
-								CONVERT_TZ(date_of_songcircle, @@global.time_zone, '+0:00') AS date_of_songcircle_UTC,
-								CONVERT_TZ(now(), @@global.time_zone, '+0:00') AS today_time_UTC,
-								CONVERT_TZ(now(), SUBSTR(ut.full_timezone,5,6), '+0:00') AS user_time_UTC
+								ut.full_timezone, TIMESTAMPDIFF( MINUTE, CONVERT_TZ(now(),SUBSTR(ut.full_timezone,5,6),'+0:00'), date_of_songcircle ) AS diff
 								FROM songcircle_create AS sc,	songcircle_register AS sr
 								INNER JOIN user_register AS ur ON sr.user_id = ur.user_id
 								INNER JOIN user_timezone AS ut ON ur.user_id = ut.user_id
 								WHERE sc.songcircle_id = sr.songcircle_id
 								AND sc.songcircle_status = 0
 								AND sr.confirm_status = 1
-								AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ(now(),SUBSTR(ut.full_timezone,5,6),'+0:00'), CONVERT_TZ(date_of_songcircle,@@global.time_zone,'+0:00') ) > 4290 -- 6 days
-								AND	TIMESTAMPDIFF( MINUTE, CONVERT_TZ(now(),SUBSTR(ut.full_timezone,5,6),'+0:00'), CONVERT_TZ(date_of_songcircle,@@global.time_zone,'+0:00') ) < 4320"; // 6 days + 30 min
-								/**
-								* NOTE: for testing purposes
-								* Changed 4320/4350 ( 3 days in minutes ) to 5760/5745 ( 4 days in minutes )
-								*
-								* 4320 = 3 fulls day in minutes.
-								*/
+								AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ(now(),SUBSTR(ut.full_timezone,5,6),'+0:00'), CONVERT_TZ( date_of_songcircle, @@global.time_zone, '+0:00') ) > 1500
+								AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ(now(),SUBSTR(ut.full_timezone,5,6),'+0:00'), CONVERT_TZ( date_of_songcircle, @@global.time_zone, '+0:00') ) < 1530";
+
 				if($result = $db->getRows($sql)){
 
 					// foreach result/user
