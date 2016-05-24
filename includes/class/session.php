@@ -27,7 +27,7 @@ class Session{
 	function __construct() {
 		session_start();
 		$this->checkLogin();
-		$this->isUserLocation();
+		$this->setSessionDetails();
 		// could take additional action here
 		if($this->logged_in) {
 			// do something if user is logged in
@@ -48,15 +48,9 @@ class Session{
 	* AND sets $logged_in = false
 	*/
 	private function checkLogin() {
-		if(isset($_SESSION['user_id'])) {
+		if( isset($_SESSION['user_id']) && isset($_SESSION['username'])) {
 			$this->user_id = $_SESSION['user_id'];
 			$this->username = $_SESSION['username'];
-			if(isset($_SESSION['permission'])){
-				$this->permission = $_SESSION['permission'];
-			}
-			if(isset($_SESSION['email'])){
-				$this->email = $_SESSION['email'];
-			}
 			$this->logged_in = true;
 		} else {
 			unset($this->user_id);
@@ -64,6 +58,7 @@ class Session{
 			unset($this->permission);
 			$this->logged_in = false;
 		}
+
 	}
 
 	/**
@@ -78,12 +73,16 @@ class Session{
 	/**
 	* Sets user location $_SESSION variables if applicable
 	*/
-	private function isUserLocation(){
-		if(isset($_SESSION['country_name']) && isset($_SESSION['country_code'])){
-			$this->timezone = $_SESSION['timezone'];
-			$this->full_timezone = $_SESSION['full_timezone'];
-			$this->country_name = $_SESSION['country_name'];
-			$this->country_code = $_SESSION['country_code'];
+	private function setSessionDetails(){
+		if( isset($_SESSION) ){
+			// isset($_SESSION['user_id']) ? $this->
+			isset($_SESSION['username']) ? $this->username = $_SESSION['username'] : null;
+			isset($_SESSION['permission']) ? $this->email = $_SESSION['permission'] : $this->permission = 0;
+			isset($_SESSION['email']) ? $this->email = $_SESSION['email'] : $this->email = null;
+			isset($_SESSION['timezone']) ?$this->timezone = $_SESSION['timezone'] : null;
+			isset($_SESSION['full_timezone']) ?$this->full_timezone = $_SESSION['full_timezone'] : null;
+			isset($_SESSION['country_name']) ?$this->country_name = $_SESSION['country_name'] : null;
+			isset($_SESSION['country_code']) ?$this->country_code = $_SESSION['country_code'] : null;
 		}
 	}
 

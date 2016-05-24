@@ -68,74 +68,116 @@ class Songcircle extends MySQLDatabase{
 		if( $result = $db->query($sql) ){
 			$count = 0;
 			$output = '<table class="songcircle_table">';
+			// while songcircle
 			while( $row = $db->fetchArray($result) ){
-				/*** collect dateList information here ***/
+
 				$output.= '<tr data-row-count="'.$count.'">';
-				// if no $_SESSION data
-					if( empty($_SESSION['user_id']) || !isset($_SESSION['user_id']) || !isset($user->timezone) ){
-						// format times in UTC
-						$output.= '<td data-month-date="'.$this->createMonthDate($row['date_of_songcircle']).'">'.$this->formatUTC($row['date_of_songcircle']).'</td>';
-					}
-					else
-					{
-						// format times according to user timezone
-						$output.= '<td>'.$this->userTimezone($row['date_of_songcircle'], $user->timezone).'</td>';
+				if( empty($_SESSION['user_id']) || !isset($_SESSION['user_id']) || !isset($user->timezone) ){
+					// format times in UTC
+					$output.= '<td data-month-date="'.$this->createMonthDate($row['date_of_songcircle']).'">'.$this->formatUTC($row['date_of_songcircle']).'</td>';
+				}
+				else
+				{
+					// format times according to user timezone
+					$output.= '<td>'.$this->userTimezone($row['date_of_songcircle'], $user->timezone).'</td>';
+				}
+				// middle td + currently registered count
+				$output.= '<td name="event_name"><div><p>'.$row['songcircle_name'].'</p>';
+				$output.= '<span class="triggerParticipantsTable blue">('.$this->getParticipantCount($row['songcircle_id']).' of '.$row['max_participants'].' participants registered)</span></div>';
+				$output.= '</td>';
 
-						/*** Can I add the span here through PHP ***/
-					}
-
-					$output.= '<td name="event_name"><div><p>'.$row['songcircle_name'].'</p>';
-					$output.= '<span class="triggerParticipantsTable blue">('.$this->getParticipantCount($row['songcircle_id']).' of '.$row['max_participants'].' participants registered)</span></div>';
-
-					$output.= '</td>';
-
-					$output.= '<td name="songcircle_data_container">';
+				// third td - holds hidden info about songcircles + action buttons
+				$output.= '<td name="songcircle_data_container">';
 
 					// if songcircle not started
 					if( $row['songcircle_status'] == 0 ){
-
 						// write hidden inputs for songcircle values
 						$output.= '<input type="hidden" name="songcircle_id" value="'.$row['songcircle_id'].'">';
 						$output.= '<input type="hidden" name="date_of_songcircle" value="'.$row['date_of_songcircle'].'">';
 						$output.= '<input type="hidden" name="songcircle_name" value="'.$row['songcircle_name'].'">';
 
-						// is songcircle full
-						if( $this->isFullSongcircle( $row['songcircle_id'], $row['max_participants']) ){
-
-							// songcircle full, waiting list true
-							$output.= '<input type="hidden" name="waiting_list" value="true">';
-
-							// is waiting list full
-							if( $this->isFullWaitingList($row['songcircle_id'], $this->max_wait_participants) ) {
-								// waiting list full, display inactive button
-								$output.= '<span class="button_container cannot_register">Songcircle Full</span>';
-							} else {
-								// not full waiting list, display join button
-								$output.= '<span class="button_container" data-id="triggerRegForm">Join&nbsp;Waitlist</span>';
+						// see if session exists
+						if( isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) ){
+							// check if user is already registered
+							if( $this->isRegisteredUser($row['songcircle_id'], $_SESSION['user_id']) ){
+								// allow user to unregister
+								$output.= '<span class="button_container">Unregister</span>';
 							}
-
-						} else {
-
-							// songcircle not full, waiting list false
-							$output.= '<input type="hidden" name="waiting_list" value="false">';
-
-							// if $_SESSION data
-							if( isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) ){
-								// check if user is already registered
-								if( $this->isRegisteredUser($row['songcircle_id'], $_SESSION['user_id']) ){
-									// allow user to unregister
-									$output.= '<span class="button_container">Unregister</span>';
-									/**
-									* Code unregister sequence
-									**/
+							elseif( $this->isFullSongcircle( $row['songcircle_id'], $row['max_participants']) )
+							{
+								// songcircle full, waiting list true
+								$output.= '<input type="hidden" name="waiting_list" value="true">';
+								// is waiting list full?
+								if( $this->isFullWaitingList( $row['songcircle_id'], $this->max_wait_participants) ) {
+									// waiting list full, display inactive button
+									$output.= '<span class="button_container cannot_register">Songcircle Full</span>';
+								} else {
+									// not full waiting list, display join button
+									$output.= '<span class="button_container" data-id="triggerRegForm">Join&nbsp;Waitlist</span>';
 								}
-
-							}	// end of: is $_SESSION data
-
-							// allow user to register
-							$output.= '<span class="button_container" data-id="triggerRegForm">Register</span>';
-
+							}
+							else
+							{
+								$output.= '<input type="hidden" name="waiting_list" value="false">';
+								$output.= '<span class="button_container" data-id="triggerRegForm">Register</span>';
+							}
+						}	// end of: is $_SESSION data
+						else
+						{
+							// no session, but is it full
+							if( $this->isFullSongcircle( $row['songcircle_id'], $row['max_participants']) ){
+								// songcircle full, waiting list true
+								$output.= '<input type="hidden" name="waiting_list" value="true">';
+								// is waiting list full?
+								if( $this->isFullWaitingList( $row['songcircle_id'], $this->max_wait_participants) ) {
+									// waiting list full, display inactive button
+									$output.= '<span class="button_container cannot_register">Songcircle Full</span>';
+								} else {
+									// not full waiting list, display join button
+									$output.= '<span class="button_container" data-id="triggerRegForm">Join&nbsp;Waitlist</span>';
+								}
+							}
+							else
+							{
+								// songcircle not full
+								$output.= '<input type="hidden" name="waiting_list" value="false">';
+								$output.= '<span class="button_container" data-id="triggerRegForm">Register</span>';
+							}
 						}
+
+						// is songcircle full?
+						// if( $this->isFullSongcircle( $row['songcircle_id'], $row['max_participants']) ){
+						// 	// songcircle full, waiting list true
+						// 	$output.= '<input type="hidden" name="waiting_list" value="true">';
+						// 	// is waiting list full?
+						// 	if( $this->isFullWaitingList( $row['songcircle_id'], $this->max_wait_participants) ) {
+						// 		// waiting list full, display inactive button
+						// 		$output.= '<span class="button_container cannot_register">Songcircle Full</span>';
+						// 	} else {
+						// 		// not full waiting list, display join button
+						// 		$output.= '<span class="button_container" data-id="triggerRegForm">Join&nbsp;Waitlist</span>';
+						// 	}
+						// }
+						// else
+						// {
+						// 	// songcircle not full, waiting list false
+						// 	$output.= '<input type="hidden" name="waiting_list" value="false">';
+						// 	// see if session exists
+						// 	if( isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) ){
+						// 		// check if user is already registered
+						// 		if( $this->isRegisteredUser($row['songcircle_id'], $_SESSION['user_id']) ){
+						// 			// allow user to unregister
+						// 			$output.= '<span class="button_container">Unregister</span>';
+						// 		} else {
+						// 			$output.= '<span class="button_container" data-id="triggerRegForm">Register</span>';
+						// 		}
+						// 	}	// end of: is $_SESSION data
+						// 	else
+						// 	{
+						// 		// allow user to register
+						// 		$output.= '<span class="button_container" data-id="triggerRegForm">Register</span>';
+						// 	}
+						// }
 
 						$output.= '<input type="submit" class="hide">';
 
@@ -496,7 +538,7 @@ class Songcircle extends MySQLDatabase{
 	private function isRegisteredUser($songcircle_id, $user_id){
 		global $db;
 
-		$sql = "SELECT user_id FROM songcircle_register WHERE songcircle_id = '$songcircle_id' AND user_id = $user_id";
+		$sql = "SELECT user_id FROM songcircle_register WHERE songcircle_id = '$songcircle_id' AND user_id = $user_id AND confirm_status = 1";
 		if($result = $db->query($sql)){
 			if($db->hasRows($result)){
 				return true;

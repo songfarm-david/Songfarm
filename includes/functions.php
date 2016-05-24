@@ -249,8 +249,6 @@ function notifyAdminByEmail($msg){
 */
 function generateIPData(){
 
-	return false; /* for testing purposes sans internet */
-
 	// if the Server detects an IP address, set it to $user_ip variable
 	if(isset($_SERVER['REMOTE_ADDR']) && filter_var($_SERVER['REMOTE_ADDR'], FILTER_VALIDATE_IP)){
 

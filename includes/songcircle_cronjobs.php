@@ -20,7 +20,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 			*/
 				case 'songcircle_state':
 					// log call
-					file_put_contents($cronlog_location,$server_time.' CALLED: songcircle_state'.PHP_EOL,FILE_APPEND);
+					file_put_contents($cronlog_location,$server_time.' songcircle_state'.PHP_EOL,FILE_APPEND);
 
 				// if Incomplete Songcircles Exist (Not Started OR Started)
 				if($result = $songcircle->getIncompleteSongcircles()){
@@ -32,8 +32,8 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 						$date_of_songcircle = floor( strtotime($songcircle_result['date_of_songcircle']) / 60 );
 						// duration of songcircle in minutes
 						$duration_of_songcircle = ( strtotime($songcircle_result['duration']) - strtotime('today') ) / 60;
-						// current time plus 5 hours (for UTC)
-						$currentUTCTime = date("G:i:s",strtotime('+5 hours'));
+						// current time plus 4 hours (for UTC)
+						$currentUTCTime = date("G:i:s",strtotime('+4 hours'));
 						// current time in minutes
 						$currentUTCTime = floor( strtotime($currentUTCTime) / 60);
 						// get different in MINUTES between now and $date_of_songcircle
@@ -81,18 +81,21 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 				case 'reminder_songcircle':
 
 				// write to log
-				file_put_contents($cronlog_location,$server_time.' CALLED: reminder_songcircle'.PHP_EOL,FILE_APPEND);
+				file_put_contents($cronlog_location,$server_time.' reminder_songcircle'.PHP_EOL,FILE_APPEND);
 
 				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, sr.user_id, ur.user_name, user_email,
-								ut.full_timezone, TIMESTAMPDIFF( MINUTE, CONVERT_TZ(now(),SUBSTR(ut.full_timezone,5,6),'+0:00'), date_of_songcircle ) AS diff
+								ut.full_timezone, TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(), @@global.time_zone, '+0:00' ), date_of_songcircle ) AS diff
 								FROM songcircle_create AS sc,	songcircle_register AS sr
 								INNER JOIN user_register AS ur ON sr.user_id = ur.user_id
 								INNER JOIN user_timezone AS ut ON ur.user_id = ut.user_id
 								WHERE sc.songcircle_id = sr.songcircle_id
 								AND sc.songcircle_status = 0
 								AND sr.confirm_status = 1
-								AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ(now(),SUBSTR(ut.full_timezone,5,6),'+0:00'), CONVERT_TZ( date_of_songcircle, @@global.time_zone, '+0:00') ) > 1500
-								AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ(now(),SUBSTR(ut.full_timezone,5,6),'+0:00'), CONVERT_TZ( date_of_songcircle, @@global.time_zone, '+0:00') ) < 1530";
+								AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(), @@global.time_zone, '+0:00' ), date_of_songcircle ) > 1425
+								AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(), @@global.time_zone, '+0:00' ), date_of_songcircle ) < 1440";
+								/**
+								* NOTE: 1410 - 1440 only denote a 1 day difference. Ratify this to denote 3 days (4305-4320)
+								*/
 
 				if($result = $db->getRows($sql)){
 
@@ -116,7 +119,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 								// if mail successful
 								if( mail($to,$subject,$message,$headers,'-fsongfarm') ){
 
-									file_put_contents($cronlog_location,$server_time.' -- Email Sent: User '.$songcircle_user_data['user_id'].', '.$songcircle_user_data['songcircle_id'].' ('.$songcircle_user_data['songcircle_name'].') '.$songcircle_user_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
+									file_put_contents($cronlog_location, $server_time.' -- Email Sent: User '.$songcircle_user_data['user_id'].', '.$songcircle_user_data['songcircle_id'].PHP_EOL,FILE_APPEND);
 
 								}
 								else
@@ -160,36 +163,28 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 				case 'join_songcircle':
 
 				// write to log
-				file_put_contents($cronlog_location,$server_time.' CALLED: join_songcircle'.PHP_EOL,FILE_APPEND);
+				file_put_contents($cronlog_location,$server_time.' join_songcircle'.PHP_EOL,FILE_APPEND);
 
-				// query database
-// 				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, ";
-// 				$sql.= "sr.user_id, verification_key, confirm_status, ur.user_name, user_email, SUBSTR(ut.full_timezone,5,6) AS user_timezone ";
-// 				$sql.= "FROM songcircle_create AS sc, songcircle_register AS sr	";
-// 				$sql.= "INNER JOIN user_register AS ur ON sr.user_id = ur.user_id ";
-// 				$sql.= "INNER JOIN user_timezone AS ut ON ur.user_id = ut.user_id ";
-// 				$sql.= "WHERE sc.songcircle_id = sr.songcircle_id ";
-// 				$sql.= "AND sc.songcircle_status = 0 AND sr.confirm_status = 1 ";
-// 				/* NOTE: need to input user timezone variable below somewhere */
-// 				$sql.= "AND DATE(date_of_songcircle) = DATE(DATE_ADD(UTC_TIMESTAMP(), INTERVAL 15 MINUTES))";
-
-				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, sr.user_id, verification_key, confirm_status, ur.user_name, user_email,	SUBSTR(ut.full_timezone,5,6) AS user_timezone
-				-- CONVERT_TZ(date_of_songcircle, @@global.time_zone, '+0:00') as date_of_songcircle_UTC,
-				-- CONVERT_TZ(now(), @@global.time_zone, '+0:00') as today_time_UTC,
-				-- CONVERT_TZ(now(), SUBSTR(ut.full_timezone,5,6), '+0:00') as user_time_UTC
-				/*,TIMESTAMPDIFF( MINUTE, CONVERT_TZ(date_of_songcircle, @@global.time_zone, '+0:00'), CONVERT_TZ(now(), SUBSTR(ut.full_timezone,5,6), '+0:00') ) */
-
-				FROM songcircle_create AS sc, songcircle_register AS sr
-				INNER JOIN user_register AS ur ON sr.user_id = ur.user_id
-				INNER JOIN user_timezone AS ut ON ur.user_id = ut.user_id
-				WHERE sc.songcircle_id = sr.songcircle_id AND sc.songcircle_status = 0 AND sr.confirm_status = 1
-
-				AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ( NOW(), SUBSTR(ut.full_timezone,5,6), '+0:00'), CONVERT_TZ( date_of_songcircle, @@global.time_zone, '+0:00') ) > -1
-				AND	TIMESTAMPDIFF( MINUTE, CONVERT_TZ( NOW(), SUBSTR(ut.full_timezone,5,6), '+0:00'), CONVERT_TZ( date_of_songcircle, @@global.time_zone, '+0:00') ) < 16";
+				$sql="SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, sr.user_id, verification_key,
+							confirm_status, ur.user_name, user_email, ut.full_timezone, TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(),   @@global.time_zone, '+0:00' ), date_of_songcircle ) AS diff
+							FROM songcircle_create AS sc, songcircle_register AS sr
+							INNER JOIN user_register AS ur ON sr.user_id = ur.user_id
+							INNER JOIN user_timezone AS ut ON ur.user_id = ut.user_id
+							WHERE sc.songcircle_id = sr.songcircle_id
+							AND sc.songcircle_status = 0
+							AND sr.confirm_status = 1
+							-- get songcircles where difference between now (UTC) and date of songcircle (also UTC) is 1 hour
+							AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(), @@global.time_zone, '+0:00' ), date_of_songcircle ) > 50
+							AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(), @@global.time_zone, '+0:00' ), date_of_songcircle ) < 70";
+							/**
+							* NOTE: constraints determined to find time area approx. 1 hr before songcircle
+							*/
 
 				if($result = $db->getRows($sql)){
 
 					foreach($result as $songcircle_user_data){
+
+						// file_put_contents($cronlog_location, $server_time.' -- Join link sent - User '.$songcircle_user_data['user_id'].'  '.$songcircle_user_data['songcircle_id'].PHP_EOL,FILE_APPEND);
 
 						// construct email
 						$to = "{$songcircle_user_data['user_name']} <{$songcircle_user_data['user_email']}>";
@@ -200,7 +195,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 							$headers.= "Content-Type: text/html; charset=utf-8";
 							if( mail($to,$subject,$message,$headers,'-fsongfarm') )
 							{
-								file_put_contents($cronlog_location,$server_time.' -- Join link sent - User '.$songcircle_user_data['user_id'].'  '.$songcircle_user_data['songcircle_id'].PHP_EOL,FILE_APPEND);
+								file_put_contents($cronlog_location,$server_time.' -- Join link sent - User '.$songcircle_user_data['user_id'].', '.$songcircle_user_data['songcircle_id'].' diff: '.$songcircle_user_data['diff'].PHP_EOL,FILE_APPEND);
 							}
 							else
 							{
@@ -217,7 +212,11 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 
 					} // end of: foreach($result as $row)
 				} // end of: if($result = $db->getRows($sql))
-
+				else
+				{
+					// write to log
+					file_put_contents($cronlog_location,$server_time.' -- no action'.PHP_EOL,FILE_APPEND);
+				}
 					break;
 
 			/**
@@ -228,7 +227,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 				case 'clear_expired_songcircle':
 
 				// write to log
-				file_put_contents($cronlog_location, $server_time.' CALLED: clear_expired_songcircle'.PHP_EOL,FILE_APPEND);
+				file_put_contents($cronlog_location, $server_time.' clear_expired_songcircle'.PHP_EOL,FILE_APPEND);
 
 				// if songcircle start time + duration of songcircle is less than current time (in UTC)
 				$sql = "SELECT id, songcircle_id, date_of_songcircle ";

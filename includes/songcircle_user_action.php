@@ -49,7 +49,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 			if($diff = array_diff($required_data, $form_data)){
 				// if diff, return error
 
-					/* function for displaying which values were missing */
+					/* NOTE: log this error */
 					echo displayMissingValues($diff);
 
 				/* exit validation.. */
@@ -109,7 +109,6 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					if($songcircle->userAlreadyRegistered($songcircle_id, $user_id)){
 						$errors['email_error'] = 'You are already registered for '.$songcircle_name.'.';
 					}
-
 				}	else {
 					// email is not in database, set flag
 					$emailInDatabase = false;
@@ -134,21 +133,15 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					}
 					$output.= '</ul>';
 					echo $output;
-
 					// exit processing
 					exit;
+				}
 
-				} elseif (!$emailInDatabase) {
+				if (!$emailInDatabase) {
 				// if emailInDatabase is false, user is not registered in the database
 
 				// generate user key
 				$unsubscribe_key = generateUserKey();
-				/*
-				* NOTE: Make sure unsubscribe_key is unique
-				* - do so in a function off script ..perhaps in functions.php
-				* Or better yet, find out what the odds are of duplication!
-				* or - have to levels of verification: unsubscribe_key && user_email
-				*/
 
 				// begin transaction
 				$db->beginTransaction();
@@ -171,15 +164,6 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 								// if no result, throw error
 								throw new Exception("Error Processing Timezone Insert Request", 1);
 							} else {
-								// create session variables
-								$_SESSION['user_id'] 	= $user_id;
-								$_SESSION['username'] = $username;
-								$_SESSION['email'] 		= $email;
-								$_SESSION['timezone'] = $timezone;
-								$_SESSION['full_timezone'] = $full_timezone;
-								$_SESSION['country_name'] = $country_name;
-								$_SESSION['country_code'] = $country_code;
-
 								// commit query to database
 								$db->commit();
 								// construct log text
@@ -194,11 +178,32 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					}
 
 				} // end of: elseif (!$emailInDatabase)
+				else
+				{
+					/** NOTE: is there a way to skip this step or verify that a change has or has not been made to user info?? */
+					// user already exists but has changed timezone
+					$sql = "UPDATE user_timezone ";
+					$sql.= "SET timezone='$timezone', full_timezone='$full_timezone', country_name='$country_name', country_code='$country_code' ";
+					$sql.= "WHERE user_id = $user_id";
+					if(!$result = $db->query($sql)){
+						// log new error
+						trigger_error("Could not update the user time zone for user id: {$user_id}");
+					}
+				}
 
 				/*
 				No errors..
 				User either was already IN the database or is NOW in the database
 				*/
+				// create session variables
+				$_SESSION['user_id'] 	= $user_id;
+				$_SESSION['username'] = $username;
+				$_SESSION['email'] 		= $email;
+				$_SESSION['timezone'] = $timezone;
+				$_SESSION['full_timezone'] = $full_timezone;
+				$_SESSION['country_name'] = $country_name;
+				$_SESSION['country_code'] = $country_code;
+				file_put_contents(SITE_ROOT.'/logs/user_'.date("m-d-Y").'.txt',$currentUTCTime.' pass through Session user id: '.$user_id.PHP_EOL,FILE_APPEND);
 
 				// create unique confirmation key
 				$confirmation_key = getToken(40);
@@ -447,7 +452,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 																file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',$currentUTCTime.$log_text.PHP_EOL,FILE_APPEND);
 																$error_msg = false;
 																$success_msg[] = 'You have been successfully confirmed for '.$songcircle_name.'!';
-																$success_msg[] = 'Check your inbox for all the details.';
+																$success_msg[] = 'Check your inbox for more details.';
 															}
 														} // end of: if($message = initiateEmail())
 													} else {
@@ -479,7 +484,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 											}
 
 										} else { // else for: isset($user_array['confirmation_key']) && !empty($user_array['confirmation_key'])
-											$error_msg[] = 'You have already confirmed your registration for '.$songcircle_name.' on '.$date_of_songcircle.' UTC.';
+											$error_msg[] = 'You have already confirmed your registration for this Songcircle';
 										} // end of: isset($user_array['confirmation_key']) && !empty($user_array['confirmation_key'])
 
 									} else {

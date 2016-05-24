@@ -131,7 +131,7 @@ article#schedule{
 	background: linear-gradient(to bottom,  rgb(255,255,255) 0%,rgb(255,255,255) 17%,rgb(252,252,252) 23%,rgb(235,235,235) 52%,rgb(213,213,213) 81%,rgb(242,242,242) 92%,rgb(255,255,255) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=0 );
 }
-#schedule table.songcircle_table td > div:after{
+#schedule table.songcircle_table td[name="event_name"] > div:after{
 	content: url('../images/songcircle/arrow_green.png');
 	display: block;
 	position: absolute; bottom: 0; right: 50%;

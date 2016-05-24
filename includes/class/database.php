@@ -47,8 +47,8 @@ class MySQLDatabase{
 			$mysli_error = mysqli_error($this->connection).PHP_EOL;
 			// write to error log
 			error_log($mysli_error, 3, ERROR_PATH);
-
-			die("Database query failed. Exiting script.");
+			file_put_contents(SITE_ROOT.DS.'logs'.DS.'error_'.date("m-d-Y").'.txt',$mysli_error,FILE_APPEND);
+			die("There was an error in the data query. Support has been notified. \n\rPlease accept our apologies for the inconvenience.");
 		}
 	}
 
