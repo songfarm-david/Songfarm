@@ -67,20 +67,31 @@ class Songcircle extends MySQLDatabase{
 		$sql = "SELECT * FROM songcircle_create WHERE created_by_id = $this->global_user_id";
 		if( $result = $db->query($sql) ){
 			$count = 0;
-			$output = '<table class="songcircle_table">';
+			$output = '<table class="songcircle_table"';
+
+			// if $_SESSION['user_id'] exists
+			if( isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) ){
+				$output.= ' data-user-session-id="'.$_SESSION['user_id'].'">';
+			} else {
+				$output.= '>';
+			}
+
 			// while songcircle
 			while( $row = $db->fetchArray($result) ){
 
 				$output.= '<tr data-row-count="'.$count.'">';
-				if( empty($_SESSION['user_id']) || !isset($_SESSION['user_id']) || !isset($user->timezone) ){
+
+				if( empty($_SESSION['user_id'])
+				|| !isset($_SESSION['user_id'])
+				|| !isset($user->timezone) ){
 					// format times in UTC
-					$output.= '<td data-month-date="'.$this->createMonthDate($row['date_of_songcircle']).'">'.$this->formatUTC($row['date_of_songcircle']).'</td>';
-				}
-				else
-				{
+					$output.= '<td data-month-date="'.$this->createMonthDate($row['date_of_songcircle']).'">';
+					$output.= $this->formatUTC($row['date_of_songcircle']).'</td>';
+				}	else {
 					// format times according to user timezone
 					$output.= '<td>'.$this->userTimezone($row['date_of_songcircle'], $user->timezone).'</td>';
 				}
+
 				// middle td + currently registered count
 				$output.= '<td name="event_name"><div><p>'.$row['songcircle_name'].'</p>';
 				$output.= '<span class="triggerParticipantsTable blue">('.$this->getParticipantCount($row['songcircle_id']).' of '.$row['max_participants'].' participants registered)</span></div>';
@@ -91,6 +102,7 @@ class Songcircle extends MySQLDatabase{
 
 					// if songcircle not started
 					if( $row['songcircle_status'] == 0 ){
+
 						// write hidden inputs for songcircle values
 						$output.= '<input type="hidden" name="songcircle_id" value="'.$row['songcircle_id'].'">';
 						$output.= '<input type="hidden" name="date_of_songcircle" value="'.$row['date_of_songcircle'].'">';
@@ -101,10 +113,16 @@ class Songcircle extends MySQLDatabase{
 							// check if user is already registered
 							if( $this->isRegisteredUser($row['songcircle_id'], $_SESSION['user_id']) ){
 								// allow user to unregister
-								$output.= '<span class="button_container">Unregister</span>';
-							}
-							elseif( $this->isFullSongcircle( $row['songcircle_id'], $row['max_participants']) )
-							{
+								$output.= '<span class="button_container waitlist" data-waitlist=false>Unregister</span>';
+								/**
+								* NOTE: <span class="button_container waitlist" data-waitlist=true>Leave Waitlist</span>
+								*/
+
+							} elseif( $this->isFullSongcircle( $row['songcircle_id'], $row['max_participants']) ){
+								/**
+								* NOTE: is user on the waiting list? if so, we offer a way to unregister from it.
+								* - remember to use 'data-waitlist=true'
+								*/
 								// songcircle full, waiting list true
 								$output.= '<input type="hidden" name="waiting_list" value="true">';
 								// is waiting list full?
@@ -236,8 +254,6 @@ class Songcircle extends MySQLDatabase{
 
 			} // end of: while( $row = $db->fetchArray($result) )
 
-
-
 			$output.= '</table>';
 
 			return $output;
@@ -361,6 +377,269 @@ class Songcircle extends MySQLDatabase{
 	}
 
 	/**
+	*	Checks for presence of waitlist registrant by songcircle id
+	*
+	* @param (string) songcircle_id
+	* @return (array) waitlist array on success
+	* @return (bool) false if waitlist is empty
+	*/
+	public function getWaitlist($songcircle_id){
+		global $db;
+
+		// get all waitlist registrants for given songcircle id
+		$sql = "SELECT * FROM songcircle_wait_register ";
+		$sql.= "WHERE songcircle_id = '$songcircle_id'";
+
+		// if rows exist
+		if( $row = $db->getRows($sql) ){
+
+			foreach ($row as $key) {
+
+				$user_id = $key['user_id'];
+				$confirmation_key = $key['confirmation_key'];
+
+				// confirm existence in database
+				$sql = "SELECT ur.user_id, user_name, user_email, ut.timezone ";
+				$sql.= "FROM user_register AS ur, user_timezone AS ut ";
+				$sql.= "WHERE ur.user_id = {$user_id} AND ut.user_id = {$user_id}";
+
+				// if successful in confirming presence of user id, email and timezone
+				if( $user_data = $db->getRows($sql) ){
+					// init. array and construct
+					$waitlist_array = [];
+					$waitlist_array['confirmation_key'] = $confirmation_key;
+
+					foreach ($user_data as $key => $value) {
+						$waitlist_array['user'] = $value;
+					}
+					$waitlist_array['songcircle'] = $this->songcircleDataByID($songcircle_id);
+					// return the array
+					return $waitlist_array;
+					// if successful return, stop processing
+					exit;
+				}
+			}
+		}
+	}
+
+	/**
+	* Get songcircle data by songcircle_id
+	*
+	* @param (string) songcircle_id
+	*/
+	public function songcircleDataByID($songcircle_id){
+		global $db;
+		$sql = "SELECT * FROM songcircle_create WHERE songcircle_id = '$songcircle_id'";
+		if($result = $db->query($sql)){
+			return $row = $db->fetchArray($result);
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	* Retrieves a user's unsubscribe key from user_register table in database
+	*
+	* @param (int) unique user id
+	* @return (string) the unsubscribe key
+	*/
+	public function retrieveUnsubscribeKey($user_id){
+		global $db;
+		$sql = "SELECT unsubscribe_key FROM user_register WHERE user_id = $user_id";
+		if( $result = $db->getRows($sql) ){
+			return $result[0]['unsubscribe_key'];
+		} else {
+			file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',$currentUTCTime.' Unable to retrieve unsubscribe_key for user '.$user_id." (line ".__LINE__.")".PHP_EOL,FILE_APPEND);
+		}
+	}
+
+	/**
+	*	Checks to see if current time is
+	* greater than start time of a songcircle
+	*
+	*	Created: 01/15/2016
+	*
+	* @param (datetime) the current time
+	* @param (datetime) start time of a songcircle
+	* @return (bool) true is expired
+	*/
+	public function isExpiredLink($current_time, $start_time){
+		if($current_time > $start_time){
+			return true;
+		}
+	}
+
+	/**
+	* Checks by user id if user is already registered for a given songcircle by songcircle_id
+	* (referenced in includes/songcircleRegisterUser.php)
+	*
+	* @param (string) songcircle_id
+	* @param (int) user_id
+	* @return (bool) returns true if user IS already registered
+	*/
+	public function userAlreadyRegistered($songcircle_id, $user_id){
+		global $db;
+		$sql = "SELECT user_id FROM songcircle_register WHERE songcircle_id = '$songcircle_id' AND user_id = $user_id";
+		if($result = $db->query($sql)){
+			$rows = $db->hasRows($result);
+			if($rows > 0){
+				return true;
+			} else {
+				return false;
+			}
+		}
+	}
+
+	/**
+	* Formats a timezone string into a friendlier format
+	*
+	* Updated: 01/30/2016
+	*
+	* @param (string) a user timezone
+	* @return (string) formatted timezone
+	*/
+	public function formatTimezone($timezone){
+		if( ($pos = strpos($timezone, '/') ) !== false ) { // remove 'America/'
+			$clean_timezone = substr($timezone, $pos+1);
+			if( ($pos = strpos($clean_timezone, '/')) !== false ) { // remove second level '.../'
+				$clean_timezone = substr($clean_timezone, $pos+1);
+				if( ($pos = strpos($clean_timezone, '/')) !== false ) { // remove third level if exist'.../'
+					$clean_timezone = substr($clean_timezone, $pos+1);
+				}
+			}
+		}
+		return $clean_timezone = str_replace('_',' ',$clean_timezone); // remove the '_' in city names
+	}
+
+	/**
+	* An assistive function that laterally calls userTimezone function
+	*
+	* @param (datetime) a songcircle datetime
+	* @param (name constant) php timezone name
+	* @return a formatted datetime according to the user's timezone
+	*/
+	public function callUserTimezone($date_of_songcircle, $timezone) {
+		$this->user_timezone = $timezone;
+		return $this->userTimezone($date_of_songcircle);
+	}
+
+	/**
+	*	Has a songcircle reached it's maximum occupancy
+	*
+	* Updated: 05/20/2016
+	*
+	* @param (string) a songcircle_id
+	* @param (int) the number of max_participants allowed for given songcircle
+	* @return (bool) true if given songcircle is full
+	*/
+	protected function isFullSongcircle($songcircle_id, $max_participants){
+		global $db;
+		$sql = "SELECT COUNT(*) AS registered_participants ";
+		$sql.= "FROM songcircle_register ";
+		$sql.= "WHERE songcircle_id = '{$songcircle_id}' ";
+		$sql.= "AND confirm_status = 1";
+		if($result = $db->query($sql))
+		{
+			$result_set = $db->fetchArray($result);
+			if($result_set['registered_participants'] == $max_participants )
+			{
+				return true;
+			}
+		}
+	}
+
+	/**
+	* Checks to see if Waiting List for a given songcircle is full
+	*
+	* Created: 01/28/2016
+	*
+	* @param (srting) songcircle id
+	* @param (int) maximimum waiting list participants allowed
+	* @return (bool) true if given waiting list is full
+	*/
+	protected function isFullWaitingList($songcircle_id, $max_wait_participants){
+		global $db;
+
+		$sql = "SELECT COUNT(*) AS registered_wait_participants FROM songcircle_wait_register WHERE songcircle_id = '{$songcircle_id}'";
+		if($result = $db->query($sql)){
+			// fetch array set
+			$count = $db->fetchArray($result);
+			// compare registered wait participants with max wait participants allowed
+			if( $count['registered_wait_participants'] == $max_wait_participants ){
+				return true;
+			}
+		}
+	}
+
+	/**
+	*	Gets number of registered members for a particular songcircle
+	*
+	*	Created: 01/13/2015
+	*
+	* @param (string) a songcircle id
+	* @return (int) number of registered members
+	*/
+	protected function getParticipantCount($songcircle_id){
+		global $db;
+		$sql = "SELECT COUNT(*) AS registered_participants FROM songcircle_register WHERE songcircle_id = '{$songcircle_id}' AND confirm_status = 1";
+		if($result = $db->query($sql)){
+			$count = $db->fetchArray($result);
+			return $count['registered_participants'];
+		}
+	}
+
+	/**
+	*	Gets user information for a given songcircle
+	*
+	* Created: 01/13/2016
+	*
+	* @param (string) songcircle id
+	* @return (array) an array of user data
+	*/
+	protected function fetchParticipantData($songcircle_id){
+		global $db;
+
+		$sql = "SELECT user_id, reg_time FROM songcircle_register WHERE songcircle_id = '{$songcircle_id}' AND confirm_status = 1 ORDER BY reg_time ASC";
+		if($result = $db->query($sql)){
+			if($row = mysqli_num_rows($result) > 0){
+				while( $row = $db->fetchArray($result) ){
+					$user_id = $row['user_id'];
+					$sql = "SELECT user_register.user_id, user_name, user_timezone.timezone, country_name FROM user_register, user_timezone WHERE user_register.user_id = {$user_id} AND user_timezone.user_id = {$user_id}";
+					if($res = $db->query($sql)){
+						$returnData[] = $db->fetchArray($res);
+						mysqli_free_result($res);
+					}
+				}
+				return $returnData;
+			}
+		}
+	}
+
+	/**
+	* Takes a datetime object and formats it into UTC time zone
+	*
+	* Reviewed: 01/13/2016
+	*
+	* @param (datetime) date of Songcircle
+	* @return (string) a formatted date time string in UTC
+	*/
+	protected function formatUTC($date_of_songcircle){
+		$date = new DateTime($date_of_songcircle, new DateTimeZone('UTC'));
+		return $date->format('l, \\<\\s\\p\\a\\n\\ \\c\\l\\a\\s\\s\\=\\"\\s\\e\\l\\e\\c\\t\\e\\d\ \\b\\l\\u\\e">F jS\\<\\/\\s\\p\\a\\n\\>, Y - \\<\\b\\r\\> g:i A T');
+	}
+
+	/**
+	* Create a Month/Day format
+	*
+	* @param (datetime) date of songcircle
+	*	@return (string) a formatted date
+	*/
+	protected function createMonthDate($date_of_songcircle){
+		$date = new DateTime($date_of_songcircle, new DateTimeZone('UTC'));
+		return $date->format('M j');
+	}
+
+	/**
 	* Does open songcircle exist?
 	*
 	* Updated: 05/20/2016
@@ -458,74 +737,6 @@ class Songcircle extends MySQLDatabase{
 		}
 	} // end of: function createNewOpenSongcircle
 
-
-	/* Auxillary Functions */
-
-	/**
-	*	Has a songcircle reached it's maximum occupancy
-	*
-	* Updated: 05/20/2016
-	*
-	* @param (string) a songcircle_id
-	* @param (int) the number of max_participants allowed for given songcircle
-	* @return (bool) true if given songcircle is full
-	*/
-	protected function isFullSongcircle($songcircle_id, $max_participants){
-		global $db;
-		$sql = "SELECT COUNT(*) AS registered_participants ";
-		$sql.= "FROM songcircle_register ";
-		$sql.= "WHERE songcircle_id = '{$songcircle_id}' ";
-		$sql.= "AND confirm_status = 1";
-		if($result = $db->query($sql))
-		{
-			$result_set = $db->fetchArray($result);
-			if($result_set['registered_participants'] == $max_participants )
-			{
-				return true;
-			}
-		}
-	}
-
-	/**
-	* Checks to see if Waiting List for a given songcircle is full
-	*
-	* Created: 01/28/2016
-	*
-	* @param (srting) songcircle id
-	* @param (int) maximimum waiting list participants allowed
-	* @return (bool) true if given waiting list is full
-	*/
-	protected function isFullWaitingList($songcircle_id, $max_wait_participants){
-		global $db;
-
-		$sql = "SELECT COUNT(*) AS registered_wait_participants FROM songcircle_wait_register WHERE songcircle_id = '{$songcircle_id}'";
-		if($result = $db->query($sql)){
-			// fetch array set
-			$count = $db->fetchArray($result);
-			// compare registered wait participants with max wait participants allowed
-			if( $count['registered_wait_participants'] == $max_wait_participants ){
-				return true;
-			}
-		}
-	}
-
-	/**
-	*	Gets number of registered members for a particular songcircle
-	*
-	*	Created: 01/13/2015
-	*
-	* @param (string) a songcircle id
-	* @return (int) number of registered members
-	*/
-	protected function getParticipantCount($songcircle_id){
-		global $db;
-		$sql = "SELECT COUNT(*) AS registered_participants FROM songcircle_register WHERE songcircle_id = '{$songcircle_id}' AND confirm_status = 1";
-		if($result = $db->query($sql)){
-			$count = $db->fetchArray($result);
-			return $count['registered_participants'];
-		}
-	}
-
 	/**
 	*	Checks to see if a user is registered for a given songcircle
 	*
@@ -546,127 +757,9 @@ class Songcircle extends MySQLDatabase{
 		}
 	}
 
-	/**
-	*	Gets user information for a given songcircle
-	*
-	* Created: 01/13/2016
-	*
-	* @param (string) songcircle id
-	* @return (array) an array of user data
-	*/
-	protected function fetchParticipantData($songcircle_id){
-		global $db;
-
-		$sql = "SELECT user_id, reg_time FROM songcircle_register WHERE songcircle_id = '{$songcircle_id}' AND confirm_status = 1 ORDER BY reg_time ASC";
-		if($result = $db->query($sql)){
-			if($row = mysqli_num_rows($result) > 0){
-				while( $row = $db->fetchArray($result) ){
-					$user_id = $row['user_id'];
-					$sql = "SELECT user_register.user_id, user_name, user_timezone.timezone, country_name FROM user_register, user_timezone WHERE user_register.user_id = {$user_id} AND user_timezone.user_id = {$user_id}";
-					if($res = $db->query($sql)){
-						$returnData[] = $db->fetchArray($res);
-						mysqli_free_result($res);
-					}
-				}
-				return $returnData;
-			}
-		}
-	}
 
 
-	/**
-	* Takes a datetime object and formats it into UTC time zone
-	*
-	* Reviewed: 01/13/2016
-	*
-	* @param (datetime) date of Songcircle
-	* @return (string) a formatted date time string in UTC
-	*/
-	protected function formatUTC($date_of_songcircle){
-		$date = new DateTime($date_of_songcircle, new DateTimeZone('UTC'));
-		return $date->format('l, \\<\\s\\p\\a\\n\\ \\c\\l\\a\\s\\s\\=\\"\\s\\e\\l\\e\\c\\t\\e\\d\ \\b\\l\\u\\e">F jS\\<\\/\\s\\p\\a\\n\\>, Y - \\<\\b\\r\\> g:i A T');
-	}
 
-	/**
-	* Create a Month/Day format
-	*
-	* @param (datetime) date of songcircle
-	*	@return (string) a formatted date
-	*/
-	protected function createMonthDate($date_of_songcircle){
-		$date = new DateTime($date_of_songcircle, new DateTimeZone('UTC'));
-		return $date->format('M j');
-	}
-
-	/**
-	*	Checks to see if current time is
-	* greater than start time of a songcircle
-	*
-	*	Created: 01/15/2016
-	*
-	* @param (datetime) the current time
-	* @param (datetime) start time of a songcircle
-	* @return (bool) true is expired
-	*/
-	public function isExpiredLink($current_time, $start_time){
-		if($current_time > $start_time){
-			return true;
-		}
-	}
-
-	/**
-	* Checks by user id if user is already registered for a given songcircle by songcircle_id
-	* (referenced in includes/songcircleRegisterUser.php)
-	*
-	* @param (string) songcircle_id
-	* @param (int) user_id
-	* @return (bool) returns true if user IS already registered
-	*/
-	public function userAlreadyRegistered($songcircle_id, $user_id){
-		global $db;
-		$sql = "SELECT user_id FROM songcircle_register WHERE songcircle_id = '$songcircle_id' AND user_id = $user_id";
-		if($result = $db->query($sql)){
-			$rows = $db->hasRows($result);
-			if($rows > 0){
-				return true;
-			} else {
-				return false;
-			}
-		}
-	}
-
-	/**
-	* Formats a timezone string into a friendlier format
-	*
-	* Updated: 01/30/2016
-	*
-	* @param (string) a user timezone
-	* @return (string) formatted timezone
-	*/
-	public function formatTimezone($timezone){
-		if( ($pos = strpos($timezone, '/') ) !== false ) { // remove 'America/'
-			$clean_timezone = substr($timezone, $pos+1);
-			if( ($pos = strpos($clean_timezone, '/')) !== false ) { // remove second level '.../'
-				$clean_timezone = substr($clean_timezone, $pos+1);
-				if( ($pos = strpos($clean_timezone, '/')) !== false ) { // remove third level if exist'.../'
-					$clean_timezone = substr($clean_timezone, $pos+1);
-				}
-			}
-		}
-		return $clean_timezone = str_replace('_',' ',$clean_timezone); // remove the '_' in city names
-	}
-
-	/**
-	* An assistive function that laterally calls userTimezone function
-	*
-	* @param (datetime) a songcircle datetime
-	* @param (name constant) php timezone name
-	* @return a formatted datetime according to the user's timezone
-	*/
-	public function callUserTimezone($date_of_songcircle, $timezone) {
-		$this->user_timezone = $timezone;
-		return $this->userTimezone($date_of_songcircle);
-	}
 
 	/**
 	* Private function - takes a datetime string (in UTC)
@@ -717,67 +810,6 @@ class Songcircle extends MySQLDatabase{
 					return true;
 				}
 			}
-		}
-	}
-
-	/**
-	*	Checks for presence of waitlist registrant by songcircle id
-	*
-	* @param (string) songcircle_id
-	* @return (array) waitlist array on success
-	* @return (bool) false if waitlist is empty
-	*/
-	public function getWaitlist($songcircle_id){
-		global $db;
-
-		// get all waitlist registrants for given songcircle id
-		$sql = "SELECT * FROM songcircle_wait_register ";
-		$sql.= "WHERE songcircle_id = '$songcircle_id'";
-
-		// if rows exist
-		if( $row = $db->getRows($sql) ){
-
-			foreach ($row as $key) {
-
-				$user_id = $key['user_id'];
-				$confirmation_key = $key['confirmation_key'];
-
-				// confirm existence in database
-				$sql = "SELECT ur.user_id, user_name, user_email, ut.timezone ";
-				$sql.= "FROM user_register AS ur, user_timezone AS ut ";
-				$sql.= "WHERE ur.user_id = {$user_id} AND ut.user_id = {$user_id}";
-
-				// if successful in confirming presence of user id, email and timezone
-				if( $user_data = $db->getRows($sql) ){
-					// init. array and construct
-					$waitlist_array = [];
-					$waitlist_array['confirmation_key'] = $confirmation_key;
-
-					foreach ($user_data as $key => $value) {
-						$waitlist_array['user'] = $value;
-					}
-					$waitlist_array['songcircle'] = $this->songcircleDataByID($songcircle_id);
-					// return the array
-					return $waitlist_array;
-					// if successful return, stop processing
-					exit;
-				}
-			}
-		}
-	}
-
-	/**
-	* Get songcircle data by songcircle_id
-	*
-	* @param (string) songcircle_id
-	*/
-	public function songcircleDataByID($songcircle_id){
-		global $db;
-		$sql = "SELECT * FROM songcircle_create WHERE songcircle_id = '$songcircle_id'";
-		if($result = $db->query($sql)){
-			return $row = $db->fetchArray($result);
-		} else {
-			return false;
 		}
 	}
 

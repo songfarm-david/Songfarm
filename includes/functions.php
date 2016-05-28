@@ -153,10 +153,9 @@ function constructHTMLEmail($email_data, $user_data, $email_template){
 			// retrieve user key from database
 			if( !$unsubscribe_key = retrieveUserKey($compiled_user_data['user_email']) )
 			{
-
-				file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").' Could not retrieve user key for user email '.$compiled_user_data['user_email'].' -- '.$_SERVER['PHP_SELF'].' ('.__LINE__.')'.PHP_EOL,FILE_APPEND);
-
-				exit('error retrieving necessary information to execute email script');
+				file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").' Could not retrieve user key for user email '.$compiled_user_data['user_email'].' -- '.$_SERVER['PHP_SELF'].' ('.__LINE__.'). Script halted.'.PHP_EOL,FILE_APPEND);
+				
+				die('error retrieving necessary information to execute email script');
 			}
 
 			$email_template = str_replace('%unsubscribe_key%',$unsubscribe_key,$email_template);

@@ -1,4 +1,5 @@
 <?php require_once("../includes/initialize.php");
+
 /**
 * NOTE: generateIPData() function references 'includes/functions.php'
 */
@@ -14,7 +15,7 @@ if( $location_by_ip = generateIPData() ){
 	}
 } // end of: if( $location_by_ip = generateIPData() )
 ?>
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
@@ -100,4 +101,40 @@ if( $location_by_ip = generateIPData() ){
 	<script type="text/javascript" src="js/login.js"></script>
   <script type="text/javascript" src="js/songcircle.js"></script>
 	<script type="text/javascript" src="js/social.js"></script>
+	<script type="text/javascript">
+	document.body.onload = function(){
+
+		/**
+		* Code looks for a specific cookie, i.e: When a user unregisters via
+		* the call to action button on schedule on songcircle.php
+		*
+		* Displays a confirmation message then disappears
+		*/
+
+		if( document.cookie.indexOf('unregister') != -1 ){
+
+			// get start and end index of first cookie value
+			var startIndex = document.cookie.indexOf("=")+1;
+			var endIndex = document.cookie.indexOf(";");
+			// get name of songcircle
+			var songcircleName = document.cookie.substring(startIndex, endIndex);
+			var message = "<p>You have successfully unregistered for <strong>"+songcircleName+".</strong></p>";
+
+			// clear cookies
+			document.cookie = "songcircle_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+			document.cookie = "unregister=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+
+			var modalOverlay = $('#modal, #overlay');
+			$('#modal').append(message);
+
+			// fade in and out overlay
+			modalOverlay.fadeIn('3000',function(){
+				setTimeout(function(){
+					modalOverlay.fadeOut('3000');
+				}, 3000);
+			});
+		}
+
+	};
+	</script>
 </html>

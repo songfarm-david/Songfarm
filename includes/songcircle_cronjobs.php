@@ -22,55 +22,55 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 					// log call
 					file_put_contents($cronlog_location,$server_time.' songcircle_state'.PHP_EOL,FILE_APPEND);
 
-				// if Incomplete Songcircles Exist (Not Started OR Started)
-				if($result = $songcircle->getIncompleteSongcircles()){
+					// if Incomplete Songcircles Exist (Not Started OR Started)
+					if($result = $songcircle->getIncompleteSongcircles()){
 
-					foreach ($result as $songcircle_result) {
+						foreach ($result as $songcircle_result) {
 
-						$songcircle_id = $songcircle_result['songcircle_id'];
-						// date of songcircle in minutes (in UTC)
-						$date_of_songcircle = floor( strtotime($songcircle_result['date_of_songcircle']) / 60 );
-						// duration of songcircle in minutes
-						$duration_of_songcircle = ( strtotime($songcircle_result['duration']) - strtotime('today') ) / 60;
-						// current time plus 4 hours (for UTC)
-						$currentUTCTime = date("G:i:s",strtotime('+4 hours'));
-						// current time in minutes
-						$currentUTCTime = floor( strtotime($currentUTCTime) / 60);
-						// get different in MINUTES between now and $date_of_songcircle
-						$diff_in_minutes = floor( ($currentUTCTime - $date_of_songcircle) );
+							$songcircle_id = $songcircle_result['songcircle_id'];
+							// date of songcircle in minutes (in UTC)
+							$date_of_songcircle = floor( strtotime($songcircle_result['date_of_songcircle']) / 60 );
+							// duration of songcircle in minutes
+							$duration_of_songcircle = ( strtotime($songcircle_result['duration']) - strtotime('today') ) / 60;
+							// current time plus 4 hours (for UTC)
+							$currentUTCTime = date("G:i:s",strtotime('+4 hours'));
+							// current time in minutes
+							$currentUTCTime = floor( strtotime($currentUTCTime) / 60);
+							// get different in MINUTES between now and $date_of_songcircle
+							$diff_in_minutes = floor( ($currentUTCTime - $date_of_songcircle) );
 
-					  // if Songcircle has started and hasn't finished yet AND current status isn't already set to 1
-						if ( ($diff_in_minutes >= 0) && ($diff_in_minutes < $duration_of_songcircle)
-							&& ($songcircle_result['songcircle_status'] != 1) ){
+						  // if Songcircle has started and hasn't finished yet AND current status isn't already set to 1
+							if ( ($diff_in_minutes >= 0) && ($diff_in_minutes < $duration_of_songcircle)
+								&& ($songcircle_result['songcircle_status'] != 1) ){
 
-							// set status to 1 (started)
-							$songcircle_status = 1;
-							$songcircle->updateSongcircleState($songcircle_id,$songcircle_status);
+								// set status to 1 (started)
+								$songcircle_status = 1;
+								$songcircle->updateSongcircleState($songcircle_id,$songcircle_status);
 
-							file_put_contents($cronlog_location,$server_time.' -- UPDATED_STATUS - '.$songcircle_id.' Status '.$songcircle_status.PHP_EOL,FILE_APPEND);
+								file_put_contents($cronlog_location,$server_time.' -- UPDATED_STATUS - '.$songcircle_id.' Status '.$songcircle_status.PHP_EOL,FILE_APPEND);
 
-						}
-						// if Songcircle has ended AND current status isn't already set to 5
-						elseif ( ($diff_in_minutes > $duration_of_songcircle) && ($songcircle_result['songcircle_status'] != 5 ) ){
+							}
+							// if Songcircle has ended AND current status isn't already set to 5
+							elseif ( ($diff_in_minutes > $duration_of_songcircle) && ($songcircle_result['songcircle_status'] != 5 ) ){
 
-							// set status to 5 (complete)
-							$songcircle_status = 5;
-							$songcircle->updateSongcircleState($songcircle_id,$songcircle_status);
+								// set status to 5 (complete)
+								$songcircle_status = 5;
+								$songcircle->updateSongcircleState($songcircle_id,$songcircle_status);
 
-							file_put_contents($cronlog_location,$server_time.' -- UPDATED_STATUS - '.$songcircle_id.' Status '.$songcircle_status.PHP_EOL,FILE_APPEND);
+								file_put_contents($cronlog_location,$server_time.' -- UPDATED_STATUS - '.$songcircle_id.' Status '.$songcircle_status.PHP_EOL,FILE_APPEND);
 
-						}
-						else
-						{
-							file_put_contents($cronlog_location,$server_time.' -- no action - '.$songcircle_id.PHP_EOL, FILE_APPEND);
-						}
-					} // end of: foreach ($result as $songcircle_result)
-				} // end of: if($result = $songcircle->getIncompleteSongcircles())
-				else
-				{
-					file_put_contents($cronlog_location,$server_time.' -- no songcircles found'.PHP_EOL,FILE_APPEND);
-				}
-					break;
+							}
+							else
+							{
+								file_put_contents($cronlog_location,$server_time.' -- no action - '.$songcircle_id.PHP_EOL, FILE_APPEND);
+							}
+						} // end of: foreach ($result as $songcircle_result)
+					} // end of: if($result = $songcircle->getIncompleteSongcircles())
+					else
+					{
+						file_put_contents($cronlog_location,$server_time.' -- no songcircles found'.PHP_EOL,FILE_APPEND);
+					}
+						break;
 
 			/**
 			* Sends reminder email, RELATIVE TO USER TIMEZONE, 3 days out from event
@@ -184,7 +184,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 
 					foreach($result as $songcircle_user_data){
 
-						// file_put_contents($cronlog_location, $server_time.' -- Join link sent - User '.$songcircle_user_data['user_id'].'  '.$songcircle_user_data['songcircle_id'].PHP_EOL,FILE_APPEND);
+						file_put_contents($cronlog_location, $server_time.' -- Join link sent - User '.$songcircle_user_data['user_id'].'  verification_key: '.$songcircle_user_data['verification_key'].PHP_EOL,FILE_APPEND);
 
 						// construct email
 						$to = "{$songcircle_user_data['user_name']} <{$songcircle_user_data['user_email']}>";

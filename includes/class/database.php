@@ -216,7 +216,7 @@ class MySQLDatabase{
 	public function getRows($sql){
 		$result = $this->query($sql);
 		$data = array();
-		while ($row = $result->fetch_array(MYSQLI_ASSOC)){ // changed this from $result->fetch_object()
+		while ( $row = $result->fetch_array(MYSQLI_ASSOC) ){ // changed this from $result->fetch_object()
 	        $data[] = $row;
 	    }
 		return $data;

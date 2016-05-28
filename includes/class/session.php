@@ -79,10 +79,10 @@ class Session{
 			isset($_SESSION['username']) ? $this->username = $_SESSION['username'] : null;
 			isset($_SESSION['permission']) ? $this->email = $_SESSION['permission'] : $this->permission = 0;
 			isset($_SESSION['email']) ? $this->email = $_SESSION['email'] : $this->email = null;
-			isset($_SESSION['timezone']) ?$this->timezone = $_SESSION['timezone'] : null;
-			isset($_SESSION['full_timezone']) ?$this->full_timezone = $_SESSION['full_timezone'] : null;
-			isset($_SESSION['country_name']) ?$this->country_name = $_SESSION['country_name'] : null;
-			isset($_SESSION['country_code']) ?$this->country_code = $_SESSION['country_code'] : null;
+			isset($_SESSION['timezone']) ? $this->timezone = $_SESSION['timezone'] : null;
+			isset($_SESSION['full_timezone']) ? $this->full_timezone = $_SESSION['full_timezone'] : null;
+			isset($_SESSION['country_name']) ? $this->country_name = $_SESSION['country_name'] : null;
+			isset($_SESSION['country_code']) ? $this->country_code = $_SESSION['country_code'] : null;
 		}
 	}
 

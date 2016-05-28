@@ -4,10 +4,10 @@ $(document).ready(function(){
 
 	// Where re-direction will go after successful registration:
 	/* local site */
-	var redirectURL = 'http://localhost/songfarm-oct2015/public/index.php';
+	// var redirectURL = 'http://localhost/songfarm-oct2015/public/index.php';
 
 	/* live test site */
-	// var redirectURL = 'http://test.songfarm.ca';
+	var redirectURL = 'http://test.songfarm.ca';
 
 	/* live site */
 	// var redirectURL = 'http://songfarm.ca';
@@ -56,7 +56,7 @@ $(document).ready(function(){
 
 	/* IP sensitive variables */
 	var timezoneText = '<p>Please select your timezone</p>';
-	var timezoneSlctField = '<select name="timezone" tabindex="3"></select>';
+	var timezoneSelectField = '<select name="timezone" tabindex="3"></select>';
 	var formHasIP = $('p#timezone');
 
 	// error output div
@@ -91,8 +91,7 @@ $(document).ready(function(){
 	var cOcErrorCounter = 0;
 
 	// email regex
-	var myRegex = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
-	var emailRegEx = new RegExp(myRegex);
+	var emailRegExp = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
 
 
 	/**
@@ -138,15 +137,15 @@ $(document).ready(function(){
 		});
 	}
 
+	/**
+	* Retrieves event data from songcircle event table rows
+	* and Populates a date-list container
+	*/
 	// hook songcircle table class
 	var songcircleTable = $('#schedule #schedule_container table.songcircle_table');
 	// get hook to target container
 	var datesListContainer = $('#schedule #datesList_container');
 	// cycle through songcircle tables
-	/**
-	* Retrieves event data from songcircle event table rows
-	* and Populates a date-list container
-	*/
 	$(songcircleTable).find('tr')
 	.filter('.songcircle_table > tbody > tr').each(function(index, element){
 		// retrieve values
@@ -171,7 +170,6 @@ $(document).ready(function(){
 		$(songcircleTable).find('tr[data-row-count="'+rowNumber+'"]').addClass('active');
 	})
 
-
 	/**
 	*	Targets specific hidden inputs in the registration form
 	* and Removes them
@@ -187,6 +185,21 @@ $(document).ready(function(){
 	function getSetFullTimezone(){
 		full_timezone = $(registrationForm).find('select[name="timezone"] option:selected').html();
 		fullTimezoneVal.val(full_timezone);
+	}
+
+	/**
+	* Retrieves Session timezone if present and set selected attr in timezone select menu
+	*/
+	function setSessionTimezone(){
+		// if session timezone exists, get the element containing its value
+		if( document.getElementById('session-timezone') != null ){
+			// get value of element
+			var sessionTimezone = document.getElementById("session-timezone").getAttribute("data-session-timezone");
+			// get timezone select menu and set selected option where is session timezone
+			$('[name="timezone"]').find('option[value="'+sessionTimezone+'"]').attr('selected',true);
+			// var y = document.getElementsByName("timezone");
+			// console.log(y);
+		}
 	}
 
 	callAjax(countryCode);
@@ -210,6 +223,8 @@ $(document).ready(function(){
 				method : 'POST',
 				success: function(data){
 					$('form#registration_form select[name="timezone"]').html(data);
+					// once timezones are loaded, call function to test for session timezone
+					setSessionTimezone();
 				}
 			});
 		}
@@ -250,13 +265,13 @@ $(document).ready(function(){
 	*/
 	// if presence of IP address elements
 	if( formHasIP.length ){
-		$('p#timezone').after(timezoneSlctField);
+		$('p#timezone').after(timezoneSelectField);
 	} else {
 		// if no presence of IP address elements
 		// show country selection container
 		countrySelectBoxContainer.show();
 		// insert elements after selection container
-		countrySelectBoxContainer.after(timezoneText+timezoneSlctField);
+		countrySelectBoxContainer.after(timezoneText+timezoneSelectField);
 	}
 
 	/**
@@ -331,7 +346,7 @@ $(document).ready(function(){
 				}
 			}
 			// if not not valid email
-			else if( !emailRegEx.test( emailInput.val() ) ){
+			else if( !emailRegExp.test( emailInput.val() ) ){
 				emailInput.addClass('input_error').focus().select();
 				emailError.css('display','table').html('<p>Please enter a valid email address.</p>').show();
 			}	else {
@@ -429,7 +444,7 @@ $(document).ready(function(){
 
 					} catch(e) {
 						/* Returned data was an error */
-						// console.log('there was an error registering user');
+						console.log('there was an error registering user');
 						var notificationMsg = data;
 
 						// trim returned data for keywords ('name','email')
@@ -500,6 +515,53 @@ $(document).ready(function(){
 		return false;
 
 	}); // end of on formSubmit
+
+	/**
+	* Unregister user if session user id can be determined
+	*/
+	// handle to any button with waitlist class
+	var unregisterBtn = $('span.waitlist');
+
+	unregisterBtn.on('click',function(){
+		// clear cookies if any
+		document.cookie = "songcircle_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+		document.cookie = "unregister=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+
+		var userId;
+		// if data attribute exists
+		if( userId = $('table.songcircle_table').data('user-session-id') ){
+
+			// collect relevant data
+			var songcircleId = $(this).parent().find('input[name="songcircle_id"]').val();
+			var songcircleName = $(this).parent().find('input[name="songcircle_name"]').val();
+			var waitlist = $(this).data('waitlist');
+			var userId = $('table.songcircle_table').data('user-session-id');
+
+			// create target destination
+			var target = "../includes/songcircle_user_action.php?action=unregister"
+					target+= "&songcircle_id="+songcircleId+"&user_id="+userId+"&waitlist="+waitlist;
+
+			// request scripting page
+			$.ajax({
+				url : target,
+				method : 'POST',
+				success: function(data){
+					// set cookies for script on songcircle.php
+					document.cookie = "songcircle_name="+songcircleName;
+					document.cookie = "unregister=true;";
+					// cause reload of housing page (songcircle.php)
+					document.location.reload(true);
+				},
+				failure: function(data){
+					alert('fail');
+					alert(data);
+					// display failure message
+				}
+			});
+
+		}
+
+	});
 
 	/**
 	* Toggles checked property on codeOfConduct

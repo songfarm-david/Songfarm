@@ -448,7 +448,7 @@ div.global_msg{
     position: absolute;
     z-index: 1000;
     top: 70px; right: 0;
-    width: 28.5%; min-width: 190px;
+    width: 28.5%; min-width: 200px;
     text-align: right;
     padding: 0.5em 1.25em;
     background: #ffffff;

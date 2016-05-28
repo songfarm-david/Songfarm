@@ -57,7 +57,7 @@ $email_data = [
 		"intro" => "You are almost done registering for <b>%songcircle_name%</b> on <b>%date_of_songcircle%</b>.",
 		"body" => "Please confirm your registration by clicking the link below:",
 		"ctaLink" => [
-			"linkLocation" => "http://songfarm.ca/includes/songcircle_user_action.php?action=confirm_registration&songcircle_id=%songcircle_id%&user_email=%user_email%&username=%username%&confirmation_key=%confirmation_key%&waitlist=false",
+			"linkLocation" => "http://test.songfarm.ca/includes/songcircle_user_action.php?action=confirm_registration&songcircle_id=%songcircle_id%&user_email=%user_email%&username=%username%&confirmation_key=%confirmation_key%&waitlist=false",
 			"linkText" => "Confirm Registration"
 		],
 		"signature" => "Thank you!<br />
@@ -91,7 +91,7 @@ $email_data = [
 		"signature" => "Take care! <br />
 		The Songfarm team",
 		"unregister" => [
-			"unregisterText" => "If you will be unable to attend this event, please unregister by <a href=\"http://songfarm.ca/includes/songcircle_user_action.php?action=unregister&songcircle_id=%songcircle_id%&user_id=%user_id%&waitlist=false\">clicking here</a>."
+			"unregisterText" => "If you will be unable to attend this event, please unregister by <a href=\"http://test.songfarm.ca/includes/songcircle_user_action.php?action=unregister&songcircle_id=%songcircle_id%&user_id=%user_id%&waitlist=false\">clicking here</a>."
 		],
 		"disclaimer" => "You are receiving this email because you registered for a Songcircle on <a href=\"http://songfarm.ca\" style=\"text-decoration: none; color: #153643;\"><font color=\"#153643\">songfarm.ca</font></a><br />
 		If you received this email in error or do not wish to receive any further communications from Songfarm, please ",
@@ -122,7 +122,7 @@ $email_data = [
 		"signature" => "Looking forward to hearing from you!<br />
 		The Songfarm Team",
 		"unregister" => [
-			"unregisterText" => "If you will be unable to attend this event, please unregister by <a href=\"http://songfarm.ca/includes/songcircle_user_action.php?action=unregister&songcircle_id=%songcircle_id%&user_id=%user_id%&waitlist=false\">clicking here</a>."
+			"unregisterText" => "If you will be unable to attend this event, please unregister by <a href=\"http://test.songfarm.ca/includes/songcircle_user_action.php?action=unregister&songcircle_id=%songcircle_id%&user_id=%user_id%&waitlist=false\">clicking here</a>."
 		],
 		"disclaimer" => "You are receiving this email because you registered for a Songcircle on <a href=\"http://songfarm.ca\" style=\"text-decoration: none; color: #153643;\"><font color=\"#153643\">songfarm.ca</font></a><br />
 		If you received this email in error or do not wish to receive any further communications from Songfarm, please ",
@@ -133,20 +133,21 @@ $email_data = [
 	],
 	"join_songcircle" => [
 		"email_type" => "join_songcircle",
-		"title" => "Join %songcircle_name% now!",
+		"title" => "Join %songcircle_name%",
 		"logo" => [ // may user alternate logo
 			"source" => "http://songfarm.ca/public/images/emails/logo_email_l.png",
 			"width" => "293",
 			"height" => "194"
 		],
-		"header" => "%songcircle_name%<br /> is starting!",
-		"greeting" => "<b>%songcircle_name%</b> is starting now!",
-		"intro" => "Click the link below to be connected now:",
+		"header" => "%songcircle_name%<br /> is starting soon!",
+		"greeting" => "<b>%songcircle_name%</b> is starting within the hour!",
+		"intro" => "Click the link below to be connected when the Songcircle is starting. You can also go to <a href=\"http://songfarm.ca/songcircle\">http://songfarm.ca/songcircle</a> and join the Songcircle there once it begins.",
+		"body" => "Click the link below to connect to the Songcircle when it starts:",
 		"ctaLink" => [
-			"linkLocation" => "http://songfarm.ca/public/songcircle_user_action.php?action=join_songcircle&songcircle_id=%songcircle_id%&user_id=%user_id%&verification_key=%verification_key%",
+			"linkLocation" => "http://test.songfarm.ca/includes/songcircle_user_action.php?action=join_songcircle&songcircle_id=%songcircle_id%&user_id=%user_id%&verification_key=%verification_key%",
 			"linkText" => "Join Now!"
 		],
-		"signature" => "Break a leg!<br />
+		"signature" => "Best of luck and have fun!<br />
 		The Songfarm Team",
 		"disclaimer" => "You are receiving this email because you registered for a Songcircle on <a href=\"http://songfarm.ca\" style=\"text-decoration: none; color: #153643;\"><font color=\"#153643\">songfarm.ca</font></a><br />
 		If you received this email in error or do not wish to receive any further communications from Songfarm, please ",
@@ -168,11 +169,11 @@ $email_data = [
 		"intro" => "A spot has opened up for <b>%songcircle_name%</b> on <b>%date_of_songcircle%</b>.",
 		"body" => "Please click the link below to secure your spot:",
 		"ctaLink" => [
-			"linkLocation" => "http://songfarm.ca/includes/songcircle_user_action.php?action=confirm_registration&songcircle_id=%songcircle_id%&user_email=%user_email%&username=%username%&confirmation_key=%confirmation_key%&waitlist=true",
+			"linkLocation" => "http://test.songfarm.ca/includes/songcircle_user_action.php?action=confirm_registration&songcircle_id=%songcircle_id%&user_email=%user_email%&username=%username%&confirmation_key=%confirmation_key%&waitlist=true",
 			"linkText" => "Secure my spot!"
 
 		],
-		"postScript" => "If you no longer wish to participate, please <a href=\"http://songfarm.ca/includes/songcircle_user_action.php?action=unregister&songcircle_id=%songcircle_id%&user_id=%user_id%&waitlist=true\">click here</a> to be removed from the waitlist.",
+		"postScript" => "If you no longer wish to participate, please <a href=\"http://test.songfarm.ca/includes/songcircle_user_action.php?action=unregister&songcircle_id=%songcircle_id%&user_id=%user_id%&waitlist=true\">click here</a> to be removed from the waitlist.",
 		"signature" => "Thanks!<br />
 		The Songfarm Team",
 		"disclaimer" => "You are receiving this email because you registered for a Songcircle on <a href=\"http://songfarm.ca\" style=\"text-decoration: none; color: #153643;\"><font color=\"#153643\">songfarm.ca</font></a><br />

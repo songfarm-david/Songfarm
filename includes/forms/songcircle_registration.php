@@ -26,6 +26,9 @@
 		<p id="timezone">
 			Please select the most appropriate timezone for your location
 		</p>
+		<?php if(isset($session->timezone)){
+			echo "<span class=\"hide\" id=\"session-timezone\" data-session-timezone=\"".$session->timezone."\"></span>";
+		} ?>
 		<!--
 			Jquery inserts timezone select list here if user has IP data
 		-->
@@ -36,7 +39,7 @@
 		</p>
 		<!-- end of: if((isset($country_code) && (isset($country_name))) -->
 	<?php
-		} else {
+	} else {
 	?>
 	<!-- if NO values generated from generateIPData() -->
 		<p>
