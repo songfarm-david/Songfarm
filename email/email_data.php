@@ -111,7 +111,7 @@ $email_data = [
 		"header" => "We are only a couple days away from %songcircle_name%",
 		"greeting" => "Hey %username%,",
 		"intro" => "This is a reminder that you are confirmed to participate in <b>%songcircle_name%</b> on <b>%date_of_songcircle%</b>.",
-		"body" => "Please remember that, in order to participate, you will need to be using:",
+		"body" => "Please remember that, <b>in order to participate</b>, you will need to be using:",
 		"linkIntro" => "Here's an article we think you'll like:",
 		"blogLink" => [
 			"linkLocation_1" => "http://blog.songfarm.ca/blog_article_1.html",
@@ -133,7 +133,7 @@ $email_data = [
 	],
 	"join_songcircle" => [
 		"email_type" => "join_songcircle",
-		"title" => "Join %songcircle_name%",
+		"title" => "%songcircle_name% is starting in 1 hour!",
 		"logo" => [ // may user alternate logo
 			"source" => "http://songfarm.ca/public/images/emails/logo_email_l.png",
 			"width" => "293",
@@ -141,11 +141,11 @@ $email_data = [
 		],
 		"header" => "%songcircle_name%<br /> is starting soon!",
 		"greeting" => "<b>%songcircle_name%</b> is starting within the hour!",
-		"intro" => "Click the link below to be connected when the Songcircle is starting. You can also go to <a href=\"http://songfarm.ca/songcircle\">http://songfarm.ca/songcircle</a> and join the Songcircle there once it begins.",
+		"intro" => "To connect to the Songcircle, click the link below to be connected when the Songcircle is starting or visit <a href=\"http://songfarm.ca/songcircle\">http://songfarm.ca/songcircle</a> and join their once the Songcircle begins.",
 		"body" => "Click the link below to connect to the Songcircle when it starts:",
 		"ctaLink" => [
 			"linkLocation" => "http://test.songfarm.ca/includes/songcircle_user_action.php?action=join_songcircle&songcircle_id=%songcircle_id%&user_id=%user_id%&verification_key=%verification_key%",
-			"linkText" => "Join Now!"
+			"linkText" => "Join Songcircle!"
 		],
 		"signature" => "Best of luck and have fun!<br />
 		The Songfarm Team",

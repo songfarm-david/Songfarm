@@ -651,8 +651,10 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 				$verification_key = $_GET['verification_key'];
 
 				if($songcircle->userAlreadyRegistered($songcircle_id,$user_id)){
+					$log_text = " Join link activated: ".$songcircle_id.", user id: ".$user_id;
+					file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',$currentUTCTime.$log_text.PHP_EOL,FILE_APPEND);
 					// construct join link
-					$link_join_songcircle = $_SERVER['SERVER_ADDR'].'public/start_call.php?';
+					$link_join_songcircle = '../public/start_call.php?';
 					$link_join_songcircle.= 'songcircle_id='.$songcircle_id.'&';
 					$link_join_songcircle.= 'user_id='.$user_id.'&';
 					$link_join_songcircle.= 'verification_key='.$verification_key;

@@ -174,8 +174,8 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 							AND sc.songcircle_status = 0
 							AND sr.confirm_status = 1
 							-- get songcircles where difference between now (UTC) and date of songcircle (also UTC) is 1 hour
-							AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(), @@global.time_zone, '+0:00' ), date_of_songcircle ) > 50
-							AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(), @@global.time_zone, '+0:00' ), date_of_songcircle ) < 70";
+							AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(), @@global.time_zone, '+0:00' ), date_of_songcircle ) > 45
+							AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(), @@global.time_zone, '+0:00' ), date_of_songcircle ) < 60";
 							/**
 							* NOTE: constraints determined to find time area approx. 1 hr before songcircle
 							*/
@@ -188,7 +188,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 
 						// construct email
 						$to = "{$songcircle_user_data['user_name']} <{$songcircle_user_data['user_email']}>";
-						$subject = "Join ".$songcircle_user_data['songcircle_name']." now!";
+						$subject = $songcircle_user_data['songcircle_name']." is starting in 1 hour!";
 						$from = "Songfarm <noreply@songfarm.ca>";
 						if( $message = initiateEmail($email_data['join_songcircle'],$songcircle_user_data) ){
 							$headers = "From: {$from}\r\n";

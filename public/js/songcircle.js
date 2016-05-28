@@ -93,7 +93,6 @@ $(document).ready(function(){
 	// email regex
 	var emailRegExp = new RegExp("^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$");
 
-
 	/**
 	* Trigger Songcircle Registration form + pass values from songcircle table
 	*/

@@ -172,6 +172,12 @@ article#schedule{
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5fcca', endColorstr='#92ea41',GradientType=0 );
 }
 
+#schedule #schedule_container table.songcircle_table div p.in-progress,
+#schedule #schedule_container table.songcircle_table div p.is-complete{
+	padding: 5px 0 4px; font-family: 'museo_sans300';
+}
+
+
 /**
 * Participants Drop-Down table
 */

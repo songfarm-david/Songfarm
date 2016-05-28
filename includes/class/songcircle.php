@@ -81,15 +81,16 @@ class Songcircle extends MySQLDatabase{
 
 				$output.= '<tr data-row-count="'.$count.'">';
 
-				if( empty($_SESSION['user_id'])
-				|| !isset($_SESSION['user_id'])
-				|| !isset($user->timezone) ){
+				if( (empty($_SESSION['user_id']) && !isset($_SESSION['user_id']))
+					&& !isset($_SESSION['timezone']) ){
 					// format times in UTC
 					$output.= '<td data-month-date="'.$this->createMonthDate($row['date_of_songcircle']).'">';
 					$output.= $this->formatUTC($row['date_of_songcircle']).'</td>';
 				}	else {
+					$this->user_timezone = $_SESSION['timezone'];
 					// format times according to user timezone
-					$output.= '<td>'.$this->userTimezone($row['date_of_songcircle'], $user->timezone).'</td>';
+					$output.= '<td data-month-date="'.$this->createMonthDate($row['date_of_songcircle']).'">';
+					$output.= $this->callUserTimezone($row['date_of_songcircle'], $this->user_timezone).'</td>';
 				}
 
 				// middle td + currently registered count
@@ -130,8 +131,14 @@ class Songcircle extends MySQLDatabase{
 									// waiting list full, display inactive button
 									$output.= '<span class="button_container cannot_register">Songcircle Full</span>';
 								} else {
-									// not full waiting list, display join button
-									$output.= '<span class="button_container" data-id="triggerRegForm">Join&nbsp;Waitlist</span>';
+									// not full waiting list,
+									// already on waiting list?
+									if( $this->userAlreadyRegistered($row['songcircle_id'],$_SESSION['user_id'],'true') ) {
+										$output.= '<span class="button_container waitlist" data-waitlist=true>Leave Waitlist</span>';
+									} else {
+										// allow join
+										$output.= '<span class="button_container" data-id="triggerRegForm">Join&nbsp;Waitlist</span>';
+									}
 								}
 							}
 							else
@@ -162,43 +169,7 @@ class Songcircle extends MySQLDatabase{
 								$output.= '<span class="button_container" data-id="triggerRegForm">Register</span>';
 							}
 						}
-
-						// is songcircle full?
-						// if( $this->isFullSongcircle( $row['songcircle_id'], $row['max_participants']) ){
-						// 	// songcircle full, waiting list true
-						// 	$output.= '<input type="hidden" name="waiting_list" value="true">';
-						// 	// is waiting list full?
-						// 	if( $this->isFullWaitingList( $row['songcircle_id'], $this->max_wait_participants) ) {
-						// 		// waiting list full, display inactive button
-						// 		$output.= '<span class="button_container cannot_register">Songcircle Full</span>';
-						// 	} else {
-						// 		// not full waiting list, display join button
-						// 		$output.= '<span class="button_container" data-id="triggerRegForm">Join&nbsp;Waitlist</span>';
-						// 	}
-						// }
-						// else
-						// {
-						// 	// songcircle not full, waiting list false
-						// 	$output.= '<input type="hidden" name="waiting_list" value="false">';
-						// 	// see if session exists
-						// 	if( isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) ){
-						// 		// check if user is already registered
-						// 		if( $this->isRegisteredUser($row['songcircle_id'], $_SESSION['user_id']) ){
-						// 			// allow user to unregister
-						// 			$output.= '<span class="button_container">Unregister</span>';
-						// 		} else {
-						// 			$output.= '<span class="button_container" data-id="triggerRegForm">Register</span>';
-						// 		}
-						// 	}	// end of: is $_SESSION data
-						// 	else
-						// 	{
-						// 		// allow user to register
-						// 		$output.= '<span class="button_container" data-id="triggerRegForm">Register</span>';
-						// 	}
-						// }
-
 						$output.= '<input type="submit" class="hide">';
-
 					}
 					// if songcircle started
 					elseif ( $row['songcircle_status'] == 1 ) {
@@ -211,19 +182,16 @@ class Songcircle extends MySQLDatabase{
 							$output.= "</button>";
 
 						} else {
-
 							// display "Songcircle In Progress" button
-							$output.= "<div><p>".$row['songcircle_name']." is in progress</p></div>";
-
+							$output.= "<div><p class=\"in-progress\">".$row['songcircle_name']."<br> is in progress</p></div>";
 						}
-
 					}
 					// if songcircle complete
 					else
 					{
 						// show message here that songcircle has completed
 						// display "Songcircle has Completed" button
-						$output.= "<div><p>".$row['songcircle_name']." has completed</p></div>";
+						$output.= "<div><p>".$row['songcircle_name']."<br> has completed</p></div>";
 					}
 					// $output.= '<h4>'.$count.'</h4>';
 
@@ -246,16 +214,12 @@ class Songcircle extends MySQLDatabase{
 					$output.= '</table>';
 					$output.= '</td>';
 					// end of participantsTable
-
 				$output.= '</tr>';
-
 				// increment counter +1
 				$count++;
-
 			} // end of: while( $row = $db->fetchArray($result) )
 
 			$output.= '</table>';
-
 			return $output;
 
 		} // end of: if( $result = $db->query($sql) )
@@ -295,7 +259,6 @@ class Songcircle extends MySQLDatabase{
 							return true;
 						}
 					}
-
 				}
 			}
 
@@ -332,7 +295,7 @@ class Songcircle extends MySQLDatabase{
 	}
 
 	/**
-	* Updates state of Songcircle ID
+	* Updates state of a Songcircle
 	*
 	* @param (string) a songcircle_id
 	* @param (int) a status state
@@ -377,7 +340,7 @@ class Songcircle extends MySQLDatabase{
 	}
 
 	/**
-	*	Checks for presence of waitlist registrant by songcircle id
+	*	Checks for presence of waitlist registrants by songcircle id
 	*
 	* @param (string) songcircle_id
 	* @return (array) waitlist array on success
@@ -477,9 +440,12 @@ class Songcircle extends MySQLDatabase{
 	* @param (int) user_id
 	* @return (bool) returns true if user IS already registered
 	*/
-	public function userAlreadyRegistered($songcircle_id, $user_id){
+	public function userAlreadyRegistered($songcircle_id, $user_id, $table_name=null){
 		global $db;
-		$sql = "SELECT user_id FROM songcircle_register WHERE songcircle_id = '$songcircle_id' AND user_id = $user_id";
+
+		$table_name == null ? $table_name = 'songcircle_register' : $table_name = 'songcircle_wait_register';
+
+		$sql = "SELECT user_id FROM ".$table_name." WHERE songcircle_id = '$songcircle_id' AND user_id = $user_id";
 		if($result = $db->query($sql)){
 			$rows = $db->hasRows($result);
 			if($rows > 0){
@@ -521,6 +487,36 @@ class Songcircle extends MySQLDatabase{
 	public function callUserTimezone($date_of_songcircle, $timezone) {
 		$this->user_timezone = $timezone;
 		return $this->userTimezone($date_of_songcircle);
+	}
+
+	/**
+	* Unregisters a user from a given songcircle
+	*
+	* @param (string) a songcircle id
+	*	@param (int) a user id
+	* @param (string) table name
+	* @return (bool) true on successful unregister
+	*/
+	public function unregisterUserFromSongcircle($songcircle_id, $user_id, $table_name){
+		global $db;
+
+		$sql = "SELECT id FROM ".$table_name." ";
+		$sql.= "WHERE songcircle_id = '$songcircle_id' ";
+		$sql.= "AND user_id = $user_id LIMIT 1";
+
+		if( $result = $db->query($sql) ){
+			// if there are rows
+			if( $row = $db->hasRows($result) > 0 ){
+				$data = $db->fetchArray($result);
+				// fetch the id of the row
+				$id = $data['id'];
+				// Perform row deletion
+				$sql = "DELETE FROM ".$table_name." WHERE id = $id LIMIT 1";
+				if($result = $db->query($sql)){
+					return true;
+				}
+			}
+		}
 	}
 
 	/**
@@ -640,6 +636,28 @@ class Songcircle extends MySQLDatabase{
 	}
 
 	/**
+	* Private function - takes a datetime string (in UTC)
+	* and converts it to a users timezone
+	*
+	* @param datetime a datetime description of a date
+	*	@return string formatted date with user timezone
+	*/
+	protected function userTimezone($date_of_songcircle){
+		$date = new DateTime($date_of_songcircle, new DateTimeZone('UTC'));
+		$timezone = new DateTimeZone($this->user_timezone);
+		$date->setTimezone($timezone);
+
+		$callMethod = debug_backtrace();
+		// if the calling method is 'displaySongcircles'
+		if( isset($callMethod[2]['function']) == 'displaySongcircles' ){
+			return $date->format('l, \\<\\s\\p\\a\\n\\ \\c\\l\\a\\s\\s\\=\\"\\s\\e\\l\\e\\c\\t\\e\\d\ \\b\\l\\u\\e">F jS\\<\\/\\s\\p\\a\\n\\>, Y - \\<\\b\\r\\> g:i A T');
+		} else {
+			// format for modal box
+			return $date->format('l, F jS, Y - g:i A T');
+		}
+	}
+
+	/**
 	* Does open songcircle exist?
 	*
 	* Updated: 05/20/2016
@@ -748,7 +766,6 @@ class Songcircle extends MySQLDatabase{
 	*/
 	private function isRegisteredUser($songcircle_id, $user_id){
 		global $db;
-
 		$sql = "SELECT user_id FROM songcircle_register WHERE songcircle_id = '$songcircle_id' AND user_id = $user_id AND confirm_status = 1";
 		if($result = $db->query($sql)){
 			if($db->hasRows($result)){
@@ -760,58 +777,6 @@ class Songcircle extends MySQLDatabase{
 
 
 
-
-	/**
-	* Private function - takes a datetime string (in UTC)
-	* and converts it to a users timezone
-	*
-	* @param datetime a datetime description of a date
-	*	@return string formatted date with user timezone
-	*/
-	protected function userTimezone($date_of_songcircle){
-		$date = new DateTime($date_of_songcircle, new DateTimeZone('UTC'));
-		$timezone = new DateTimeZone($this->user_timezone);
-		$date->setTimezone($timezone);
-		// debug_backtrace tells the last called function
-		// depending on the function, display time format accordingly
-		$callMethod = debug_backtrace();
-		if (isset($callMethod[1]['function']) && $callMethod[1]['function'] == 'displaySongcircles')
-		{
-			return $date->format('l, F jS, Y - \\<\\b\\r\\> g:i A T');
-		} else {
-			return $date->format('l, F jS, Y - g:i A T');
-		}
-	}
-
-	/**
-	* Unregisters a user from a given songcircle
-	*
-	* @param (string) a songcircle id
-	*	@param (int) a user id
-	* @param (string) table name
-	* @return (bool) true on successful unregister
-	*/
-	public function unregisterUserFromSongcircle($songcircle_id, $user_id, $table_name){
-		global $db;
-
-		$sql = "SELECT id FROM ".$table_name." ";
-		$sql.= "WHERE songcircle_id = '$songcircle_id' ";
-		$sql.= "AND user_id = $user_id LIMIT 1";
-
-		if( $result = $db->query($sql) ){
-			// if there are rows
-			if( $row = $db->hasRows($result) > 0 ){
-				$data = $db->fetchArray($result);
-				// fetch the id of the row
-				$id = $data['id'];
-				// Perform row deletion
-				$sql = "DELETE FROM ".$table_name." WHERE id = $id LIMIT 1";
-				if($result = $db->query($sql)){
-					return true;
-				}
-			}
-		}
-	}
 
 
 
