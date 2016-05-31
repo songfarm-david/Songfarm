@@ -128,6 +128,7 @@ form#contact-form div.errorContainer:before{
   display: table-cell;
 	vertical-align: middle;
 	padding: 5px 0;
+  width: 100%; /* enables left-justication of p tag */
 }
 form#contact-form div.errorContainer #name-error{
   top: -12px;
@@ -180,9 +181,9 @@ div.errors_php ul li{ list-style-type: disc; }
 @media screen and (max-width: 800px){
 	#contact-form .error#name-error,
 	#contact-form .error#email-error{ top: 3px;}
-	#contact-form #msg-error{
+	/*#contact-form #msg-error{
     top: initial;
-  }
+  }*/
 	form#contact-form div.errorContainer{
 		position: relative; display: block;
 		left: 14px; top: -10px;

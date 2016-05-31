@@ -1,35 +1,36 @@
 <?php	require_once("../includes/initialize.php");
 /**
 * This page receives request from songcircle_user_action.php (case: 'join_songcircle')
-*
 * It first validates url query parameters before connecting user to video_call.php
-*
-* NOTE: commented out to bypass $_SESSION data -- 03/01/16
-* if(!$session->isLoggedIn()) { redirectTo('index.php'); }
-*
 */
+
+// if(!$session->isLoggedIn()) { redirectTo('index.php'); }
+
 /* begin validation */
   // if query parameters are not present or empty
-    if( (!isset($_GET['songcircle_id']) || empty($_GET['songcircle_id'])) &&
-        (!isset($_GET['user_id']) || empty($_GET['user_id'])) &&
-        (!isset($_GET['verification_key']) || empty($_GET['verification_key'])) ){
+if( (!isset($_GET['songcircle_id']) || empty($_GET['songcircle_id'])) &&
+    (!isset($_GET['user_id']) || empty($_GET['user_id'])) &&
+    (!isset($_GET['verification_key']) || empty($_GET['verification_key'])) )
+    {
       // invalid parameters
-        // redirect user
         redirectTo('index.php');
     }
     // if verification keys don't match
-    elseif(!$songcircle->verifyKeys($_GET['songcircle_id'],$_GET['user_id'],$_GET['verification_key'])) {
+    elseif( !$songcircle->verifyKeys($_GET['songcircle_id'],$_GET['user_id'],$_GET['verification_key']) )
+    {
       // keys don't match
-        // redirect user
         redirectTo('index.php');
     }
     else
     {
       // query parameters valid
         // set variables
-        $songcircle_id = $_GET['songcircle_id'];
-        //NOTE: ternary operator first checks $_SESSION for user_id, else from $_GET['user_id']
-        $user_id = (isset($session) && isset($session->user_id) ? $session->user_id : $_GET['user_id']);
+        $songcircle_id = $_GET['songcircle_id'].'<br>';
+        /*
+        * NOTE: ternary operator first checks $_SESSION for user_id, else from $_GET['user_id']
+        */
+        $user_id = isset($session->user_id) ? $session->user_id : $_GET['user_id'];
+
     }
 ?>
 <html lang="en">
@@ -61,7 +62,8 @@
 		var sessionUserId = "<?php echo $user_id ?>";;
 
 		if (!sessionToken) {
-	    //login to get session token
+
+      //login to get session token
 	    participantId = "123" + sessionUserId;
 
 			//"url to send response with the session token";
@@ -88,6 +90,7 @@
 	            results = regex.exec(location.search);
 	        return results === null ? "" : results[1].replace(/\+/g, " ");
 	  }
+
 		</script>
 	</body>
 </html>

@@ -10,13 +10,15 @@
 */
 
 /* make body full-width of viewport */
-body{ max-width: 100%; }
-
-header{
-	max-width: 1600px; margin-left: auto; margin-right: auto;
+body{
+	max-width: 100%;
 }
-
-/* hide green register button */
+header{
+	max-width: 1600px;
+	margin-left: auto;
+	margin-right: auto;
+}
+/* hides green register button on index.php*/
 button.register.medium{ display: none; }
 
 main{
@@ -60,27 +62,24 @@ article#schedule{
 	position: relative; z-index: 100;	top: 110px;
 }
 
-
-#schedule table{
+table{
 	width: 100%; text-align: center;
 	position: relative;
 	font-weight: 900;	line-height: 1.4;
 	border: 3px solid #fff;
 	border-radius: 30px;
 	box-shadow: 0px 1px 6px 2px rgba(0,0,0,0.45);
+	color: #666;
 	background: #e5fcca;
 	background: linear-gradient(to bottom,  #e5fcca 0%,#99ee20 45%,#89dc3d 70%,#7ec919 80%,#92ea41 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5fcca', endColorstr='#92ea41',GradientType=0 );
 }
-#schedule table.songcircle_table tr{ position: relative; display: none; }
-#schedule table.songcircle_table tr.active{ display: table-row; }
-#schedule table td{
+table td{
 	width: 33.3%;
 	font-size: 1.25em;
 	vertical-align: middle;
 	padding: 1em 0;
 	display: inline-block;
-	/*display: table-cell;*/
 }
 
 /* date-list container */
@@ -91,35 +90,45 @@ article#schedule{
 	font-family: 'museo_sans900';
 	color: #666;
 }
-#datesList_container ul li{ display: inline; font-family: 'museo_sans700'; cursor: pointer; transition: opacity 250ms; }
-#datesList_container ul li:not(:last-child):after{
-	content: '/';
+#datesList_container p,
+#datesList_container ul{
+	padding: 0.25em;
 }
-#datesList_container ul li:hover{ opacity: 0.6; }
-#datesList_container ul li.selected:hover{ opacity: 1; }
-#datesList_container p:first-child, #datesList_container .selected, .participantsTable td{ color: #3F9FEB; }
-#datesList_container p:last-child{
-	font-family: 'museo_sans700';
+#datesList_container li{
+	display: inline; font-family: 'museo_sans700';
+	cursor: pointer; transition: opacity 250ms;
 }
-#schedule #datesList_container p, #datesList_container ul{ padding: 0.25em; }
+#datesList_container li:not(:last-child):after{ content: '/'; }
+#datesList_container li:hover{ opacity: 0.6; }
+#datesList_container li.selected:hover{ opacity: 1; }
 
-#schedule #datesList_container .selected, span.selected, #banner h1 span, #about h3 span{
-	font-family: 'museo_sans900';
+.selected, .participantsTable td,
+#datesList_container p{
+	color: #3F9FEB;
 }
-#schedule #datesList_container .selected:before{
+/*#datesList_container p:last-child{font-family: 'museo_sans700';}*/
+#datesList_container .selected:before{
 	content: url('../images/songcircle/arrow_blue.png');
 	position: relative; top: 1px;
 	margin-left: 6px;	margin-right: -1px;
 }
+.selected, #banner span, #about span,
+#datesList_container li.selected{
+	font-family: 'museo_sans900';
+}
 
-
+/**
+* Songcircle table
+*/
+.songcircle_table tr{ position: relative; display: none; }
+.songcircle_table tr.active{ display: table-row; }
 /* Middle td */
-#schedule table.songcircle_table td:nth-child(2){
+.songcircle_table td:nth-child(2){
 	position: relative;
 	font-size: 1.45em;
 	top: -30px;
 }
-#schedule table.songcircle_table td:nth-child(2) > div{
+.songcircle_table td:nth-child(2) > div{
 	position: absolute; top: -12px;
 	height: 134px;
 	/*display: table; */
@@ -131,14 +140,14 @@ article#schedule{
 	background: linear-gradient(to bottom,  rgb(255,255,255) 0%,rgb(255,255,255) 17%,rgb(252,252,252) 23%,rgb(235,235,235) 52%,rgb(213,213,213) 81%,rgb(242,242,242) 92%,rgb(255,255,255) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=0 );
 }
-#schedule table.songcircle_table td[name="event_name"] > div:after{
+.songcircle_table td[name="event_name"] > div:after{
 	content: url('../images/songcircle/arrow_green.png');
 	display: block;
 	position: absolute; bottom: 0; right: 50%;
 }
-#schedule table.songcircle_table td > div p > span{ display: inline; }
-#schedule table.songcircle_table td > div span{	display: table-header-group; }
-#schedule table.songcircle_table td > div span.triggerParticipantsTable{
+.songcircle_table td > div p > span{ display: inline; vertical-align: bottom; }
+.songcircle_table td > div span{ display: table-header-group; }
+.songcircle_table td > div span.triggerParticipantsTable{
 	font-size: 0.75em;
 	display: block;
 	padding-bottom: 2.5em;
@@ -146,10 +155,14 @@ article#schedule{
 	position: relative;
 	z-index: 2;
 }
-#schedule table.songcircle_table td[name="event_name"] p{ min-width: 302px; }
-
+.songcircle_table td[name="event_name"] p{ min-width: 302px; }
+/* styles for varying button states */
+.songcircle_table div p.in-progress,
+.songcircle_table div p.is-complete{
+	padding: 5px 0 4px; font-family: 'museo_sans300';
+}
 /* blue register button */
-#schedule table.songcircle_table td span.button_container{
+.button_container{
 	font-family: 'museo_sans700', Arial, Helvetica, sans-serif;
 	font-size: 1.75em; color: white;
 	min-width: 75%;	max-width: 85%;
@@ -161,27 +174,34 @@ article#schedule{
 	background: linear-gradient(to bottom,  rgb(134,231,255) 0%,rgb(63,216,255) 17%,rgb(18,121,222) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#86e7ff', endColorstr='#1279de',GradientType=0 );
 }
-#schedule table td span.button_container:before, #registration_form span#submit_registration:before{
+/*.button_container a{
+	color: white; border:2px solid white;
+	display: inline; width: 100%;
+	position: relative;
+}*/
+
+/*.button_container a:before,*/
+.button_container:before,
+span[name="register"]:before{ /* registration form button */
 	content: url('../images/arrows_and_lines/white_arrow_right.svg');
 	position: relative; right: 10px;
-	/*width: 15px; height: 26px;*/
 }
-#schedule table td span.button_container:hover{
+.button_container:hover{
 	background: #89dc3d;
 	background: linear-gradient(to bottom,  #e5fcca 0%,#99ee20 45%,#89dc3d 70%,#7ec919 90%,#92ea41 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5fcca', endColorstr='#92ea41',GradientType=0 );
 }
-
-#schedule #schedule_container table.songcircle_table div p.in-progress,
-#schedule #schedule_container table.songcircle_table div p.is-complete{
-	padding: 5px 0 4px; font-family: 'museo_sans300';
+span.triggerParticipantsTable{
+	text-decoration: underline; transition-duration: .250s;
 }
-
+span.triggerParticipantsTable:hover{
+	cursor: pointer; color:#7CC919; transition-duration: .250s;
+}
 
 /**
 * Participants Drop-Down table
 */
-#schedule #schedule_container table.songcircle_table td.participantsTable{
+table.songcircle_table td.participantsTable{
 	position: absolute;
 	top: 112px;
 	left: 50%; transform: translateX(-50%);
@@ -190,31 +210,26 @@ article#schedule{
 	padding: 0;
 	display: none;
 }
-#schedule #schedule_container table.songcircle_table table.participantsTable{
+table.songcircle_table td.participantsTable table{
 	display: block; margin: 0 auto; padding: 0.5em 0;
 	border-width: 5px; border-radius: 0px;
 	background: #DFEECB; line-height: 1;
 	width: 90%;
 }
-.participantsTable tbody{ display: block; max-height: 224px; overflow-y: auto; }
-#schedule #schedule_container .participantsTable tr{ width: 100%; display: table; }
-#schedule #schedule_container table.songcircle_table table.participantsTable td{
+table.songcircle_table td.participantsTable table td{
 	position: static; display: table-cell;
 	transform: none; line-height: 1.25;
 	font-size: 1em; width: 50%;
 	font-family: 'museo_sans100'; font-weight: 100; padding: 0.5em 0;
 }
-.participantsTable td > a, #schedule #schedule_container table.songcircle_table table.participantsTable td.empty{ font-family: 'museo_sans700'; }
-.participantsTable td.empty{ color: #666; }
+.participantsTable tbody{ display: block; max-height: 224px; overflow-y: auto; }
+.participantsTable tr{ width: 100%; display: table; }
 
-
-span.triggerParticipantsTable{ text-decoration: underline; transition-duration: .250s;}
-span.triggerParticipantsTable:hover{ cursor: pointer; color:#7CC919; transition-duration: .250s; }
-/* schedule table classes */
-/*.triggerParticipantsTable{ color: #3F9FEB; */
-/* powder blue */ }
-.event_name{ color: #009145; /* forest green */ }
-
+.participantsTable td > a,
+.songcircle_table .participantsTable td.empty{
+	font-family: 'museo_sans700';
+}
+.participantsTable .empty{ color: #666; }
 
 /**
 * About Section
@@ -228,33 +243,26 @@ article#about{
 	font-size: 2em;	font-weight: 500;
 	padding: 3.25em 0 2em; line-height: 1.3;
 }
-
 #about p{
-	font-size: 1.3em;	padding: 1.5em 0 0;	line-height: 1.5;
+	font-size: 1.3em;	padding: 1.5em 0 0;
+	line-height: 1.5;
 }
 #about a{ color: #3F9FEB; text-decoration: underline; }
 #about img{ width: 98%; }
-/*#about hr{
-	height:1px;	font-size: 1em;	border: none;
-	background-image: linear-gradient(to right, #333 10%, rgba(255, 255, 255, 0) 0%);
-	background-position: top;	background-size: 10px 1px; background-repeat: repeat-x;
-}*/
-
 
 /**
 * Misc
 */
-#schedule #schedule_container span.button_container.cannot_register{ opacity: 0.5; }
-#schedule #schedule_container span.button_container.cannot_register:hover{
+.button_container.cannot_register{ opacity: 0.5; }
+.button_container.cannot_register:hover{
 	cursor: default;
 	background: rgb(63,216,255);
 	background: linear-gradient(to bottom,  rgb(134,231,255) 0%,rgb(63,216,255) 17%,rgb(18,121,222) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#86e7ff', endColorstr='#1279de',GradientType=0 );
 }
-
+/* text highlighting classes */
+.green, .event_name{ color: #009145; } /* forest green */
 .blue{ color: #3F9FEB; } /* powder blue */
-.green{ color: #009145; } /* forest green */
-
 
 /**
 * Media Queries
@@ -279,12 +287,12 @@ article#about{
 @media screen and (max-width: 950px){
 	article#banner h1,h2{
 		width: 490px;
-		min-width: initial;
+		min-width: 0;
 		top:110px;
 	}
 	article#schedule, article#about{ top: 188px; }
 	#schedule div#schedule_container, #schedule table, #about{
-		min-width: initial;
+		min-width: 0;
 		width: 454px;
 	}
 	#schedule table{ position: relative; bottom: 60px; }
@@ -377,18 +385,3 @@ article#about{
 	#schedule #schedule_container .participantsTable{ top: 48px; padding-top: 1em; }
 	article#about{ margin-bottom: 42em; }
 }
-
-
-
-/*** scrap ***/
-
-/*#schedule #schedule_container td:last-child{
-	position: relative; z-index: -100; top: -15px;
-	width: 80%;
-	display: none;
-}*/
-/*#schedule #schedule_container .participantsTable tr, #schedule .participantsTable tr:active{ width: 100%; display: table; }*/
-/*#schedule #schedule_container .participantsTable td, #schedule #schedule_container .participantsTable td:nth-child(2){
-	width: 50%; position: static;
-	font-family: 'museo_sans100'; font-weight: 100; padding: 0.5em 0;
-}*/

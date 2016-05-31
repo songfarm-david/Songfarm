@@ -31,7 +31,7 @@ class Songcircle extends MySQLDatabase{
 	protected $user_id;
 	protected $user_timezone;
 	protected $songcircle_id;
-	protected $duration_of_songcircle = '1:00:00'; // in minutes
+	protected $duration_of_songcircle = '3:00:00';
 	protected $songcircle_permission=0;
 
 	/**
@@ -87,10 +87,9 @@ class Songcircle extends MySQLDatabase{
 					$output.= '<td data-month-date="'.$this->createMonthDate($row['date_of_songcircle']).'">';
 					$output.= $this->formatUTC($row['date_of_songcircle']).'</td>';
 				}	else {
-					$this->user_timezone = $_SESSION['timezone'];
 					// format times according to user timezone
 					$output.= '<td data-month-date="'.$this->createMonthDate($row['date_of_songcircle']).'">';
-					$output.= $this->callUserTimezone($row['date_of_songcircle'], $this->user_timezone).'</td>';
+					$output.= $this->callUserTimezone($row['date_of_songcircle'], $_SESSION['timezone']).'</td>';
 				}
 
 				// middle td + currently registered count
@@ -133,7 +132,7 @@ class Songcircle extends MySQLDatabase{
 								} else {
 									// not full waiting list,
 									// already on waiting list?
-									if( $this->userAlreadyRegistered($row['songcircle_id'],$_SESSION['user_id'],'true') ) {
+									if( $this->userAlreadyRegistered($row['songcircle_id'], $_SESSION['user_id'], 1) ) { /* third argument is positive value only */
 										$output.= '<span class="button_container waitlist" data-waitlist=true>Leave Waitlist</span>';
 									} else {
 										// allow join
@@ -174,17 +173,34 @@ class Songcircle extends MySQLDatabase{
 					// if songcircle started
 					elseif ( $row['songcircle_status'] == 1 ) {
 
-						if( !isset($_SESSION['user_id']) || empty($_SESSION['user_id']) ){
+						if( isset($_SESSION['user_id']) && !empty($_SESSION['user_id']) ){
 
-							// display join button
-							$output.= "<button id=\"divJoin".$row['songcircle_id']."\" class=\"join\" style=\"display: block\">";
-							$output.= "<a href=\"start_call.php?songcircleid=".$row['songcircle_id']."\" target=\"new\">Join Now</a>";
-							$output.= "</button>";
+							// retrieve the verification key
+							if( !$verification_key = $this->retrieveVerificationKey($row['songcircle_id'], $_SESSION['user_id']) ){
+
+								// if no verification key
+								$output.= "<div><p class=\"in-progress\">".$row['songcircle_name']."<br> is in progress</p></div>";
+
+							} else {
+
+								// allow link
+								// link target
+								$target = "../includes/songcircle_user_action.php?action=join_songcircle";
+								$target.= "&songcircle_id=".$row['songcircle_id'];
+								$target.= "&user_id=".$_SESSION['user_id'];
+								$target.= "&verification_key=".$verification_key;
+
+								// output button with 'Join' text
+								// class 'button_container' styles button
+								$output.= "<a href=".$target."><span class=\"button_container\">Join Now</span></a>";
+
+							}
 
 						} else {
 							// display "Songcircle In Progress" button
 							$output.= "<div><p class=\"in-progress\">".$row['songcircle_name']."<br> is in progress</p></div>";
 						}
+
 					}
 					// if songcircle complete
 					else
@@ -519,6 +535,29 @@ class Songcircle extends MySQLDatabase{
 		}
 	}
 
+
+	/* Protected Functions */
+
+	/**
+	*	Retrieve verification key from songcircle_register table
+	*
+	* @param (string) songcircle_id
+	* @param (int) user_id
+	* @return (string) verification_key
+	*/
+	protected function retrieveVerificationKey($songcircle_id, $user_id){
+		global $db;
+
+		$sql = "SELECT verification_key FROM songcircle_register ";
+		$sql.= "WHERE songcircle_id = '$songcircle_id' ";
+		$sql.= "AND user_id = $user_id ";
+		$sql.= "AND confirm_status = 1";
+
+		if( $result = $db->getRows($sql) ){
+			return $result[0]['verification_key'];
+		}
+	}
+
 	/**
 	*	Has a songcircle reached it's maximum occupancy
 	*
@@ -657,6 +696,8 @@ class Songcircle extends MySQLDatabase{
 		}
 	}
 
+
+
 	/**
 	* Does open songcircle exist?
 	*
@@ -720,15 +761,15 @@ class Songcircle extends MySQLDatabase{
 			*/
 			$now->setTime(19,00,00);
 			// add 1 week time
-			// $now->modify('+1 week');
-			$now->modify('+1 day'); /* NOTE: for testing */
+			$now->modify('+1 week');
+			// $now->modify('+1 day'); /* NOTE: for testing */
 			// assign reference variable
 			$dt =& $now;
 		} else {
 			// use last scheduled time and add 1 week to it
 			$dt = new DateTime($last_scheduled_time, new DateTimeZone("UTC"));
-			// $dt->modify('+1 week');
-			$dt->modify('+1 day'); /* NOTE: for testing */
+			$dt->modify('+1 week');
+			// $dt->modify('+1 day'); /* NOTE: for testing */
 		}
 		// format DateTime object and collect in variable
 		$date_of_songcircle = $dt->format('Y-m-d\TH:i:00');
@@ -808,7 +849,7 @@ class Songcircle extends MySQLDatabase{
 	// 	}
 	// }
 
-	// public function create_songcircle($user_id){
+	// public function userCreateSongcircle($user_id){
 	// 	global $db;
 	//
 	// 	$this->user_id = $user_id;

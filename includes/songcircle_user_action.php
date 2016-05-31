@@ -180,12 +180,9 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					} // end of: elseif (!$emailInDatabase)
 					else
 					{
-						/** NOTE: is there a way to skip this step or
-						* verify that a change has or has not been made to user info??
-						*
-						* NOTE: this also leaves room for user error, i.e: if the user forgets to
-						* set their timezone correctly if they sign up for an additional songcircle
-						* Also, $_SESSION should remember user timezone which will make this point moot
+						/**
+						* NOTE: $_SESSION contains user timezone data.
+						* If this code is executed then user has deliberately changed their timezone
 						*/
 						// user already exists but has changed timezone
 						$sql = "UPDATE user_timezone ";
@@ -334,12 +331,10 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 
 				$success_msg = ''; $error_msg = array();
 
-				// get table name
+				// determine table name for sql query to follow
 				$table_name = $_GET['waitlist'] == 'true' ? 'songcircle_wait_register' : 'songcircle_register';
 
-				/*
-				Sanitize values
-				*/
+				/* Sanitize $_GET values */
 				$songcircle_id = $db->escapeValue($_GET['songcircle_id']);
 				if(strlen($songcircle_id) != 13){
 					$error_msg[] = 'Invalid conference id';
@@ -385,8 +380,8 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 							notifyAdminByEmail("Error retrieving start time of songcircle (id: {$songcircle_id}).");
 
 							// client-facing error msg:
-							$error_msg[] = 'An error has occurred retrieving the start time of '.$songcircle_name.' on '.$date_of_songcircle;
-							$error_msg[] = 'Please contact support at <a href="mailto:support@songfarm.ca">support@songfarm.ca</a> if this problem has not been addressed within 24 hours.<br>Our sincere apologies for the inconvenience.';
+							$error_msg[] = 'An error occurred retrieving the start time of '.$songcircle_name.' on '.$date_of_songcircle.'. We apologize for the inconvenience. Our support staff has been notified.';
+							// $error_msg[] = 'Please contact support at <a href="mailto:support@songfarm.ca">support@songfarm.ca</a> if this problem has not been addressed within 24 hours.<br>Our sincere apologies for the inconvenience.';
 
 							return false;
 
@@ -450,7 +445,7 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 																]
 															];
 															// craft email
-															$to = "{$username} <{$user_email}>"; // this may cause a bug on Windows systems
+															$to = "{$username} <{$user_email}>";
 															$subject = "Registration Confirmed!";
 															$from = "Songfarm <noreply@songfarm.ca>";
 															if($message = initiateEmail($email_data['registered'],$songcircle_user_data)){
@@ -645,21 +640,31 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 				(isset($_GET['verification_key']) && !empty($_GET['verification_key']))
 			)
 			{
-				// set variables
 				$songcircle_id = $db->escapeValue($_GET['songcircle_id']);
 				$user_id = $db->escapeValue($_GET['user_id']);
-				$verification_key = $_GET['verification_key'];
+				$verification_key = $db->escapeValue($_GET['verification_key']);
 
+				// is user registered for this songcircle?
+				/*
+				* NOTE: userAlreadyRegistered takes a third argument: table_name=null
+				*/
 				if($songcircle->userAlreadyRegistered($songcircle_id,$user_id)){
+
 					$log_text = " Join link activated: ".$songcircle_id.", user id: ".$user_id;
 					file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',$currentUTCTime.$log_text.PHP_EOL,FILE_APPEND);
-					// construct join link
+
+					// construct link w/ parameters
 					$link_join_songcircle = '../public/start_call.php?';
 					$link_join_songcircle.= 'songcircle_id='.$songcircle_id.'&';
 					$link_join_songcircle.= 'user_id='.$user_id.'&';
 					$link_join_songcircle.= 'verification_key='.$verification_key;
-					// redirect to start_call.php
+					/**
+					* NOTE: test viability of this link::
+					*/
+
+					// redirect to link
 					redirectTo($link_join_songcircle);
+
 				}
 			} else {
 				$error_msg[] = "Unknown Error: Unable to Join Songcircle";
