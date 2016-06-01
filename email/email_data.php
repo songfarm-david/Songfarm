@@ -102,24 +102,55 @@ $email_data = [
 	],
 	"first_reminder" => [
 		"email_type" => "first_reminder",
-		"title" => "%songcircle_name% is happening soon!",
+		"title" => "You're 3 days away from %songcircle_name%!",
 		"logo" => [ // may user alternate logo
 			"source" => "http://songfarm.ca/public/images/emails/logo_email_l.png",
 			"width" => "293",
 			"height" => "194"
 		],
-		"header" => "We are only a couple days away from %songcircle_name%",
+		"header" => "You are only a few days away from %songcircle_name%",
 		"greeting" => "Hey %username%,",
 		"intro" => "This is a reminder that you are confirmed to participate in <b>%songcircle_name%</b> on <b>%date_of_songcircle%</b>.",
 		"body" => "Please remember that, <b>in order to participate</b>, you will need to be using:",
-		"linkIntro" => "Here's an article we think you'll like:",
-		"blogLink" => [
-			"linkLocation_1" => "http://blog.songfarm.ca/blog_article_1.html",
-			"linkText_1" => "blog_article_1",
+		// "linkIntro" => "Here's an article we think you'll like:",
+		// "blogLink" => [
+		// 	"linkLocation_1" => "http://blog.songfarm.ca/blog_article_1.html",
+		// 	"linkText_1" => "blog_article_1",
 			// "linkLocation_2" => "http://blog.songfarm.ca/blog_article_2.html",
 			// "linkText_2" => "blog_article_2",
+		// ],
+		"signature" => "Take care!<br />
+		The Songfarm Team",
+		"unregister" => [
+			"unregisterText" => "If you will be unable to attend this event, please unregister by <a href=\"http://test.songfarm.ca/includes/songcircle_user_action.php?action=unregister&songcircle_id=%songcircle_id%&user_id=%user_id%&waitlist=false\">clicking here</a>."
 		],
-		"signature" => "Looking forward to hearing from you!<br />
+		"disclaimer" => "You are receiving this email because you registered for a Songcircle on <a href=\"http://songfarm.ca\" style=\"text-decoration: none; color: #153643;\"><font color=\"#153643\">songfarm.ca</font></a><br />
+		If you received this email in error or do not wish to receive any further communications from Songfarm, please ",
+		"unsubscribeLink" => [
+			"unsubscribeLinkLocation" => "http://songfarm.ca/includes/unsubscribe.php?unsubscribe_key=%unsubscribe_key%&user_email=%user_email%"
+		],
+		"year" => date("Y")
+	],
+	"second_reminder" => [
+		"email_type" => "second_reminder",
+		"title" => "%songcircle_name% is tomorrow!",
+		"logo" => [
+			"source" => "http://songfarm.ca/public/images/emails/logo_email_l.png",
+			"width" => "293",
+			"height" => "194"
+		],
+		"header" => "You are only a few days away from %songcircle_name%",
+		"greeting" => "%username%,",
+		"intro" => "<b>%songcircle_name%</b> starts at this time tomorrow.",
+		"body" => "Be sure to have a song ready to play. It would also be a good idea to have any materials handy, like lyrics, a pen and paper for making notes, and a drink of water or cup of tea.<br /> We'll send you a link tomorrow when the Songcircle is starting and you'll be connected through that.",
+		// "linkIntro" => "Here's an article we think you'll like:",
+		// "blogLink" => [
+		// 	"linkLocation_1" => "http://blog.songfarm.ca/blog_article_1.html",
+		// 	"linkText_1" => "blog_article_1",
+			// "linkLocation_2" => "http://blog.songfarm.ca/blog_article_2.html",
+			// "linkText_2" => "blog_article_2",
+		// ],
+		"signature" => "See you tomorrow!<br />
 		The Songfarm Team",
 		"unregister" => [
 			"unregisterText" => "If you will be unable to attend this event, please unregister by <a href=\"http://test.songfarm.ca/includes/songcircle_user_action.php?action=unregister&songcircle_id=%songcircle_id%&user_id=%user_id%&waitlist=false\">clicking here</a>."
@@ -133,21 +164,20 @@ $email_data = [
 	],
 	"join_songcircle" => [
 		"email_type" => "join_songcircle",
-		"title" => "%songcircle_name% is starting in 1 hour!",
-		"logo" => [ // may user alternate logo
+		"title" => "Join %songcircle_name% now!",
+		"logo" => [
 			"source" => "http://songfarm.ca/public/images/emails/logo_email_l.png",
 			"width" => "293",
 			"height" => "194"
 		],
-		"header" => "%songcircle_name%<br /> is starting soon!",
-		"greeting" => "<b>%songcircle_name%</b> is starting within the hour!",
-		"intro" => "To connect to the Songcircle, click the link below to be connected when the Songcircle is starting or visit <a href=\"http://songfarm.ca/songcircle\">http://songfarm.ca/songcircle</a> and join their once the Songcircle begins.",
-		"body" => "Click the link below to connect to the Songcircle when it starts:",
+		"header" => "%songcircle_name%<br /> is starting!",
+		"greeting" => "<b>%songcircle_name%</b> is starting now!",
+		"intro" => "Click the link below to connect to <b>%songcircle_name%</b>:",
 		"ctaLink" => [
 			"linkLocation" => "http://test.songfarm.ca/includes/songcircle_user_action.php?action=join_songcircle&songcircle_id=%songcircle_id%&user_id=%user_id%&verification_key=%verification_key%",
-			"linkText" => "Join Songcircle!"
+			"linkText" => "Join Now"
 		],
-		"signature" => "Best of luck and have fun!<br />
+		"signature" => "Good luck!<br />
 		The Songfarm Team",
 		"disclaimer" => "You are receiving this email because you registered for a Songcircle on <a href=\"http://songfarm.ca\" style=\"text-decoration: none; color: #153643;\"><font color=\"#153643\">songfarm.ca</font></a><br />
 		If you received this email in error or do not wish to receive any further communications from Songfarm, please ",

@@ -179,7 +179,7 @@ class Songcircle extends MySQLDatabase{
 							if( !$verification_key = $this->retrieveVerificationKey($row['songcircle_id'], $_SESSION['user_id']) ){
 
 								// if no verification key
-								$output.= "<div><p class=\"in-progress\">".$row['songcircle_name']."<br> is in progress</p></div>";
+								$output.= "<div><p class=\"in-progress\"><span>".$row['songcircle_name']."</span><br> is in progress</p></div>";
 
 							} else {
 
@@ -198,7 +198,7 @@ class Songcircle extends MySQLDatabase{
 
 						} else {
 							// display "Songcircle In Progress" button
-							$output.= "<div><p class=\"in-progress\">".$row['songcircle_name']."<br> is in progress</p></div>";
+							$output.= "<div><p class=\"in-progress\"><span>".$row['songcircle_name']."</span><br> is in progress</p></div>";
 						}
 
 					}
@@ -207,9 +207,8 @@ class Songcircle extends MySQLDatabase{
 					{
 						// show message here that songcircle has completed
 						// display "Songcircle has Completed" button
-						$output.= "<div><p>".$row['songcircle_name']."<br> has completed</p></div>";
+						$output.= "<div><p class=\"is-complete\"><span>".$row['songcircle_name']."</span><br> has completed</p></div>";
 					}
-					// $output.= '<h4>'.$count.'</h4>';
 
 					$output.= '</td>';
 

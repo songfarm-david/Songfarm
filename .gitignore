@@ -13,7 +13,7 @@ logs/
 includes/config.php
 .htaccess
 phpinfo.php
-template.htm*
+template.*
 .git*
 *.sql
 *.txt

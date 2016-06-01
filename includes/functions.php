@@ -35,9 +35,18 @@ function initiateEmail($email_data, $user_data=''){
 			case 'first_reminder':
 				$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_first_reminder.html');
 				break;
+		/**
+		* NOTE: test this case
+		*/
+			case 'second_reminder':
+				$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_first_reminder.html');
+				break;
 			case 'join_songcircle':
 				$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_join_songcircle.html');
 				break;
+		/**
+		* NOTE: This case remains untested/unwritten
+		*/
 			// case 'confirm_waitlist':
 			// 	$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_confirm_waitlist.html');
 			// 	break;
@@ -154,7 +163,7 @@ function constructHTMLEmail($email_data, $user_data, $email_template){
 			if( !$unsubscribe_key = retrieveUserKey($compiled_user_data['user_email']) )
 			{
 				file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").' Could not retrieve user key for user email '.$compiled_user_data['user_email'].' -- '.$_SERVER['PHP_SELF'].' ('.__LINE__.'). Script halted.'.PHP_EOL,FILE_APPEND);
-				
+
 				die('error retrieving necessary information to execute email script');
 			}
 

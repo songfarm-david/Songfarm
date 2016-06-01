@@ -159,8 +159,14 @@ table td{
 /* styles for varying button states */
 .songcircle_table div p.in-progress,
 .songcircle_table div p.is-complete{
-	padding: 5px 0 4px; font-family: 'museo_sans300';
+	padding: 3px 0 4px;
+	/*font-family: 'museo_sans300';*/
 }
+/* code to emphasize songcircle name */
+.songcircle_table div p.in-progress > span,
+.songcircle_table div p.is-complete > span
+{ font-family: 'museo_sans700'; font-size: 1.1em;}
+
 /* blue register button */
 .button_container{
 	font-family: 'museo_sans700', Arial, Helvetica, sans-serif;
