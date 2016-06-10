@@ -74,7 +74,7 @@
 				/**
 				* NOTE: can exclude continents here..
 				*/
-				if( $continent != 'Asia' && $continent != 'Africa' && $continent != 'Antarctica'){
+				if( $continent != 'Africa' && $continent != 'Antarctica'){ //$continent != 'Asia' && 
 					echo "<optgroup label=\"{$continent}\"></optgroup>";
 					foreach ($countries as $key => $value) {
 						if($value['continent'] == $continent){
