@@ -48,7 +48,6 @@
     font-style: normal;
 }
 
-
 /*	Global styles		*/
 html{ max-width: 2400px; }
 html, body, div, p, ul, h1, h2, h3, img, em, small, li, span, time, section, article, header, nav, footer, table, th, td, tr{
@@ -100,13 +99,16 @@ button:hover{	background: #3FA8F4; color: #fff; cursor: pointer; }
 button.inactive{ background: rgba(0,0,0,.25); color: rgba(42, 92, 3, .5); }
 button.inactive:hover{ cursor: default;}
 button.inactive a{ cursor: default;}
-button:focus {outline:0;}
+button:focus { outline:0; }
 
 /**
 * Custom Classes
 */
 .hide	{ display: none; }
-.bold{ font-family: 'museo_sans900', Arial, Helvetica, sans-serif; }
+.bold{
+  font-family: 'museo_sans900', Arial, Helvetica, sans-serif;
+  font-weight: bold;
+}
 
 /**
 * Header
@@ -143,7 +145,6 @@ header .logo{
 }*/
 header div.logo:hover:after{ color: #000; transition-duration: 0; cursor: default; }
 
-
 /**
 * Navigation
 */
@@ -153,6 +154,8 @@ nav{
   position: relative;
    /*z-index: 10;*/
  }
+nav > h2 + a{ display: block; } /* fixed weird visual bug with a tag */
+
 nav ul{
   line-height: 76px;
   position: absolute;
@@ -170,30 +173,38 @@ ul#links li{
 	text-transform: uppercase;
   position: relative;
 }
-
-/*ul#links li:last-child{ position: relative; }*/
-/*ul#links li:nth-child(5):after{
-  content: '|';
-  position: relative;
-  right:-20px;
-}*/
-/*ul#links li a[title="Log In"]:hover:before{ content:''; position: relative; } /* remove arrow from this link */*/
-
 ul#links li a{ padding: .3em .1em; }
+
+/* add visual arrow on hover */
 ul#links li a:hover:before{
   content:url('../images/arrows_and_lines/navActive_arrow.png');
   position:absolute; left:-15px; top:3px;
 }
 
-ul#links span#style, ul#links span.menu{ visibility: hidden; }
+/* remove arrow from this link */
+/**
+ul#links li:last-child{ position: relative; }
+ul#links li:nth-child(5):after{
+  content: '|';
+  position: relative;
+  right:-20px;
+}
+ul#links li a[title="Log In"]:hover:before{ content:''; position: relative; }
+*/
 
-/* nav mini-menu */
-ul#links span.menu:hover{ color: #7CC919; }
-ul#links span.menu.active-color{ color: #7CC919;}
-
-/* nav-mini container */
-ul#links div#nav-mini_container.active{ display: block; }
-
+.menu-icon{
+  visibility: hidden;
+  background: none;
+  border: none;
+}
+.menu-icon:hover{
+  color: #7CC919;
+  background: none;
+}
+/* when mini-menu is clicked */
+.menu-icon.active-color{ color: #7CC919;}
+/* active state for mini-menu container */
+ul#links.active{ display: block; }
 
 /* Gradient background */
 #modal, button.register, button.contact{
@@ -205,10 +216,6 @@ ul#links div#nav-mini_container.active{ display: block; }
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5fcca', endColorstr='#92ea41',GradientType=0 );
 }
 /* Permalink - use to edit and share this gradient: http://colorzilla.com/gradient-editor/#e5fcca+0,99ee20+45,89dc3d+70,7ec919+90,92ea41+100 */
-
-/*ul#links span.menu:hover{ color: #7CC919; }
-ul#links div.active{ display: block; }
-ul#links span.menu.active-color{ color: #7CC919;}*/
 
 /* Register Button */
 button.register, button.contact{
@@ -236,7 +243,6 @@ button.register:hover, button.contact:hover{
 	background: linear-gradient(to bottom,  rgb(134,231,255) 0%,rgb(63,216,255) 17%,rgb(18,121,222) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#86e7ff', endColorstr='#1279de',GradientType=0 );
 }
-
 
 /**
 * Footer
@@ -267,7 +273,6 @@ footer div.share-links ul{ margin:0; padding:0; }
 footer div.share-links ul li{ display: inline-block; margin: 0 6% 0 0; cursor: pointer; transition: opacity 250ms; }
 footer div.share-links ul li:hover{ opacity: 0.75; }
 footer div.share-links ul li img{ height:40px; width:40px; }
-
 
 /**
 * Login In form
@@ -373,7 +378,6 @@ div.global_msg{
   border-radius: 6px;
 }
 
-
 /**
 * Media Queries
 */
@@ -397,8 +401,7 @@ div.global_msg{
   }
 }
 
-/* Break nav onto two lines */
-@media screen and (max-width: 1290px) and (min-width: 840px){ /* max-width: 1024px & min-width: 640px*/
+@media screen and (max-width: 1290px) and (min-width: 840px){
   button.register.medium{
     font-size: 1.75em;
     min-width: 290px;
@@ -406,12 +409,14 @@ div.global_msg{
 }
 
 @media screen and (max-width: 990px) and (min-width: 840px){
+  /* break nav li's onto separate lines */
   header ul#links{
     line-height: 40px;
     text-align: left;
     top: 44px; right: 0;
     width: 37.5%; min-width: 0;
   }
+  /* NOTE: something here */
   ul#links span{ display: block; }
 }
 
@@ -420,33 +425,12 @@ div.global_msg{
   #modal p, #modal ul li{
     max-width: 72.5%;
   }
-  ul#links li:nth-child(5):after{
-    content: '';
-  }
-  /* green arrow on hover - position changes to relative from absolute */
-  ul#links li a:hover:before{
-    position: relative; left: -7px;
-  }
-  /* add green arrow to 'Log In' */
-  ul#links li a[title="Log In"]:hover:before{
-    content:url('../images/arrows_and_lines/navActive_arrow.png');
-    /*position:absolute; left:-15px; */
-    top:3px;
-  }
-  ul#links span.menu{
-    visibility: visible;
-    color: #666666;
-    font-size: 3em;
-    cursor: pointer;
-    padding: 0 0.25em;
-    position: relative; top: 8px; right: -14px;
-  }
-  ul#links li{ display: block; line-height: 40px; }
-  ul#links div{
+  ul#links {
     position: absolute;
     z-index: 1000;
-    top: 70px; right: 0;
+    top: 118px; right: 0;
     width: 28.5%; min-width: 200px;
+    height: auto;
     text-align: right;
     padding: 0.5em 1.25em;
     background: #ffffff;
@@ -459,13 +443,41 @@ div.global_msg{
     border: 0px solid #000000;
     display: none;
   }
+  /* what is this?? */
+  ul#links li:nth-child(5):after{
+    content: '';
+  }
+  /* changes behavior of green arrow on hover */
+  ul#links li a:hover:before{
+    position: relative; left: -7px;
+  }
+  /* add green arrow to 'Log In' list-item */
+  ul#links li a[title="Log In"]:hover:before{
+    content:url('../images/arrows_and_lines/navActive_arrow.png');
+    /*position:absolute; left:-15px; */
+    top:3px;
+  }
+  ul#links li{
+    display: block;
+    line-height: 40px;
+  }
+  /* icon for the mini-menu nav */
+  .menu-icon{
+    visibility: visible;
+    color: #666666;
+    font-size: 3em;
+    cursor: pointer;
+    padding: 0 0.25em;
+    position: absolute;
+    top: 60px; right: 14px;
+  }
   button.register{
     /*width: 260px;*/ /* cause svg to break in IE */
     font-size: 1.5em;
     line-height: 1.5;
     right: 6%;
   }
-  button.register:before{ top: 4px;  }
+  button.register:before{ top: 4px; }
 }
 
 /* end of log in test */
@@ -509,48 +521,5 @@ div.global_msg{
   #modal p{ max-width: 80%; }
   #modal p, #modal p span{ position: relative; z-index: 3002; }
   #modal img{ width: 80px; height: auto;}
-  ul#links span.menu{ font-size: 2.5em;}
+  .menu-icon{ font-size: 2.5em;}
 }
-
-
-
-/*** Styles not in use ***/
-
-/**
-* Styles for social links at top of page
-*/
-/*
-header#header ul#social_head{
-  position:absolute;
-  top:-4px; right: 12.75%;
-  width:250px;
-  margin:0;
-  height:60px;
-  text-align: center;
-}
-#header ul#social_head li{
-  transition-duration: .250s;
-  margin:0;
-  height:50px; width:50px;
-}
-#header ul#social_head li:hover{ transition-duration: .250s; }
-header#header ul#social_head li.facebook{
-  background: url('../images/icons/social icons/facebook_s.png');
-  height:50px; width:50px;
-}
-header#header ul#social_head li.facebook:hover{ background: url('../images/icons/social icons/facebook_s_hover.png'); }
-header#header ul#social_head li.twitter{ background: url('../images/icons/social icons/twitter_s.png');
-  height:50px; width:50px; }
-header#header ul#social_head li.twitter:hover{ background: url('../images/icons/social icons/twitter_s_hover.png'); }
-header#header ul#social_head li.linkedIn{
-  background: url('../images/icons/social icons/linkedIn_s.png');
-  height:50px; width:50px;
-}
-header#header ul#social_head li.linkedIn:hover{ background: url('../images/icons/social icons/linkedIn_s_hover.png'); }
-header#header ul#social_head li a{
-  background: url('../images/icons/social icons/message.png') no-repeat;
-  height:50px; width:50px;
-  display: block;
-}
-header#header ul#social_head li a:hover{ background: url('../images/icons/social icons/message_hover.png') no-repeat; }
-header#header ul#social_head a:hover:before{ content: ''; }*/

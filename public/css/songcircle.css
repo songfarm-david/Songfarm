@@ -18,9 +18,6 @@ header{
 	margin-left: auto;
 	margin-right: auto;
 }
-/* hides green register button on index.php*/
-button.register.medium{ display: none; }
-
 main{
 	position: relative; z-index: 1; width: 100%;
 	margin: 0;	box-sizing: inherit; color: #666;
@@ -34,26 +31,26 @@ main{
 /**
 * Main Banner
 */
-article#banner{
+#banner{
 	position: relative; z-index: 10;
 	width: 100%; height: 515px;	padding-top: 1em;
 	background: url('../images/songcircle/girlguitarcut.png') no-repeat transparent; /* banner image */
 	background-size: 75%;	background-position: 135% 0;
 	box-shadow: inset 0px 25px 50px -10px rgb(255, 255, 255); /* white blur box shadow over image */
 }
-article#banner h1, h2{
+#banner h1, h2{
 	display: block; width: 65%; min-width: 950px;
 	font-family: 'museo_sans300', Arial, Helvetica, sans-serif;
 	margin: 0 auto; padding-left: 8px; line-height: 1.5;
 	position: relative; top: 20px;
 }
-article#banner h1{ font-size: 2.5em; margin-top: 0.5em; margin-bottom: 1.5em; }
-article#banner h2{ font-size: 1.5em; font-style: italic; padding-right: 0.5em; }
+#banner h1{ font-size: 2.5em; margin-top: 0.5em; margin-bottom: 1.5em; }
+#banner h2{ font-size: 1.5em; font-style: italic; padding-right: 0.5em; }
 
 /**
 * Songcircle Schedule
 */
-article#schedule{
+#schedule{
 	position: relative; top: -160px; height: 318px;
 	background: url('../images/songcircle/notes_white.png') no-repeat transparent;
 }
@@ -140,6 +137,7 @@ table td{
 	background: linear-gradient(to bottom,  rgb(255,255,255) 0%,rgb(255,255,255) 17%,rgb(252,252,252) 23%,rgb(235,235,235) 52%,rgb(213,213,213) 81%,rgb(242,242,242) 92%,rgb(255,255,255) 100%);
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#ffffff',GradientType=0 );
 }
+
 .songcircle_table td[name="event_name"] > div:after{
 	content: url('../images/songcircle/arrow_green.png');
 	display: block;
@@ -157,15 +155,17 @@ table td{
 }
 .songcircle_table td[name="event_name"] p{ min-width: 302px; }
 /* styles for varying button states */
-.songcircle_table div p.in-progress,
+/*.songcircle_table div p.in-progress,
 .songcircle_table div p.is-complete{
 	padding: 3px 0 4px;
-	/*font-family: 'museo_sans300';*/
-}
+}*/
 /* code to emphasize songcircle name */
-.songcircle_table div p.in-progress > span,
+/*.songcircle_table div p.in-progress > span,
 .songcircle_table div p.is-complete > span
-{ font-family: 'museo_sans700'; font-size: 1.1em;}
+{ font-family: 'museo_sans700'; font-size: 1.1em;}*/
+
+.songcircle_table div p.no_button{ padding: 3px 0 4px; }
+.songcircle_table div p.no_button > span{ font-family: 'museo_sans700'; font-size: 1.1em; }
 
 /* blue register button */
 .button_container{
@@ -240,7 +240,7 @@ table.songcircle_table td.participantsTable table td{
 /**
 * About Section
 */
-article#about{
+#about{
 	position: relative; z-index: 2;	top: -285px; width: 79.5%;
 	margin: 0 auto; padding: 1em 7.5% 4em;
 	border-radius: 12px; background: #ffffff;
@@ -253,6 +253,9 @@ article#about{
 	font-size: 1.3em;	padding: 1.5em 0 0;
 	line-height: 1.5;
 }
+/* temporary de-activation of a tag until blog is in place */
+#about p:first-of-type > a{ color: inherit; text-decoration: none; }
+#about p:last-of-type > a{ cursor: pointer; }
 #about a{ color: #3F9FEB; text-decoration: underline; }
 #about img{ width: 98%; }
 
@@ -274,36 +277,36 @@ article#about{
 * Media Queries
 */
 @media screen and (max-width: 1290px) and (min-width: 840px){
-	article#banner{
+	#banner{
 		background-size: 102%;
 		background-position: -1000% 0%;
 	}
 	#schedule #schedule_container td table.participantsTable{ width: 90%; }
-	article#about{ width: 85%; }
+	#about{ width: 85%; }
 }
 
 @media screen and (max-width: 1100px){
-	article#banner{ padding-left: 2.25em; }
+	#banner{ padding-left: 2.25em; }
 	#schedule div#schedule_container{ width:97%; }
 	#schedule #schedule_container td table.participantsTable{ width: 80%; }
-	article#about{ width: 88%; }
+	#about{ width: 88%; }
 	#schedule div#datesList_container{ left: 1.5em; }
 }
 
 @media screen and (max-width: 950px){
-	article#banner h1,h2{
+	#banner h1, h2{
 		width: 490px;
 		min-width: 0;
 		top:110px;
 	}
-	article#schedule, article#about{ top: 188px; }
+	#schedule, #about{ top: 188px; }
 	#schedule div#schedule_container, #schedule table, #about{
 		min-width: 0;
 		width: 454px;
 	}
 	#schedule table{ position: relative; bottom: 60px; }
 	#schedule table.songcircle_table td, #schedule table.songcircle_table td span.button_container{
-		width: 100%; max-width: initial;
+		min-width: 100%; max-width: initial;
 	}
 	#schedule div#datesList_container{ top: -164px; left: 0;}
 	#schedule table.songcircle_table td:nth-child(2){
@@ -318,14 +321,20 @@ article#about{
 		top: 184px;
 	}
 	#schedule #schedule_container td table.participantsTable{
-		width: 95%;
-		top: 60px;
+		width: 95%;	top: 60px;
 	}
-	article#about{
-		width: 78%;
-		margin-bottom: 32em;
-	}
+	#about{	width: 78%; margin-bottom: 32em; }
 	#about h3{ padding-top: 2em;}
+	.songcircle_table div p.no_button{
+		padding: .5em 0; margin-top: -.5em;
+		border-radius: 30px;
+		border: 3px solid #fff;
+		box-shadow: 0px 1px 6px 2px rgba(0,0,0,0.45);
+		color: #666;
+		background: #e5fcca;
+		background: linear-gradient(to bottom,  #e5fcca 0%,#99ee20 45%,#89dc3d 70%,#7ec919 80%,#92ea41 100%);
+		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#e5fcca', endColorstr='#92ea41',GradientType=0 );
+	}
 }
 
 /* Query for stacking order of songcircle schedule */
@@ -334,7 +343,7 @@ article#about{
 		background: url('../images/songcircle/notes_green.png') no-repeat 0% 100%, linear-gradient(to bottom, rgb(255,255,255) 0%,rgb(253,255,251) 7%,rgb(237,252,217) 14%,rgb(225,250,189) 27%,rgb(188,244,109) 39%,rgb(154,230,59) 46%,rgb(144,226,43) 49%,rgb(95,184,39) 64%,rgb(31,155,58) 75%,rgb(4,146,67) 81%,rgb(0,145,69) 83%,rgb(0,145,69) 100%);
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#009145',GradientType=0 );
 	}
-	article#banner{
+	#banner{
 		background-size: 140%;
 		background-position: 12.5% 0%;
 	}
@@ -342,20 +351,20 @@ article#about{
 		min-width: 320px;
 	}
 	#schedule #schedule_container td table.participantsTable{ width: 70%; }
-	article#about{ width: 100%; border-radius: 0; }
+	#about{ width: 100%; border-radius: 0; }
 }
 
 @media screen and (max-width: 520px){
-	article#banner{ padding-left: 1.75em; }
-	article#banner h1,h2{
+	#banner{ padding-left: 1.75em; }
+	#banner h1,h2{
 		width: 100%;
 		padding-left: 0;
 	}
 	#schedule div#schedule_container, #schedule table.songcircle_table{
 		width: 94%; margin: 0 auto;
 	}
-	/*article#about{ top: 198px; }*/
-	article#schedule,article#about{ top: 300px; }
+	/*#about{ top: 198px; }*/
+	#schedule,#about{ top: 300px; }
 	#schedule div#datesList_container{
 		min-width: 94%;
 	}
@@ -371,11 +380,11 @@ article#about{
 		line-height: 1.25;
 	}
 	#schedule table.songcircle_table td[name="event_name"] span{ padding-top: 39px; }
-	article#about p{ line-height: 1.8; }
+	#about p{ line-height: 1.8; }
 }
 
 @media screen and (max-width: 460px){
-	article#about{ top: 300px; } /* changes height of #schedule from top of page */
+	#about{ top: 300px; } /* changes height of #schedule from top of page */
 	#schedule div#datesList_container{
 		top: -162px;
 		line-height: 1.2;
@@ -387,7 +396,7 @@ article#about{
 		background: url('../images/songcircle/notes_green.png') no-repeat 0% 100%, linear-gradient(to bottom, rgb(255,255,255) 0%,rgb(253,255,251) 4%,rgb(237,252,217) 7%,rgb(225,250,189) 20%,rgb(188,244,109) 34%,rgb(154,230,59) 46%,rgb(144,226,43) 49%,rgb(95,184,39) 64%,rgb(31,155,58) 75%,rgb(4,146,67) 81%,rgb(0,145,69) 83%,rgb(0,145,69) 100%);
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#ffffff', endColorstr='#009145',GradientType=0 );
 	}
-	article#schedule, article#about{ top: 450px; }
+	#schedule, #about{ top: 450px; }
 	#schedule #schedule_container .participantsTable{ top: 48px; padding-top: 1em; }
-	article#about{ margin-bottom: 42em; }
+	#about{ margin-bottom: 42em; }
 }

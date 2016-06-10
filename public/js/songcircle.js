@@ -1,7 +1,5 @@
 $(document).ready(function(){
 
-	/*** Last update April 12th, 2016 ***/
-
 	// Where re-direction will go after successful registration:
 	/* local site */
 	// var redirectURL = 'http://localhost/songfarm-oct2015/public/index.php';
@@ -83,7 +81,7 @@ $(document).ready(function(){
 	var usernameError		= $('div.form_error[name="username"]');
 	var emailError			= $('div.form_error[name="user_email"]');
 	// timezone error
-	$('#registration_form div#loc').append('<div class="form_error" name="timezone"></div>');
+	$('#loc #user_location').append('<div class="form_error" name="timezone"></div>');
 	var timezoneError = $('div.form_error[name="timezone"]');
 
 	// Code of Conduct error counter
@@ -351,9 +349,8 @@ $(document).ready(function(){
 			}	else {
 				// hide any error spans
 				$(emailError).hide();
-				// change outline to green
+				// remove outline
 				emailInput.css('outline','none');
-				// validate measure
 				emailIsValid = true;
 			}
 
@@ -361,7 +358,6 @@ $(document).ready(function(){
 			if( !fullTimezoneVal.val() ){
 				timezoneError.css('display','table').html('<p>Please select your timezone.</p>').show();
 			} else {
-				// console.log('no timezone error.. Validating true');
 				timezoneValid = true;
 			}
 
@@ -379,6 +375,7 @@ $(document).ready(function(){
 				// append message to div
 				// codeOfConductDiv.append(alertMsg).show();
 				codeOfConductError.html(alertMsg).show();
+				// add custom error color to code of conduct section
 				$('.checkbox-custom-label, #codeOfConduct a').css({'color':'#3FA8F4','transition-duration':'0ms'});
 				$('.checkbox-custom + .checkbox-custom-label').addClass('error');
 
@@ -519,47 +516,40 @@ $(document).ready(function(){
 	* Unregister user if session user id can be determined
 	*/
 	// handle to any button with waitlist class
-	var unregisterBtn = $('span.waitlist');
+	var userSessionUnregister = $('.songcircle_table span[data-unregister="unregister"]');
 
-	unregisterBtn.on('click',function(){
-		// clear cookies if any
-		document.cookie = "songcircle_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
-		document.cookie = "unregister=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
-
-		var userId;
-		// if data attribute exists
-		if( userId = $('table.songcircle_table').data('user-session-id') ){
-
-			// collect relevant data
-			var songcircleId = $(this).parent().find('input[name="songcircle_id"]').val();
-			var songcircleName = $(this).parent().find('input[name="songcircle_name"]').val();
-			var waitlist = $(this).data('waitlist');
-			var userId = $('table.songcircle_table').data('user-session-id');
-
+	userSessionUnregister.on('click',function(){
+		// check that user-session-id data attr. exists
+		if( $('table.songcircle_table').data('user-session-id') ){
+			var sessionData = [];
+			// extract relevant data
+			sessionData['songcircleId'] 	= $(this).parent().find('input[name="songcircle_id"]').val();
+			sessionData['songcircleName'] = $(this).parent().find('input[name="songcircle_name"]').val();
+			sessionData['waitlist'] 			= $(this).data('waitlist');
+			sessionData['userId'] 				= $('table.songcircle_table').data('user-session-id');
 			// create target destination
 			var target = "../includes/songcircle_user_action.php?action=unregister"
-					target+= "&songcircle_id="+songcircleId+"&user_id="+userId+"&waitlist="+waitlist;
-
+					target+= "&songcircle_id="+sessionData['songcircleId']
+					target+= "&user_id="+sessionData['userId']
+					target+= "&waitlist="+sessionData['waitlist'];
 			// request scripting page
 			$.ajax({
 				url : target,
 				method : 'POST',
 				success: function(data){
-					// set cookies for script on songcircle.php
-					document.cookie = "songcircle_name="+songcircleName;
-					document.cookie = "unregister=true;";
-					// cause reload of housing page (songcircle.php)
-					document.location.reload(true);
-				},
-				failure: function(data){
-					alert('fail');
-					alert(data);
-					// display failure message
+					// set cookies for display and parsing
+					document.cookie = "unregister=true";
+					document.cookie = "songcircleName="+sessionData['songcircleName'];
+					// reload page from server
+					location.reload(true);
 				}
+				// ,failure: function(data){
+				// 	alert('fail');
+				// 	alert(data);
+				// 	// display failure message
+				// }
 			});
-
 		}
-
 	});
 
 	/**
@@ -590,8 +580,11 @@ $(document).ready(function(){
 	* Function for retrieving 'Songfarm Code of Conduct' from filesystem
 	*/
 	$.fn.getCodeOfConduct = function(){
-
-		$.get('http://songfarm.ca/public/code_of_conduct.html', function(data){
+		/**
+		* NOTE: temporary target. Use http://songfarm.ca/public/code_of_conduct.html
+		* or use relative path !!
+		*/
+		$.get('code_of_conduct.html', function(data){
 			// input return data as html
 			codeOfConContainer.html(data);
 			$('body').append(codeOfConContainer);
@@ -611,7 +604,7 @@ $(document).ready(function(){
 	/**
 	* Event: User agrees with Code of Conduct
 	*/
-	$('body').on('click', 'button.cOcAgree', function(){
+	$('body').on('click', 'button[name="agree"]', function(){
 		// check checkbox if agree
 		codeOfConductCheckbox.prop('checked', true);
 		// hide Code of Conduct container
@@ -621,25 +614,46 @@ $(document).ready(function(){
 		*/
 		$('div#cOcAlertBox').hide();
 		$('.checkbox-custom + .checkbox-custom-label').removeClass('error');
-		$('.checkbox-custom-label').css('color','#666');
+		$('.checkbox-custom-label, .checkbox-custom-label + a').css('color','#666');
 	});
 
 	/**
 	* Event: User does not agree with Code of Conduct
 	*/
-	$('body').on('click', 'a[name="cOcNotAgree"]', function(){
+	$('body').on('click', 'button[name="not_agree"]', function(){
 		codeOfConductCheckbox.prop('checked', false);
 		codeOfConContainer.fadeOut().hide();
 	});
 
-	// Trigger for showing songcircle participants
-	var triggerDiv = $('span.triggerParticipantsTable');
-	var participantsTable = $('#schedule #schedule_container table.songcircle_table td.participantsTable');
-	var eventName = $(songcircleTable).find('td[name="event_name"] div p').html();
+	/* select and style songcircle event names */
+	// retrieve all the p's containing event name
+	var eventNames = $(".songcircle_table tr td[name='event_name'] > div > p");
+	var name, slcdStr, str;
+	// loop through result set
+	$(eventNames).each(function(index, element){
+		// extract the html contents
+		var eventName = $(this).html();
+		var testExp = /Songfarm/;
+		// if the string contains the word Songfarm
+		if ( testExp.test(eventName) )	{
+			// slice out word 'Songfarm'
+			slcdStr = eventName.slice(9); // 9 represents "songfarm"
+			// re-format and replace string
+			newStr = slcdStr.replace(slcdStr, "Songfarm <span class=\"selected green\">"+slcdStr+"</span>");
+		}	else	{
+			// re-format and replace string
+			newStr = eventName.replace(eventName, "<span class=\"selected green\">"+eventName+"</span>");
+		}
+		// insert new HTML into event_name p tag
+		$(this).html(newStr);
+	});
 
 	/**
 	* Toggle participants table
 	*/
+	// Trigger for showing songcircle participants
+	var triggerDiv = $('span.triggerParticipantsTable');
+	var participantsTable = $('#schedule #schedule_container table.songcircle_table td.participantsTable');
 	triggerDiv.add(participantsTable).on('mouseover mouseout', function(){
 		$(participantsTable).toggle();
 	});
@@ -647,17 +661,6 @@ $(document).ready(function(){
 	/**
 	* Get Event Name from songcircle_table and apply class .selected
 	*/
-	// if the string contains the word Songfarm
-	if ( /Songfarm/i.test(eventName) )
-	{
-		var newStr = eventName.slice(9);
-		str = newStr.replace(newStr, "Songfarm <span class=\"selected green\">"+newStr+"</span>")
-		$(songcircleTable).find('td[name="event_name"] div p').html(str);
-	}
-	else
-	{
-		var str = eventName.replace(eventName, "<span class=\"selected green\">"+eventName+"</span>");
-		$(songcircleTable).find('td[name="event_name"] div p').html(str);
-	}
+
 
 }); // end document.ready

@@ -18,8 +18,9 @@ if( (isset($_GET['unsubscribe_key']) && !empty($_GET['unsubscribe_key']) )
 				// remove user from the system
 				if($user->removeUserFromSongfarm($user_id)){
 				// user successfully removed
+
 					// construct unsubscribe text
-					$log_text = ' Unsubscribed -- user_id: '.$user_id; //.'; email: '.$user_email
+					$log_text = ' Unsubscribed -- user_id: '.$user_id.'; email: '.$user_email;
 					// write to USER log
 					file_put_contents(SITE_ROOT.'/logs/user_'.date("m-d-Y").'.txt',date("G:i:s").$log_text.PHP_EOL,FILE_APPEND);
 					$success_msg[] = "You have been successfully unsubscribed from Songfarm.<br>";

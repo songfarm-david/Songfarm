@@ -80,16 +80,17 @@ class Songcircle extends MySQLDatabase{
 			while( $row = $db->fetchArray($result) ){
 
 				$output.= '<tr data-row-count="'.$count.'">';
-
-				if( (empty($_SESSION['user_id']) && !isset($_SESSION['user_id']))
-					&& !isset($_SESSION['timezone']) ){
+				// if no session data exists
+				if( (empty($_SESSION['user_id']) && !isset($_SESSION['user_id'])) ){ //&& !isset($_SESSION['timezone'])
 					// format times in UTC
 					$output.= '<td data-month-date="'.$this->createMonthDate($row['date_of_songcircle']).'">';
 					$output.= $this->formatUTC($row['date_of_songcircle']).'</td>';
 				}	else {
+					$user = new User();
+					$user->setUserData($_SESSION['user_id']);
 					// format times according to user timezone
 					$output.= '<td data-month-date="'.$this->createMonthDate($row['date_of_songcircle']).'">';
-					$output.= $this->callUserTimezone($row['date_of_songcircle'], $_SESSION['timezone']).'</td>';
+					$output.= $this->callUserTimezone($row['date_of_songcircle'], $user->timezone).'</td>';
 				}
 
 				// middle td + currently registered count
@@ -113,7 +114,7 @@ class Songcircle extends MySQLDatabase{
 							// check if user is already registered
 							if( $this->isRegisteredUser($row['songcircle_id'], $_SESSION['user_id']) ){
 								// allow user to unregister
-								$output.= '<span class="button_container waitlist" data-waitlist=false>Unregister</span>';
+								$output.= '<span class="button_container" data-waitlist=false data-unregister="unregister">Unregister</span>';
 								/**
 								* NOTE: <span class="button_container waitlist" data-waitlist=true>Leave Waitlist</span>
 								*/
@@ -133,7 +134,8 @@ class Songcircle extends MySQLDatabase{
 									// not full waiting list,
 									// already on waiting list?
 									if( $this->userAlreadyRegistered($row['songcircle_id'], $_SESSION['user_id'], 1) ) { /* third argument is positive value only */
-										$output.= '<span class="button_container waitlist" data-waitlist=true>Leave Waitlist</span>';
+										/* name="unregister" is jQuery key -- see songcircle.js */
+										$output.= '<span class="button_container" data-waitlist=true data-unregister="unregister">Leave Waitlist</span>';
 									} else {
 										// allow join
 										$output.= '<span class="button_container" data-id="triggerRegForm">Join&nbsp;Waitlist</span>';
@@ -198,7 +200,7 @@ class Songcircle extends MySQLDatabase{
 
 						} else {
 							// display "Songcircle In Progress" button
-							$output.= "<div><p class=\"in-progress\"><span>".$row['songcircle_name']."</span><br> is in progress</p></div>";
+							$output.= "<div><p class=\"no_button\"><span>".$row['songcircle_name']."</span><br> is in progress</p></div>";
 						}
 
 					}
@@ -207,7 +209,7 @@ class Songcircle extends MySQLDatabase{
 					{
 						// show message here that songcircle has completed
 						// display "Songcircle has Completed" button
-						$output.= "<div><p class=\"is-complete\"><span>".$row['songcircle_name']."</span><br> has completed</p></div>";
+						$output.= "<div><p class=\"no_button\"><span>".$row['songcircle_name']."</span><br> has completed</p></div>";
 					}
 
 					$output.= '</td>';

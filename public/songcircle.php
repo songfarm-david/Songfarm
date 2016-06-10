@@ -12,15 +12,14 @@ if( $location_by_ip = generateIPData() ){
 			${$key} = $value;
 		}
 	}
-} // end of: if( $location_by_ip = generateIPData() )
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Songcircle - Virtual Songwriter's Circle</title>
-    <meta name="description" content="Workshop your song in a virtual songwriter's circle!">
-    <!-- a meta "description" can and should be included on each independent page to DESCRIBE it -->
+    <meta name="description" content="Write a better song! Workshop your song in a virtual songwriter's circle live!">
+		<title>Songcircle - Virtual Songwriter's Circle</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <meta property="og:url" content="http://www.songfarm.ca/songcircle.php">
     <meta property="og:title" content="Songcircle - Virtual Songwriter's Circle">
@@ -35,8 +34,8 @@ if( $location_by_ip = generateIPData() ){
     <script type="text/javascript" src="js/jquery-1.11.3.min.js"></script>
 		<script type="text/javascript" src="js/jquery.validate.min.js"></script>
     <script type="text/javascript" src="//platform.linkedin.com/in.js">
-        api_key:   77fxwmu499ca9c
-        authorize: true
+        // api_key:   77fxwmu499ca9c
+        // authorize: true
     </script>
     <!--[if lt IE 9]>
       <script src="js/html5-shiv/html5shiv.min.js"></script>
@@ -46,10 +45,14 @@ if( $location_by_ip = generateIPData() ){
     <![end if]-->
   </head>
 	<body>
-    <?php include("../includes/layout/header.php") ?>
+		<header id="header">
+			<h1 class="hide">Songcircle</h1>
+			<?php include("../includes/layout/navigation.php") ?>
+		</header>
+		<!-- Main Content -->
 		<main>
-			<!-- start Main Banner -->
-			<article id="banner">
+			<!-- Banner -->
+			<section id="banner">
 				<!-- <img src="images/songcircle/songcircle_logo.png" alt="songcircle logo" width="367" height="82"> -->
 				<h1>
 					Real songs. Real songwriters. <span>Real-time.</span>
@@ -57,10 +60,10 @@ if( $location_by_ip = generateIPData() ){
 				<h2>
 					Workshop your song live in a virtual Songwriters' Circle. <br>Get real-time feedback, collaborate with musicians, and perfect your craft. <br>Register for a Songcircle today!
 				</h2>
-			</article>
+			</section>
 			<!-- end of Main Banner -->
 			<!-- start Schedule -->
-			<article id="schedule">
+			<section id="schedule">
 				<h3 class="hide">Songcircle Schedule</h3>
 				<div id="schedule_container">
 					<div id="datesList_container">
@@ -72,21 +75,21 @@ if( $location_by_ip = generateIPData() ){
 					</div>
 					<?php print $songcircle->displaySongcircles(); ?>
 				</div>
-			</article>
+			</section>
 			<!-- end of Schedule -->
 			<!-- start About Songcircle -->
 			<article id="about">
 				<h3>What is a <span>Songcircle?</span></h3>
-				<img src="images/songcircle/hr_dotted.png">
+				<img src="images/songcircle/hr_dotted.png" alt="">
 				<p>
-					A <a href="#linkToBlog">Songcircle</a> is an <em>opportunity</em> for Songwriters to gather together, workshop their ideas, collaborate, and get real-time feedback from artists from all over the globe.
+					A <a><b>Songcircle</b></a> is an opportunity for Songwriters to gather together, workshop their ideas, collaborate with one another, and get real-time feedback from other artists from all over the world.
 				</p>
 				<p>Conducted over the internet in real-time, Songcircles are open to virtually anyone with an internet connection, a webcam, and a song.</p>
 				<p>
 					What traditionally had to be done in brick and mortar establishments is now being made possible by Songfarm as an alternative to songwriter's who may not have access to a songwriter's circle where they live; it's an exciting new way for songwriters to nurture their craft and grow their network - all without having to leave the house.
 				</p>
 				<p>
-					Experience one for yourself. <a href="#" data-id="triggerRegForm">Register for a Songcircle today!</a>
+					Experience one for yourself. <a title="Register for a Songcircle" data-id="triggerRegForm">Register for a Songcircle today!</a>
 				</p>
 			</article>
 			<!-- end of About Songcircle -->
@@ -102,37 +105,83 @@ if( $location_by_ip = generateIPData() ){
 	<script type="text/javascript" src="js/social.js"></script>
 	<script type="text/javascript">
 	document.body.onload = function(){
-
 		/**
-		* Code looks for a specific cookie, i.e: When a user unregisters via
-		* the call to action button on schedule on songcircle.php
+		* Displays a confirmation message upon unregistration when session exists
 		*
-		* Displays a confirmation message then disappears
+		* Cookie will come from the server when user
+		* has session-id on client and they choose to unregister
+		* from a songcircleName
 		*/
+		if(document.cookie){
+			var unregister = songcircleName = null;
+			// split values
+			var ca = document.cookie.split(";");
+			for (var i = 0; i < ca.length; i++) {
+				var cName = ca[i];
+				// if there's a space, remove it
+				while (cName.charAt(0) == " ") { cName = cName.substring(1,cName.length);	}
+				// check for unregister cookie
+				if ( cName.indexOf( "unregister" ) > -1 ){
+					// extract value
+					var startIndex 	= cName.indexOf("=")+1;
+					var cValue = cName.substring(startIndex, cName.length);
+					// if there is a value
+					if( cValue.length ){
+						unregister = true;
+					}
+				}
+				// check for name of songcircle
+				if ( cName.indexOf( "songcircleName" ) > -1 ){
+					var startIndex 	= cName.indexOf("=")+1;
+					var cValue = cName.substring(startIndex, cName.length);
+					if( cValue.length ){
+						songcircleName = cValue;
+					}
+				}
+			} // end of for loop
 
-		if( document.cookie.indexOf('unregister') != -1 ){
+			if( unregister && songcircleName ){
+				// clear cookie values
+				document.cookie = "unregister=";
+				document.cookie = "songcircleName=";
+				// run modal event
+				var message = "<p>You have successfully unregistered for <strong>"+songcircleName+".</strong></p>";
+				var modalOverlay = $('#modal, #overlay');
+				$('#modal').append(message);
+				// fade in and out overlay
+				modalOverlay.fadeIn('3000',function(){
+					setTimeout(function(){
+						modalOverlay.fadeOut('3000');
+					}, 3000);
+				});
+			}
+		} // end of if:cookie
 
-			// get start and end index of first cookie value
-			var startIndex = document.cookie.indexOf("=")+1;
-			var endIndex = document.cookie.indexOf(";");
-			// get name of songcircle
-			var songcircleName = document.cookie.substring(startIndex, endIndex);
-			var message = "<p>You have successfully unregistered for <strong>"+songcircleName+".</strong></p>";
 
-			// clear cookies
-			document.cookie = "songcircle_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
-			document.cookie = "unregister=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
 
-			var modalOverlay = $('#modal, #overlay');
-			$('#modal').append(message);
 
-			// fade in and out overlay
-			modalOverlay.fadeIn('3000',function(){
-				setTimeout(function(){
-					modalOverlay.fadeOut('3000');
-				}, 3000);
-			});
-		}
+		// if( document.cookie.indexOf(cName) > -1 ){
+		// 	// get start and end index of first cookie value
+		// 	var startIndex 	= document.cookie.indexOf("=")+1;
+		// 	var endIndex 		= document.cookie.indexOf(";");
+		// 	// get name of songcircle
+		// 	var songcircleName = document.cookie.substring(startIndex, endIndex);
+		// 	var message = "<p>You have successfully unregistered for <strong>"+songcircleName+".</strong></p>";
+		//
+		// 	// clear cookies
+		// 	document.cookie = "songcircle_name=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+		// 	document.cookie = "unregister=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+		//
+			// var modalOverlay = $('#modal, #overlay');
+			// $('#modal').append(message);
+			//
+			// // fade in and out overlay
+			// modalOverlay.fadeIn('3000',function(){
+			// 	setTimeout(function(){
+			// 		modalOverlay.fadeOut('3000');
+			// 	}, 3000);
+			// });
+		// }
 
 	};
 	</script>

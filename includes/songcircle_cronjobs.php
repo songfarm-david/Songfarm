@@ -7,7 +7,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 	if(isset($argv)){
 
 		$cronlog_location 	= SITE_ROOT.'/logs/cronjobs/cronlog_'.date("m-d-Y").'.txt';
-		$errorLog_location = SITE_ROOT.'/logs/cronjobs/error_'.date("m-d-Y").'.txt';
+		$errorLog_location = SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt';
 		// $log_time = date("H:i:s", strtotime('4 hours')); // converts detroit time to UTC
 		$log_time = date("H:i:s");
 
@@ -24,8 +24,9 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 			* *** A pending message should be visible to users connected to the call
 			*/
 			case 'songcircle_state':
+
 					// log call
-					file_put_contents($cronlog_location,$log_time.' songcircle_state'.PHP_EOL,FILE_APPEND);
+					file_put_contents($cronlog_location,$log_time.' SONGCIRCLE_STATE'.PHP_EOL,FILE_APPEND);
 
 					// if Incomplete Songcircles Exist (Not Started OR Started)
 					if($result = $songcircle->getIncompleteSongcircles()){
@@ -50,8 +51,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 
 						  // if Songcircle is 15 minutes until start && has not finished && current status isn't already set to 1
 							if ( ($diff_in_minutes >= -15) && ($diff_in_minutes < $duration_of_songcircle)
-								&& ($songcircle_result['songcircle_status'] != 1)
-								){
+								&& ($songcircle_result['songcircle_status'] != 1)	){
 
 								// set status to 1 (started)
 								$songcircle_status = 1;
@@ -78,6 +78,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 					} // end of: if($result = $songcircle->getIncompleteSongcircles())
 					else
 					{
+						// there were no songcircles found, incomplete or otherwise
 						file_put_contents($cronlog_location,$log_time.' -- no songcircles found'.PHP_EOL,FILE_APPEND);
 					}
 						break;
@@ -88,7 +89,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 			case 'first_reminder_songcircle':
 
 				// write to log
-				file_put_contents($cronlog_location,$log_time.' first_reminder_songcircle'.PHP_EOL,FILE_APPEND);
+				file_put_contents($cronlog_location,$log_time.' FIRST_REMINDER_SONGCIRCLE'.PHP_EOL,FILE_APPEND);
 
 				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, sr.user_id, ur.user_name, user_email,
 								ut.full_timezone, TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(), @@global.time_zone, '+0:00' ), date_of_songcircle ) AS diff
@@ -164,7 +165,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 			case 'second_reminder_songcircle':
 
 				// write to log
-				file_put_contents($cronlog_location,$log_time.' second_reminder_songcircle'.PHP_EOL,FILE_APPEND);
+				file_put_contents($cronlog_location,$log_time.' SECOND_REMINDER_SONGCIRCLE'.PHP_EOL,FILE_APPEND);
 
 				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, sr.user_id, ur.user_name, user_email,
 								ut.full_timezone, TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(), @@global.time_zone, '+0:00' ), date_of_songcircle ) AS diff
@@ -174,7 +175,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 								WHERE sc.songcircle_id = sr.songcircle_id
 								AND sc.songcircle_status = 0
 								AND sr.confirm_status = 1
-								AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(), @@global.time_zone, '+0:00' ), date_of_songcircle ) > 1411
+								AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(), @@global.time_zone, '+0:00' ), date_of_songcircle ) > 1426
 								AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(), @@global.time_zone, '+0:00' ), date_of_songcircle ) < 1441";
 
 				if($result = $db->getRows($sql)){
@@ -199,7 +200,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 								// if mail successful
 								if( mail($to,$subject,$message,$headers,'-fsongfarm') ){
 
-									file_put_contents($cronlog_location, $log_time.' -- Email Sent: User '.$songcircle_user_data['user_id'].', '.$songcircle_user_data['songcircle_id'].PHP_EOL,FILE_APPEND);
+									file_put_contents($cronlog_location, $log_time.' -- Email Sent: User '.$songcircle_user_data['user_id'].', '.$songcircle_user_data['songcircle_id'].' diff: '.$songcircle_user_data['diff'].PHP_EOL,FILE_APPEND);
 
 								}
 								else
@@ -213,8 +214,10 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 							else
 							{
 								// could not construct email
-									// log error
-									file_put_contents($errorLog_location,$log_time.' '.error_get_last().' -- FAILED: Could not construct email ('.$_SERVER['PHP_SELF'].__LINE__.') '.$songcircle_user_data['songcircle_id'].' ('.$songcircle_user_data['songcircle_name'].') '.$songcircle_user_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
+									// write to error log
+									file_put_contents($errorLog_location, $log_time.' -- FAILED: Could not construct email ('.$_SERVER['PHP_SELF'].' - line: '.__LINE__.') '.$songcircle_user_data['songcircle_id'].'; user_id: '.$songcircle_user_data['user_id'].' - User date: '.$songcircle_user_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
+									// log error in cronlog
+									file_put_contents($cronlog_location, $log_time.' -- ERROR '.PHP_EOL,FILE_APPEND);
 							}
 
 						} // end of: if($user->setUserData($songcircle_user_data['user_id']))
@@ -240,7 +243,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 			case 'join_songcircle':
 
 				// write to log
-				file_put_contents($cronlog_location,$log_time.' join_songcircle'.PHP_EOL,FILE_APPEND);
+				file_put_contents($cronlog_location,$log_time.' JOIN_SONGCIRCLE'.PHP_EOL,FILE_APPEND);
 
 				$sql="SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, sr.user_id, verification_key,
 							confirm_status, ur.user_name, user_email, ut.full_timezone, TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(),   @@global.time_zone, '+0:00' ), date_of_songcircle ) AS diff
@@ -258,7 +261,7 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 
 					foreach($result as $songcircle_user_data){
 
-						file_put_contents($cronlog_location, $log_time.' -- Join link sent - User '.$songcircle_user_data['user_id'].'  verification_key: '.$songcircle_user_data['verification_key'].PHP_EOL,FILE_APPEND);
+						// file_put_contents($cronlog_location, $log_time.' -- Join link sent - User '.$songcircle_user_data['user_id'].'  verification_key: '.$songcircle_user_data['verification_key'].PHP_EOL,FILE_APPEND);
 
 						// construct email
 						$to = "{$songcircle_user_data['user_name']} <{$songcircle_user_data['user_email']}>";
@@ -294,23 +297,100 @@ if(isset($_SERVER['REMOTE_ADDR'])){
 					break;
 
 			/**
+			* Send survey 3 hours after end of songcircle
+			*
+			* NOTE: runs every half an hour
+			*
+			*/
+			case 'songcircle_survey':
+
+				// write to log
+				file_put_contents($cronlog_location,$log_time.' SONGCIRCLE_SURVEY'.PHP_EOL,FILE_APPEND);
+
+				// query database for...
+				/**
+				*
+				* Select ID/Username/Email
+				* Where Confirm Status is 1
+				* Where Songcircle Status is 5
+				* AND three hours has passed since the END-TIME of the songcircle
+				*/
+				$sql = "SELECT sc.songcircle_id, songcircle_name, date_of_songcircle, duration,
+								sr.user_id, confirm_status,	ur.user_name, user_email
+								, TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(),   @@global.time_zone, '+0:00' ), ADDTIME(date_of_songcircle, duration) ) AS diff
+								FROM songcircle_create AS sc, songcircle_register AS sr
+								INNER JOIN user_register AS ur ON sr.user_id = ur.user_id
+								-- INNER JOIN user_timezone AS ut ON ur.user_id = ut.user_id
+								WHERE sc.songcircle_id = sr.songcircle_id
+								AND sr.confirm_status = 1
+								AND sc.songcircle_status = 5 -- songcircle is complete
+								-- Target: 3 hours after END of songcircle
+								AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(), @@global.time_zone, '+0:00' ),
+								ADDTIME(date_of_songcircle, duration) ) < -179 -- greater than 3 hours
+								AND TIMESTAMPDIFF( MINUTE, CONVERT_TZ( now(), @@global.time_zone, '+0:00' ),
+								ADDTIME(date_of_songcircle, duration) ) > -209"; //less than 3.5 hours
+
+				// if result
+				if($result = $db->getRows($sql)){
+
+					file_put_contents($cronlog_location,$log_time.' -- got result '.$result.PHP_EOL,FILE_APPEND);
+
+					foreach($result as $songcircle_user_data){
+
+						file_put_contents($cronlog_location,$log_time.' '.$songcircle_user_data['user_id'].PHP_EOL,FILE_APPEND);
+						// send each user an email with link to survey
+						// construct email
+						$to = "{$songcircle_user_data['user_name']} <{$songcircle_user_data['user_email']}>";
+						$subject = "How was ".$songcircle_user_data['songcircle_name']."?";
+						$from = "Songfarm <noreply@songfarm.ca>";
+						if( $message = initiateEmail($email_data['songcircle_survey'],$songcircle_user_data)){
+							$headers = "From: {$from}\r\n";
+							$headers.= "Content-Type: text/html; charset=utf-8";
+							if( mail($to,$subject,$message,$headers,'-fsongfarm') )
+							{
+								file_put_contents($cronlog_location,$log_time.' -- Survey sent - User '.$songcircle_user_data['user_id'].', '.$songcircle_user_data['songcircle_id'].' diff: '.$songcircle_user_data['diff'].PHP_EOL,FILE_APPEND);
+							}
+							else
+							{
+								// could not send email
+								file_put_contents($errorLog_location,$log_time.' '.error_get_last().' -- FAILED: Could not send survey email ('.$_SERVER['PHP_SELF'].__LINE__.') '.$songcircle_user_data['songcircle_id'].' ('.$songcircle_user_data['songcircle_name'].') '.$songcircle_user_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
+							}
+
+						} // end of: if($message = initiateEmail())
+						else
+						{
+							// could not construct email
+							file_put_contents($errorLog_location,$log_time.' '.error_get_last().' -- FAILED: Could not construct survey email ('.$_SERVER['PHP_SELF'].__LINE__.') '.$songcircle_user_data['songcircle_id'].' ('.$songcircle_user_data['songcircle_name'].') '.$songcircle_user_data['date_of_songcircle'].PHP_EOL,FILE_APPEND);
+						}
+
+					}
+				} else {
+					// no query result
+					//write to log
+					file_put_contents($cronlog_location,$log_time.' -- no action '.$songcircle_user_data['diff'].PHP_EOL,FILE_APPEND);
+				}
+
+				break;
+
+			/**
 			* Clears completed/expired songcircles
+			* NOTE: Executes removal of Songcircles (at least) 5 hours after End of Songcircle (see query notes)
 			*/
 			case 'clear_expired_songcircle':
 
 				// write to log
-				file_put_contents($cronlog_location, $log_time.' clear_expired_songcircle'.PHP_EOL,FILE_APPEND);
+				file_put_contents($cronlog_location, $log_time.' CLEAR_EXPIRED_SONGCIRCLE'.PHP_EOL,FILE_APPEND);
 
-				// if songcircle start time + duration of songcircle is less than current time (in UTC)
-				$sql = "SELECT id, songcircle_id, date_of_songcircle ";
-				$sql.= "FROM songcircle_create ";
-				$sql.= "WHERE DATE_ADD(date_of_songcircle, INTERVAL duration HOUR_SECOND) < DATE_ADD(NOW(), INTERVAL '4' HOUR)";
+				// NOTE: ADDTIME(duration,'05:00:00') denotes an arbitrary addition of hours to allow for case: songcircle_survey
+				$sql = "SELECT id, songcircle_id, date_of_songcircle, duration
+								-- ,TIMESTAMPDIFF(MINUTE, DATE_ADD(date_of_songcircle, INTERVAL ADDTIME(duration,'05:00:00') HOUR_SECOND), DATE_ADD(NOW(), INTERVAL '4' HOUR)) as diff
+								FROM songcircle_create
+								WHERE DATE_ADD(date_of_songcircle, INTERVAL ADDTIME(duration,'05:00:00') HOUR_SECOND) < DATE_ADD( NOW(), INTERVAL '4' HOUR )";
 
 				if($result = $db->getRows($sql)){
 
 					foreach ($result as $songcircle) {
 
-						// get id for expired
 						$id = $songcircle['id'];
 						$songcircle_id = $songcircle['songcircle_id'];
 

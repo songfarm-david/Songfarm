@@ -48,7 +48,7 @@ class MySQLDatabase{
 			// write to error log
 			error_log($mysli_error, 3, ERROR_PATH);
 			file_put_contents(SITE_ROOT.DS.'logs'.DS.'error_'.date("m-d-Y").'.txt',$mysli_error,FILE_APPEND);
-			die("There was an error in the data query. Support has been notified. \n\rPlease accept our apologies for the inconvenience.");
+			die("Query error. Support has been notified. We apologize for the inconvenience.");
 		}
 	}
 

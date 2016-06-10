@@ -541,13 +541,10 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 					$log_text = $message_status.' -- User ID: '.$user_id.' unregistered from Songcircle ID: '.$songcircle_id;
 					file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',$currentUTCTime.$log_text.PHP_EOL,FILE_APPEND);
 
-					// IF call came from AJAX
-					if( !empty($_SERVER['HTTP_X_REQUESTED_WITH'])	&& strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest')
-					{
+					/* code block for songcircle unregister request when session */
+					if( !empty($_SERVER['HTTP_X_REQUESTED_WITH'])	&& strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
 						return true; // returns true to ajax success function (songcircle.js)
-					}
-					else
-					{
+					}	else {
 						// regular script processing (not an AJAX call)
 						$success_msg = "Unregistration successful.<br>";
 						$success_msg.= "Please consider signing up for a Songcircle again soon!";

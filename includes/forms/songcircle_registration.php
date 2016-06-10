@@ -85,6 +85,7 @@
 			}
 			?>
 			</select>
+
 		</div><!-- end of: <div id="user_location" class="hide"> -->
 	</div><!-- end of: <div id="loc"> -->
 	<!-- end of: Location -->

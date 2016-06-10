@@ -84,6 +84,8 @@ div#loc{ text-align: center;	margin-top: 2em; border-top: 1px solid #ffffff; }
 	cursor: pointer; transition: color 250ms;
 }
 #locationMsg span#trigger-location:hover{ color: #FFF; }
+
+div#user_location{ position: relative; } /* for error div positioning */
 #user_location select#country_select{ margin-top: 1em; }
 
 div#codeOfConduct{
@@ -108,12 +110,12 @@ div#codeOfConduct{
 }
 .checkbox-custom-label{ color: #666666; }
 #codeOfConduct a, #cOcAlertBox a{ text-decoration: underline; }
-#cOcAlertBox a{ color: #fff; }
+#cOcAlertBox.form_error > p > a{ color: #fff !important; }
 .checkbox-custom-label a:hover,
 #codeOfConduct a:hover, #locationMsg span#trigger-location:hover{
 	color: #FFFFFF;
 }
-#cOcAlertBox a:hover{ color: #666; }
+#cOcAlertBox > p > a:hover{ color: lightcyan !important; }
 .checkbox-custom + .checkbox-custom-label:before{
 	content: '';
   background: #fff;
@@ -156,6 +158,10 @@ input.checkbox-custom + .checkbox-custom-label.error:before{
 }
 #registration_form .form_error p{
 	padding: 0;	display: table-cell; vertical-align: middle;
+}
+
+#registration_form div.form_error[name="timezone"]{
+	top: 100%;
 }
 
 /* alert box for code of conduct */
@@ -226,10 +232,10 @@ span#close_form:hover { color: #fff; }
 	div#cOcAlertBox.form_error{
 		top:12px;
 	}
-	#registration_form span#close_form{ display: inline; }
+	#registration_form span#close_form{
+		display: block; text-align: left; padding-bottom: 1em;
+	}
 }
-
-
 
 @media screen and (max-width: 480px){
 	#registration_form{
@@ -280,7 +286,7 @@ span#close_form:hover { color: #fff; }
 
 /* Styles for Code of Conduct Modal */
 
-#cOcModal{
+/*#cOcModal{
   position:fixed; z-index:3001;
   top:0.5em; bottom:0.5em;
   left: 50%; transform: translateX(-50%);
@@ -298,7 +304,6 @@ span#close_form:hover { color: #fff; }
   font-size: 0.85em; text-align: left;
   background:#eee;
 }
-#cOcModal p{ margin: 0; line-height: 1.1; padding: 0.25em 0; }
 #cOcModal h2{ margin: 2em 0 1em; font-size: 1.5em; font-weight: bold;}
 
 #cOcModal h2, #cOcModal ol li{ font-family: 'museo_sans300', Arial, Helvetica, sans-serif; }
@@ -344,116 +349,172 @@ span#close_form:hover { color: #fff; }
   text-decoration: underline;
 }
 #cOcModal a[name="cOcNotAgree"]:hover{color:#D7F6E4;}
-#cOcModal button[name="cOcAgree"]:hover{ color:white; background: #2E63AF; cursor: pointer; }
-
-/*
-* Misc
-*/
-/*span.triggerParticipantsTable{ text-decoration: underline; transition-duration: .250s;}
-span.triggerParticipantsTable:hover{ cursor: pointer; color:#7CC919; transition-duration: .250s; }*/
-
-/*.triggerParticipantsTable{
-	font-size: 0.65em;
-  cursor: pointer;
-  color:blue;
-  text-decoration: underline;
-}*/
-/*span.permission{ font-size: 0.85em; color: #DA7C7C; }*/
+#cOcModal button[name="cOcAgree"]:hover{ color:white; background: #2E63AF; cursor: pointer; }*/
+#cOcModal p{ margin: 0; line-height: 1.1; padding: 0.25em 0; }
 
 
-
-
-/*
-* Schedule table
-*/
-/*table#songcircleTable{
-	width: 65%;
-	margin:0 auto;
-	border:5px double #7CC919;
-	border-spacing: 0;
-	text-align: center;
-	border-radius: 6px;
-	font-size:1.3em;
-	font-family: 'museo_sans300', Arial, Helvetica, sans-serif;
-	background-color: #fff;
-}*/
-/*#songcircleTable tr:not(:first-child) td{ border-top: 5px double #7CC919; }*/
-
-/*td{
-	vertical-align: middle;
-	padding:16px 0;
+#codeOfConduct span.bold{ font-family: 'museo_sans900'; }
+article#codeOfConductModal{
+	position:fixed; z-index:3001;
+	/*top: 0.5em; bottom: 0.5em;*/
+	top: 0; bottom: 0;
+	left: 50%; transform: translateX(-50%);
+	width: 65%; min-width: 320px;
+	font-size: 120%;
+	overflow-x: hidden; /* horizontal */
+	overflow-y: scroll;
+	overflow: overlay;
+	min-width: 320px;
+	padding: 0.5em;
+	background: white;
+}
+#codeOfConductModal p{
+	background: #8E8E8E;
+	margin-bottom: .25em;
+	padding: 1em 4em;
 	line-height: 1.3;
-	border: none;
-	border-right:5px double #7CC919;
-}*/
-
-/*td.date{ width:31%; font-size:0.9em; }*/
-/*td.name{ font-size: 1.15em;	padding-top: 0.9em; position:relative; }*/
-
-/*span.registered{ width: 19%; }*/
-/*td:last-child{ width:27%; padding: 0 0.5em; border-right:none; }*/
-
-/*td input[type="submit"], button.join{
-	background: #7CC919;
-	padding:9px 18px;
-	border-radius: 9px;
-	border:1px solid #66A811;
-	color:#365A09;
-	font-size: 1.4em;
-	box-shadow: 4px 4px 9px 2px #ccc;
-	transition: 0.250s;
-}*/
-/*button.join{ margin: 0 auto; }*/
-
-/*td input[type="submit"]:hover, button.join:hover{
-	cursor: pointer;
-	color:white; background: #2E63AF;
-	transition: 0.250s;
-	outline: none;
-}*/
-
-/* Table participants pop-up */
-/*#songcircleTable table.participantsTable{
-  position: absolute; z-index:1;
-	left:7%; width:100%;
-  border:2px solid black;
-	font-size: .85em;
-	border-spacing: 0;
-	border-collapse: inherit;;
-}
-
-#songcircleTable table tr td:first-child{ border-right: 1px solid #ccc; }
-#songcircleTable table.participantsTable td{
-	width:50%;
-	line-height: 1.25;
-	padding:9px 6px;
-	border:none;
-}
-table.participantsTable tr:nth-child(even){ background:#ddd; }
-table.participantsTable tr:nth-child(odd){ background:#eee; }*/
-
-
-
-/* registration form submit button */
-/*#registration_form input[type="submit"]{
-	width: 100%;
-	position: absolute; top: -6px;
-	line-height: 5;
-	border: none;
-	display: block;
-	cursor: pointer;
-	z-index: 100000;
-	margin: 1em auto;
+	border-top-left-radius: 15px;
+	border-top-right-radius: 15px;
 	color: white;
-	font-size:1.75em;
-	border: none;
-	-webkit-box-shadow: 0px 0px 2px 4px rgba(255,255,255,1);
-	-moz-box-shadow: 0px 0px 2px 4px rgba(255,255,255,1);
-	box-shadow: 0px 0px 2px 4px rgba(255,255,255,1);
-	visibility: hidden;
-}*/
+	font-family: 'museo_sans300';
+}
+#codeOfConductModal p > img{ float: left; margin: 0.5em 1em 0.5em 0; }
+#codeOfConductModal p span{ font-family: 'museo_sans700'; }
+#codeOfConductModal div{
+	background: #E7E7E7;
+	border-bottom-left-radius: 15px;
+	border-bottom-right-radius: 15px;
+	padding-bottom: 1em;
+	position: relative;
+	/*height: 84%;*/
+}
+#codeOfConductModal div > h2{
+	text-align: center;
+	font-size: 2.2em;
+	padding: .25em 0 1em;
+	color: #618ADE;
+	min-width: 0;
+}
+#codeOfConductModal div > h2 + img{
+	position: absolute;
+	top: 0; width: 100%;
+}
+#codeOfConductModal ol{
+	margin:0 auto 1em; padding:0.5em 0;
+	list-style-type: none; list-style-type: decimal !ie;
+	counter-reset: ol-counter;
+	width: 50%; min-width: 284px;
+	background: #fff;
+}
+#codeOfConductModal ol li{
+	margin: 1em 0;
+	margin-left: 55%; /* offset li from the left margin */
+	transform: translateX(-50%);
+	padding: .25em 0;
+	padding-left: 1em;
+	min-height: 2em;
+	border-left: 2px solid #618ADE;
+	line-height: 1.2;
+	display: table;
+	width: 65%; /* make the li full width of ol */
+	color: #615F64;
+	font-family: 'museo_sans300';
+}
+/* nesting of spans allow for vertical-align: center technique */
+#codeOfConductModal ol li > span{
+	display: table-cell;
+	vertical-align: middle;
+	font-family: 'museo_sans300';
+	padding: .5em 0 .5em .5em;
+}
+#codeOfConductModal ol > li:before {
+	content: counter(ol-counter);
+	counter-increment: ol-counter;
+	/*position: relative; */
+	left: -1.25em;
+	position: absolute;
+	/*top: 0;*/
+	/*width: 0.85em; line-height: 0.9;*/
+	font-size: 2.5em;
+	line-height: normal;
+	/*text-align: right;*/
+	color: #618ADE;
+	font-family: 'museo_sans700';
+}
+#codeOfConductModal button{
+	display: block;
+	margin: 0 auto;
+	padding: 0.5em;
+	font-size: 1em;
+	width: 50%;
+	min-width: 266px;
+	font-family: 'museo_sans300';
+	font-weight: bold;
+}
+#codeOfConductModal button > img{
+	float: left;
+}
+#codeOfConductModal button span{ line-height: 1.5; }
+#codeOfConductModal button[name="agree"]{
+	background: #7ABE43;
+	color: white;
+	border: 3px solid #F6FF8B;
+}
+#codeOfConductModal button[name="agree"]:hover{ color: #6B6B6B; }
+#codeOfConductModal button[name="not_agree"]{
+	background: none; border: none;
+	margin: 0.5em auto 0;
+}
+#codeOfConductModal button[name="not_agree"] > img{
+	margin-left: 1em;	margin-right: .25em;
+}
+#codeOfConductModal button[name="not_agree"]:hover{
+	color: rgba(0, 0, 0, .35);
+}
+#codeOfConductModal button, #codeOfConductModal button:hover{
+	-webkit-transition: color .25s;
+	transition: color .25s;
+}
 
-/*#cOcAlertBox a{ color: #666666; text-decoration: underline; }
-#cOcAlertBox a:hover{ color: #FFFFFF; }*/
-/*#registration_form div#cOcAlertBox p{ margin: 0; padding: 9px; }
-#registration_form div#cOcAlertBox a{ text-decoration: underline; }*/
+/* media queries for code of conduct */
+@media screen and (max-width: 980px) and (min-width: 681px){
+	/*
+	expand width of elements on smaller page
+	turn off top position on h2
+	*/
+	article#codeOfConductModal{
+		width: 85%;
+	}
+	#codeOfConductModal div > h2{ top: 20px; }
+	#codeOfConductModal ol{ width: 76%; min-width: 600px; }
+	#codeOfConductModal button{ width: 76%; }
+}
+
+@media screen and (max-width: 680px){
+	article#codeOfConductModal{
+		width: 100%;
+	}
+	#codeOfConductModal p{
+		padding: 1em 1em;
+	}
+	#codeOfConductModal div > h2{
+		top: 0; padding: .5em; line-height: 1.2;
+	}
+	#codeOfConductModal ol{ width: 85%; min-width: 0; }
+	#codeOfConductModal button{ width: 80%; }
+}
+
+@media screen and (max-width: 460px){
+	article#codeOfConductModal{
+		width: 100%;
+		min-width: 320px;
+	}
+	#codeOfConductModal ol{ width: 98%; min-width: 0; }
+	#codeOfConductModal ol li{
+		padding-left: 0.5em; line-height: 1.1;
+		margin-left: 60%;
+	}
+	#codeOfConductModal ol > li::before{ left: -1em; }
+	#codeOfConductModal button{ width: 80%; }
+	#codeOfConductModal button span{ line-height: 1.15; }
+}

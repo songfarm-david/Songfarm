@@ -33,13 +33,13 @@ function initiateEmail($email_data, $user_data=''){
 				$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_registered.html');
 				break;
 			case 'first_reminder':
-				$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_first_reminder.html');
+				$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_reminder.html');
 				break;
 		/**
 		* NOTE: test this case
 		*/
 			case 'second_reminder':
-				$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_first_reminder.html');
+				$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_reminder.html');
 				break;
 			case 'join_songcircle':
 				$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_join_songcircle.html');
@@ -47,18 +47,21 @@ function initiateEmail($email_data, $user_data=''){
 		/**
 		* NOTE: This case remains untested/unwritten
 		*/
+			case 'waitlist':
+				$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_waitlist_notice.html');
+				break;
 			// case 'confirm_waitlist':
 			// 	$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_confirm_waitlist.html');
 			// 	break;
-			case 'waitlist':
-				$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_waitlist_notice.html');
+			case 'songcircle_survey':
+				$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_survey.html');
 				break;
 			case 'contact_us':
 				return makeAutoresponder($email_data, $user_data);
 				break;
 			default:
 				// write to log,
-				file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").' Error -- Function initiateEmail called. No cases matched -- '.$_SERVER['PHP_SELF'].' ('.__LINE__.')'.PHP_EOL,FILE_APPEND);
+				file_put_contents(SITE_ROOT.'/logs/error_'.date("m-d-Y").'.txt',date("G:i:s").' --Function initiateEmail called: No cases matched ('.$_SERVER['PHP_SELF'].' - line: '.__LINE__.')'.PHP_EOL,FILE_APPEND);
 				break;
 
 		} // end of switch
@@ -227,7 +230,6 @@ function makeAutoresponder($email_data, $user_data){
 	// return email
 	return $autorespond_email;
 }
-
 
 /**
 * Sends an email to administration in cases of certain errors
