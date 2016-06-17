@@ -632,41 +632,41 @@ if(isset($_GET['action']) && !empty($_GET['action'])){
 	* Join user to a songcircle
 	*/
 		case 'join_songcircle':
-		if( (isset($_GET['songcircle_id']) && !empty($_GET['songcircle_id'])) &&
-				(isset($_GET['user_id']) && !empty($_GET['user_id']))	&&
-				(isset($_GET['verification_key']) && !empty($_GET['verification_key']))
-			)
-			{
-				$songcircle_id = $db->escapeValue($_GET['songcircle_id']);
-				$user_id = $db->escapeValue($_GET['user_id']);
-				$verification_key = $db->escapeValue($_GET['verification_key']);
+			if( (isset($_GET['songcircle_id']) && !empty($_GET['songcircle_id'])) &&
+					(isset($_GET['user_id']) && !empty($_GET['user_id']))	&&
+					(isset($_GET['verification_key']) && !empty($_GET['verification_key']))
+				)
+				{
+					$songcircle_id = $db->escapeValue($_GET['songcircle_id']);
+					$user_id = $db->escapeValue($_GET['user_id']);
+					$verification_key = $db->escapeValue($_GET['verification_key']);
 
-				// is user registered for this songcircle?
-				/*
-				* NOTE: userAlreadyRegistered takes a third argument: table_name=null
-				*/
-				if($songcircle->userAlreadyRegistered($songcircle_id,$user_id)){
-
-					$log_text = " Join link activated: ".$songcircle_id.", user id: ".$user_id;
-					file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',$currentUTCTime.$log_text.PHP_EOL,FILE_APPEND);
-
-					// construct link w/ parameters
-					$link_join_songcircle = '../public/start_call.php?';
-					$link_join_songcircle.= 'songcircle_id='.$songcircle_id.'&';
-					$link_join_songcircle.= 'user_id='.$user_id.'&';
-					$link_join_songcircle.= 'verification_key='.$verification_key;
-					/**
-					* NOTE: test viability of this link::
+					// is user registered for this songcircle?
+					/*
+					* NOTE: userAlreadyRegistered takes a third argument: table_name=null
 					*/
+					if($songcircle->userAlreadyRegistered($songcircle_id,$user_id)){
 
-					// redirect to link
-					redirectTo($link_join_songcircle);
+						$log_text = " Join link activated: ".$songcircle_id.", user id: ".$user_id;
+						file_put_contents(SITE_ROOT.'/logs/songcircle_'.date("m-d-Y").'.txt',$currentUTCTime.$log_text.PHP_EOL,FILE_APPEND);
 
+						// construct link w/ parameters
+						$link_join_songcircle = '../public/start_call.php?';
+						$link_join_songcircle.= 'songcircle_id='.$songcircle_id.'&';
+						$link_join_songcircle.= 'user_id='.$user_id.'&';
+						$link_join_songcircle.= 'verification_key='.$verification_key;
+						/**
+						* NOTE: test viability of this link::
+						*/
+
+						// redirect to link
+						redirectTo($link_join_songcircle);
+
+					}
+				} else {
+					$error_msg[] = "Unknown Error: Unable to Join Songcircle";
 				}
-			} else {
-				$error_msg[] = "Unknown Error: Unable to Join Songcircle";
-			}
-			break;
+				break;
 
 		// if no cases match, redirect somewhere
 		default:
