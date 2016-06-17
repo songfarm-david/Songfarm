@@ -24,7 +24,7 @@
     <script type="text/javascript" src="js/jquery-ui.js"></script>
 	</head>
 <?php
-  var_dump($_GET);
+  	//var_dump($_GET);
 	$songcircle_id = $_GET['songcircle_id'];
 	$sessionUserId = '';
 
@@ -45,14 +45,14 @@
 	}
 	else
 	{
-		//$sessionUserId = $_GET['username '] ;
+		$sessionUserName = $_GET['username '] ;
 	}
 
 
 	//get duration of the songcircle
 	$songcircle_details = [];
 	$songcircle_details = $songcircle->songcircleDataByID($songcircle_id);
-	var_dump($songcircle_details);
+	//var_dump($songcircle_details);
 	$songcircle_duration = $songcircle_details['duration'];
 	$songcircle_date_UTC = $songcircle_details['date_of_songcircle'];
 
@@ -122,8 +122,8 @@
 		var songcircle_duration_seconds = songcircle_duration *60;
 		var songcircle_duration_milliseconds = songcircle_duration_seconds *1000;
 
-		var firstReminder_milliseconds = 15*60*1000;
-		var SecondReminder_milliseconds = 5*60*1000;
+		var firstReminder_milliseconds = 15*60*1000;  //15 minutes before scheduled end of songcircle time
+		var SecondReminder_milliseconds = 5*60*1000; 	//5 minutes before scheduled end of songcircle time
 
 
 		// get the timeoffset of the user
@@ -133,36 +133,21 @@
 		var current_utcDateString = d.toUTCString();
 
 		var current_utcDate = new Date(current_utcDateString);
-		//alert(current_utcDate);
 
 		var current_utcDateMill = Date.UTC(current_utcDate.getUTCFullYear(), current_utcDate.getUTCMonth(), current_utcDate.getUTCDate(), current_utcDate.getUTCHours()
 				, current_utcDate.getUTCMinutes(), current_utcDate.getUTCSeconds(), current_utcDate.getUTCMilliseconds());
-		//alert(current_utcDateMill);
 
 
 		//songcircle date
-		//alert(songcircle_date_UTC);
 		var songcircle_utcDate = new Date(songcircle_date_UTC);
 
 		var songcircle_utcDateMill = Date.UTC(songcircle_utcDate.getUTCFullYear(), songcircle_utcDate.getUTCMonth(), songcircle_utcDate.getUTCDate(),
 				songcircle_utcDate.getUTCHours(), songcircle_utcDate.getUTCMinutes(), songcircle_utcDate.getUTCSeconds(), songcircle_utcDate.getUTCMilliseconds());
-		//alert(songcircle_utcDateMill);
 
 
 
 		var diffMilli = current_utcDateMill - songcircle_utcDateMill;
-		//alert(diffMilli);
-
-// 		var diffSeconds = diffMilli/1000;
-// 		alert(diffSeconds);
-
-// 		var diffMinutes = diffSeconds/60;
-// 		alert(diffMinutes);
-// 		diffMinutes = diffMinutes + localTimeOffset;
-
-
-
-
+	
 		var firstReminder_duration_milliseconds = songcircle_duration_milliseconds - firstReminder_milliseconds - diffMilli;
 		//set timeout for 1st Reminder
 		setTimeout(dispalyFirstReminder, firstReminder_duration_milliseconds);
@@ -188,7 +173,7 @@
 
 	function onAPI_init(res) {
     if (res && res.error) {
-		//alert(res.error);
+		log(res.error);
         showPopup('dvNotSupported');
     } else {
         log("callback: getUserMedia");
