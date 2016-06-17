@@ -139,7 +139,7 @@ $email_data = [
 			"width" => "293",
 			"height" => "194"
 		],
-		"header" => "You are only a few days away from %songcircle_name%",
+		"header" => "%songcircle_name% is tomorrow!",
 		"greeting" => "%username%,",
 		"intro" => "<b>%songcircle_name%</b> starts at this time tomorrow.",
 		"body" => "Be sure to have a song ready to play. It would also be a good idea to have any materials handy, like lyrics, a pen and paper for making notes, and a drink of water or cup of tea.<br /> We'll send you a link tomorrow when the Songcircle is starting and you'll be connected through that.",
@@ -172,7 +172,7 @@ $email_data = [
 		],
 		"header" => "%songcircle_name%<br /> is starting!",
 		"greeting" => "<b>%songcircle_name%</b> is starting now!",
-		"intro" => "Click the link below to connect to <b>%songcircle_name%</b>:",
+		"intro" => "Click the link below to connect now:",
 		"ctaLink" => [
 			"linkLocation" => "http://test.songfarm.ca/includes/songcircle_user_action.php?action=join_songcircle&songcircle_id=%songcircle_id%&user_id=%user_id%&verification_key=%verification_key%",
 			"linkText" => "Join Now"
@@ -196,9 +196,9 @@ $email_data = [
 		],
 		"header" => "How was your experience?",
 		"greeting" => "Hi, %username%!",
-		"intro" => "First off, we want to <span style=\"font-size: 125%;\"><i>Thank You</i></span> for participating in <b>%songcircle_name%</b>. We really hope you enjoyed the experience!",
-		"body" => "As you may know, Songcircles are a new and experimental technology. Our aim is make them a truly valuable resource for songwriters like you.<br><br>
-			With that said, we ask that you please take a minute to complete a short questionnaire. Your input will help us to improve Songcircles for everyone.",
+		"intro" => "First off, we want to <i>Thank You</i> for participating in this Songcircle. We really hope you enjoyed the experience!",
+		"body" => "As you may know, <b>Songcircles</b> are a new and experimental technology. Our aim is make them a truly 	valuable resource for songwriters like you.<br><br>
+		With that said, would you please tell us about your experience? Please take a moment to complete this small survey. Your input will help us to make Songcircles better for everyone.",
 		"ctaLink" => [
 			"linkLocation" => "http://test.songfarm.ca/songcircle_survey.php?songcircle_id=%songcircle_id%&user_id=%user_id%&username=%username%&user_email=%user_email%",
 			"linkText" => "Take the Survey Now"
