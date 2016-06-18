@@ -196,14 +196,14 @@ $email_data = [
 		],
 		"header" => "How was your experience?",
 		"greeting" => "Hi, %username%!",
-		"intro" => "First off, we want to <i>Thank You</i> for participating in this Songcircle. We really hope you enjoyed the experience!",
-		"body" => "As you may know, <b>Songcircles</b> are a new and experimental technology. Our aim is make them a truly 	valuable resource for songwriters like you.<br><br>
-		With that said, would you please tell us about your experience? Please take a moment to complete this small survey. Your input will help us to make Songcircles better for everyone.",
+		"intro" => "First off, we want to thank you for participating in this Songcircle. We really hope you enjoyed the experience!",
+		"body" => "As you may know, Songcircles are a new and experimental technology and our aim is make them a truly 	valuable resource for songwriters.<br><br>
+		With that said, <i>would you please tell us about your experience?</i> Please take a moment to complete this small survey. Your input will help us to improve the Songcircle experience for everyone.",
 		"ctaLink" => [
 			"linkLocation" => "http://test.songfarm.ca/songcircle_survey.php?songcircle_id=%songcircle_id%&user_id=%user_id%&username=%username%&user_email=%user_email%",
 			"linkText" => "Take the Survey Now"
 		],
-		"signature" => "<i>Thank you again</i>,<br />
+		"signature" => "Thank You,<br />
 		The Songfarm Team",
 		"disclaimer" => "You are receiving this email because you registered for a Songcircle on <a href=\"http://songfarm.ca\" style=\"text-decoration: none; color: #153643;\"><font color=\"#153643\">songfarm.ca</font></a><br />
 		If you received this email in error or do not wish to receive any further communications from Songfarm, please ",
