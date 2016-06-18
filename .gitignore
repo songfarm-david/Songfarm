@@ -18,3 +18,6 @@ template.*
 *.sql
 *.txt
 README.md
+includes/config.php
+includes/initialize.php
+public/songcircle.php

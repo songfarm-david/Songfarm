@@ -3,7 +3,7 @@
 defined('DS') ? NULL : define('DS', DIRECTORY_SEPARATOR);
 
 /* Local site root */
-defined('SITE_ROOT') 	? NULL : define('SITE_ROOT', DS.'wamp'.DS.'www'.DS.'Songfarm-Oct2015'); // 'songfarm'.DS.
+defined('SITE_ROOT') 	? NULL : define('SITE_ROOT', DS.'wamp'.DS.'www'.DS.'Songfarm'.DS.'Songfarm-Oct2015'); // 'songfarm'.DS.
 
 /* TEST site root for test.songfarm.ca */
 // defined('SITE_ROOT') ? NULL : define('SITE_ROOT', DS.'home'.DS.'songfarm'.DS.'public_html'.DS.'test');

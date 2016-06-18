@@ -13,6 +13,7 @@ if( $location_by_ip = generateIPData() ){
 		}
 	}
 }
+$_SESSION['user_id'] = 43;
 ?>
 <!DOCTYPE html>
 <html lang="en">
