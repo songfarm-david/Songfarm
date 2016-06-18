@@ -48,7 +48,7 @@ function initiateEmail($email_data, $user_data=''){
 		* NOTE: This case remains untested/unwritten
 		*/
 			case 'waitlist':
-				$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_waitlist_notice.html');
+				$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_waitlist.html');
 				break;
 			// case 'confirm_waitlist':
 			// 	$email_template = file_get_contents(EMAIL_PATH.DS.'email_templates/songcircle_confirm_waitlist.html');
